@@ -2,6 +2,7 @@ import java.sql.*;
 
 // kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
+// TODO: finish Player class
 public class Player {
 
     private int player_id;

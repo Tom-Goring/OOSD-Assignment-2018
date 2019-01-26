@@ -4,7 +4,7 @@ public class Test {
 
         Player player = new Player("Not Notson", 1);
 
-        String string = Player.getPlayerWithName("John Johnson");
+        String string = DatabaseAPI.getPlayerWithName("John Johnson"); // eyyyy it works bois
 
         System.out.println(string);
     }

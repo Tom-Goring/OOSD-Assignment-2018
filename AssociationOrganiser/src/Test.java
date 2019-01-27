@@ -4,5 +4,7 @@ public class Test {
     public static void main(String[] args) {
 
        DatabaseManager.getPlayersWithTeamID("1").forEach(System.out::println);
+
+       DatabaseManager.getPlayerWithName("Tim Timson").forEach(System.out::println);
     }
 }

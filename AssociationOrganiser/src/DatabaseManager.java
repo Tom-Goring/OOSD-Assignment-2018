@@ -74,8 +74,15 @@ public class DatabaseManager {
     }
 
     // TODO: add method to insert a new player into database
-    public void addPlayerToDatabase(String player_name, int team_id) {
+    public void addPlayerToDatabase(String player_name, int team_name) {
 
+        // TODO: finish these queries for inserting players
+
+        // first get team_id of the selected team_name
+        // select ID from team where TeamName = '"team_name"'
+
+
+        // then send an insert with the player_name and team_id
     }
 
     // TODO: add method to insert new team into database

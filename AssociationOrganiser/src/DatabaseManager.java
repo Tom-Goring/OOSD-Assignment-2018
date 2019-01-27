@@ -130,6 +130,7 @@ public class DatabaseManager {
         // data we like in the form of StringBuilders, rather than having to individually hardcode every query's
         // data retrieval.
 
+        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
         // LinkedList of LinkedLists
         LinkedList<String[]> rows = new LinkedList<>();
 

@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class DatabaseManager {
 
@@ -15,68 +17,39 @@ public class DatabaseManager {
         return conn;
     }
 
-    static String getPlayerWithName(String name) {
+    static StringBuilder getPlayerWithName(String name) {
 
-        String result = "";
+        ArrayList<String> expectedColumns = new ArrayList<>();
+
+        expectedColumns.add("ID");
+        expectedColumns.add("PlayerName");
+        expectedColumns.add("TeamName");
 
         name = "(\"" + name + "\")" + ";";
 
         String select = "select player.ID, player.PlayerName, team.TeamName from player " +
-                "inner join team on player.TeamID = team.ID where PlayerName in "+name;
+                "inner join team on player.TeamID = team.ID where PlayerName in " + name;
 
-        result = retrieveIDPNTN(result, select);
-
-        return result;
+        return retrieveData(select, expectedColumns);
     }
 
-    // these methods return strings so we can use the frontend to manipulate the data later.
-    static String getPlayersWithTeamID(String ID) {
+    // TODO: think about making these return arrays? I'm hoping we don't have to mess around with tokenising later.
+    static StringBuilder getPlayersWithTeamID(String ID) {
 
-        String result = "";
+        ArrayList<String> columns = new ArrayList<>();
+
+        columns.add("ID");
+        columns.add("PlayerName");
+        columns.add("TeamName");
 
         ID = "(\"" + ID + "\")" + ";";
 
         String select = "select player.ID, player.PlayerName, team.TeamName from player " +
-                "inner join team on player.TeamID = team.ID where TeamID in "+ID;
+                "inner join team on player.TeamID = team.ID where TeamID in " + ID;
 
-        result = retrieveIDPNTN(result, select);
-
-        return result;
+        return retrieveData(select, columns);
     }
 
-    // IDPNTM = ID PlayerName TeamName - will probably change this later (placeholder?)
-    // should probably make this return a ResultSet to be operated upon - would be more
-    // widely usable (plus not have a crazy name).
-    private static String retrieveIDPNTN(String result, String select) {
-        try {
-
-            Connection conn = openConnection();
-
-            System.out.println("Sending query " + select);
-
-            PreparedStatement pstmt = conn.prepareStatement(select);
-
-            ResultSet rset = pstmt.executeQuery();
-
-            StringBuilder resultBuilder = new StringBuilder(result);
-            while(rset.next()) {
-
-                int PlayerID = rset.getInt("ID");
-                String PlayerName = rset.getString("PlayerName");
-                String TeamName = rset.getString("TeamName");
-
-                resultBuilder.append(PlayerID).append(" ").append(PlayerName).append(" ").append(TeamName).append("\n");
-            }
-            result = resultBuilder.toString();
-
-            conn.close();
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-        return result;
-    }
 
     // TODO: add method to insert a new player into database
     public void addPlayerToDatabase(String player_name, int team_id) {
@@ -123,5 +96,46 @@ public class DatabaseManager {
                 "";
 
         // create game table
+    }
+
+    /* QUERIES */
+
+
+    // returns query from database in the form of a linked list of the rows returned by DB query
+    private static StringBuilder retrieveData(String query, ArrayList<String> expectedColumns) {
+
+        // expectedColumns ArrayList allows us to make this data retrieval more generic, so we can retrieve any
+        // data we like in the form of StringBuilders, rather than having to individually hardcode every query's
+        // data retrieval.
+
+        StringBuilder data = new StringBuilder();
+
+        try {
+
+            LinkedList<String> result = new LinkedList<String>();
+            Connection conn = openConnection();
+
+            System.out.println("Sending query " + query);
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+
+            while (rset.next()) {
+
+                // TODO: finish retrieving data from rset
+                for (String expectedColumn : expectedColumns) {
+                    data.append(rset.getString(expectedColumn));
+                    data.append(" ");
+                }
+
+                data.append("\n");
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return data; // TODO: add an actual return
     }
 }

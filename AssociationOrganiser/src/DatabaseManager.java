@@ -34,6 +34,7 @@ public class DatabaseManager {
     }
 
     // TODO: think about making these return arrays? I'm hoping we don't have to mess around with tokenising later.
+    // Thinking about it, we almost certainly will. Goddamit.
     static StringBuilder getPlayersWithTeamID(String ID) {
 
         ArrayList<String> columns = new ArrayList<>();

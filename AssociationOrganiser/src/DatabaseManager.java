@@ -122,7 +122,6 @@ public class DatabaseManager {
 
             while (rset.next()) {
 
-                // TODO: finish retrieving data from rset
                 for (String expectedColumn : expectedColumns) {
                     data.append(rset.getString(expectedColumn));
                     data.append(" ");
@@ -136,6 +135,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
 
-        return data; // TODO: add an actual return
+        return data;
     }
 }

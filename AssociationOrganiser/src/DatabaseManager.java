@@ -45,10 +45,14 @@ public class DatabaseManager {
     }
 
     // IDPNTM = ID PlayerName TeamName - will probably change this later (placeholder?)
+    // should probably make this return a ResultSet to be operated upon - would be more
+    // widely usable (plus not have a crazy name).
     private static String retrieveIDPNTN(String result, String select) {
         try {
 
             Connection conn = openConnection();
+
+            System.out.println("Sending query " + select);
 
             PreparedStatement pstmt = conn.prepareStatement(select);
 

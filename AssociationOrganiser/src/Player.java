@@ -7,21 +7,45 @@ public class Player {
 
     private int player_id;
     private String player_name;
-    private int team_id;
+    private String team_name;
 
-    //maybe a constructor that auto pulls a player with just the id? or an id with a name?
-    public Player(int id, String name, int team_id) {
-
-        this.player_id = id;
-        this.player_name = name;
-        this.team_id = team_id;
+    @Override
+    public String toString() {
+        return "Player{" +
+                "player_id=" + player_id +
+                ", player_name='" + player_name + '\'' +
+                ", team_name='" + team_name + '\'' +
+                '}';
     }
 
-    public Player(String name, int team_id) {
+    public Player(int player_id, String name, String team_name) {
 
+        this.player_id = player_id;
         this.player_name = name;
-        this.team_id = team_id;
+        this.team_name = team_name;
     }
 
+    public int getPlayer_id() {
+        return player_id;
+    }
 
+    public void setPlayer_id(int player_id) {
+        this.player_id = player_id;
+    }
+
+    public String getPlayer_name() {
+        return player_name;
+    }
+
+    public void setPlayer_name(String player_name) {
+        this.player_name = player_name;
+    }
+
+    public String getTeam_name() {
+        return team_name;
+    }
+
+    public void setTeam_name(String team_name) {
+        this.team_name = team_name;
+    }
 }

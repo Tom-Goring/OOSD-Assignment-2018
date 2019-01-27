@@ -17,8 +17,9 @@ public class DatabaseManager {
         return conn;
     }
 
-    static StringBuilder getPlayerWithName(String name) {
+    static ArrayList<Player> getPlayerWithName(String name) {
 
+        ArrayList<Player> playerList = new ArrayList<>();
         ArrayList<String> expectedColumns = new ArrayList<>();
 
         expectedColumns.add("ID");
@@ -30,13 +31,19 @@ public class DatabaseManager {
         String select = "select player.ID, player.PlayerName, team.TeamName from player " +
                 "inner join team on player.TeamID = team.ID where PlayerName in " + name;
 
-        return retrieveData(select, expectedColumns);
+        LinkedList<String[]> players = retrieveData(select, expectedColumns);
+
+        extractPlayersFromList(playerList, players);
+
+        return playerList;
     }
 
     // TODO: think about making these return arrays? I'm hoping we don't have to mess around with tokenising later.
+    // TODO: look at interacting with player class here
     // Thinking about it, we almost certainly will. Goddamit.
-    static StringBuilder getPlayersWithTeamID(String ID) {
+    static ArrayList<Player> getPlayersWithTeamID(String ID) {
 
+        ArrayList<Player> playerList = new ArrayList<>();
         ArrayList<String> columns = new ArrayList<>();
 
         columns.add("ID");
@@ -48,9 +55,23 @@ public class DatabaseManager {
         String select = "select player.ID, player.PlayerName, team.TeamName from player " +
                 "inner join team on player.TeamID = team.ID where TeamID in " + ID;
 
-        return retrieveData(select, columns);
+        LinkedList<String[]> players = retrieveData(select, columns);
+
+        extractPlayersFromList(playerList, players);
+
+        return playerList;
     }
 
+    private static void extractPlayersFromList(ArrayList<Player> playerList, LinkedList<String[]> players) {
+        for (String[] player : players) {
+
+            int player_id = Integer.parseInt(player[0]);
+            String player_name = player[1];
+            String team_name = player[2];
+
+            playerList.add(new Player(player_id, player_name, team_name));
+        }
+    }
 
     // TODO: add method to insert a new player into database
     public void addPlayerToDatabase(String player_name, int team_id) {
@@ -102,18 +123,17 @@ public class DatabaseManager {
     /* QUERIES */
 
 
-    // returns query from database in the form of a linked list of the rows returned by DB query
-    private static StringBuilder retrieveData(String query, ArrayList<String> expectedColumns) {
+    // returns query from database in the form of a list of Player objects
+    private static LinkedList<String[]> retrieveData(String query, ArrayList<String> expectedColumns) {
 
         // expectedColumns ArrayList allows us to make this data retrieval more generic, so we can retrieve any
         // data we like in the form of StringBuilders, rather than having to individually hardcode every query's
         // data retrieval.
 
-        StringBuilder data = new StringBuilder();
+        // LinkedList of LinkedLists
+        LinkedList<String[]> rows = new LinkedList<>();
 
         try {
-
-            LinkedList<String> result = new LinkedList<String>();
             Connection conn = openConnection();
 
             System.out.println("Sending query " + query);
@@ -123,12 +143,14 @@ public class DatabaseManager {
 
             while (rset.next()) {
 
-                for (String expectedColumn : expectedColumns) {
-                    data.append(rset.getString(expectedColumn));
-                    data.append(" ");
+                String[] row = new String[3];
+
+                for (int i = 0; i < expectedColumns.size(); i++) {
+
+                    row[i] = rset.getString(expectedColumns.get(i));
                 }
 
-                data.append("\n");
+                rows.add(row);
             }
 
             conn.close();
@@ -136,6 +158,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
 
-        return data;
+        return rows;
     }
 }

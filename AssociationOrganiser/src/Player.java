@@ -3,6 +3,7 @@ import java.sql.*;
 // kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 // TODO: finish Player class
+// TODO: make better formatting for toString()
 public class Player {
 
     private int player_id;

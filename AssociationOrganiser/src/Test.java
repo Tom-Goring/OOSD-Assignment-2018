@@ -3,11 +3,6 @@ public class Test {
     // Just a class to allow for some basic testing of functionality before main GUI is implemented
     public static void main(String[] args) {
 
-        String string = DatabaseManager.getPlayerWithName("John Johnson").toString();
-
-        String string2 = DatabaseManager.getPlayersWithTeamID("1").toString();
-
-        System.out.println(string);
-        System.out.println(string2);
+       DatabaseManager.getPlayersWithTeamID("1").forEach(System.out::println);
     }
 }

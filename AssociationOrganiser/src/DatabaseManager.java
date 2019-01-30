@@ -99,6 +99,49 @@ public class DatabaseManager {
 
         ArrayList<String> queryList = new ArrayList<>();
 
+        // create player table
+        queryList.add("CREATE TABLE Player (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Name varchar(20),\n" +
+                "TeamID int NOT NULL,\n" +
+                "CONSTRAINT Player_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create team table
+        queryList.add("CREATE TABLE Team (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Name varchar(20) NOT NULL,\n" +
+                "CONSTRAINT Team_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create match table
+        queryList.add("CREATE TABLE `Match` (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "HomePlayer1ID int NOT NULL,\n" +
+                "HomePlayer2ID int NOT NULL,\n" +
+                "AwayPlayer1ID int NOT NULL,\n" +
+                "AwayPlayer2ID int NOT NULL,\n" +
+                "WinnerID int NOT NULL,\n" +
+                "Played bool NOT NULL,\n" +
+                "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create set table
+        queryList.add("CREATE TABLE `Set` (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "MatchID int NOT NULL,\n" +
+                "HomeTeamID int NOT NULL,\n" +
+                "AwayTeamID int NOT NULL,\n" +
+                "PlayerIDForHomeTeam int NOT NULL,\n" +
+                "PlayerIDForAwayTeam int NOT NULL,\n" +
+                "FinalScore int NOT NULL,\n" +
+                "WinnerID int NOT NULL,\n" +
+                "Played bool NOT NULL,\n" +
+                "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // TODO: consider moving game/set/match information into a seperate 1-1 table containing information.
+
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
                         "GameID int NOT NULL AUTO_INCREMENT,\n" +
@@ -110,65 +153,67 @@ public class DatabaseManager {
                         "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
                         ");");
 
-        // create match table
-        queryList.add("CREATE TABLE `Match` (\n" +
-                "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "HomePlayerID int NOT NULL,\n" +
-                "AwayPlayerID int NOT NULL,\n" +
-                "WinnerID int NOT NULL,\n" +
-                "SetID int NOT NULL,\n" +
-                "Played bool NOT NULL,\n" +
-                "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
-                ");");
-
-        // create player table
-        queryList.add("CREATE TABLE Player (\n" +
-                "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "Name varchar(20),\n" +
-                "TeamID int NOT NULL,\n" +
-                "CONSTRAINT Player_pk PRIMARY KEY (ID)\n" +
-                ");");
-
-        // create set table
-        queryList.add("CREATE TABLE `Set` (\n" +
-                "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "MatchID int NOT NULL,\n" +
-                "HomeTeamID int NOT NULL,\n" +
-                "AwayTeamID int NOT NULL,\n" +
-                "FinalScore int NOT NULL,\n" +
-                "WinnerID int NOT NULL,\n" +
-                "Played bool NOT NULL,\n" +
-                "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
-                ");");
-
-        // create team table
-        queryList.add("CREATE TABLE Team (\n" +
-                "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "Name varchar(20) NOT NULL,\n" +
-                "CONSTRAINT Team_pk PRIMARY KEY (ID)\n" +
-                ");");
-
         // Set up foreign keys
 
-        queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (MatchID)\n" +
+        // Game Table FKs
+        queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (MatchID) " +
                 "REFERENCES `Match` (ID);");
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT Match_Set FOREIGN KEY Match_Set (SetID)\n" +
-                "REFERENCES `Set` (ID);");
+        queryList.add("ALTER TABLE Game ADD CONSTRAINT Winner_Team FOREIGN KEY Winner_Team (WinnerID) " +
+                "REFERENCES `Team` (ID);");
 
-        queryList.add("ALTER TABLE Player ADD CONSTRAINT Player_Team FOREIGN KEY Player_Team (TeamID)\n" +
+        // Match Table FKs
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT HPID1_Player FOREIGN KEY HPID1_Player (HomePlayer1ID) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT HPID2_Player FOREIGN KEY HPID2_Player (HomePlayer2ID) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT APID1_Player FOREIGN KEY APID1_Player (AwayPlayer1ID) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT APID2_Player FOREIGN KEY APID2_Player (AwayPlayer2ID) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT MatchWinner_Team FOREIGN KEY MatchWinner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID)\n" +
+        // Player Table FKs
+
+        queryList.add("ALTER TABLE Player ADD CONSTRAINT Player_Team FOREIGN KEY Player_Team (TeamID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID)\n" +
+        // Set Table FKs
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID) " +
                 "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID) " +
+                "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (PlayerIDForHomeTeam) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDAT FOREIGN KEY PIDAT (PlayerIDForAwayTeam) " +
+                "REFERENCES Player (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT WinnerID_TeamID FOREIGN KEY WinnerID_TeamID (WinnerID) " +
+                "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES `match` (ID);");
 
 
         try {
 
+
             Connection conn = openConnection();
+
+            /*
+            PreparedStatement prep = conn.prepareStatement(queryList.get(queryList.size()-1));
+
+            prep.executeUpdate();*/
+
 
             for (String aQueryList : queryList) {
 

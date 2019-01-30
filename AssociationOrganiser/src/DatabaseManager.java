@@ -73,20 +73,31 @@ public class DatabaseManager {
     }
 
     // TODO: add method to insert a new player into database
-    public void addPlayerToDatabase(String player_name, int team_name) {
+    public static void addPlayerToDatabase(String player_name, String team_name) {
 
         // TODO: finish these queries for inserting players
 
-        // first get team_id of the selected team_name
-        // select ID from team where TeamName = '"team_name"'
+        ArrayList<String> expectedColumns = new ArrayList<>();
 
+        expectedColumns.add("ID");
+
+        String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
+
+        ArrayList<String[]> data = executeQuery(getID, expectedColumns);
+
+        String ID = data.get(0)[0];
+
+        String insert = "INSERT INTO Player (Name, TeamID) VALUES ";
 
         // then send an insert with the player_name and team_id
     }
 
     // TODO: add method to insert new team into database
-    public void addTeamToDatabase(String team_name) {
+    public static void addTeamToDatabase(String team_name) {
 
+        String insert = "INSERT INTO Team (Name) VALUES ";
+
+        insertData(insert, team_name);
     }
 
     // TODO: add method to fetch all teams and create / return fixtures using that data
@@ -115,7 +126,7 @@ public class DatabaseManager {
                 ");");
 
         // create match table
-        queryList.add("CREATE TABLE `Match` (\n" +
+        queryList.add("CREATE TABLE Match (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "HomePlayer1ID int NOT NULL,\n" +
                 "HomePlayer2ID int NOT NULL,\n" +
@@ -127,7 +138,7 @@ public class DatabaseManager {
                 ");");
 
         // create set table
-        queryList.add("CREATE TABLE `Set` (\n" +
+        queryList.add("CREATE TABLE Set (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "MatchID int NOT NULL,\n" +
                 "HomeTeamID int NOT NULL,\n" +
@@ -157,26 +168,26 @@ public class DatabaseManager {
 
         // Game Table FKs
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (MatchID) " +
-                "REFERENCES `Match` (ID);");
+                "REFERENCES Match (ID);");
 
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Winner_Team FOREIGN KEY Winner_Team (WinnerID) " +
-                "REFERENCES `Team` (ID);");
+                "REFERENCES Team (ID);");
 
         // Match Table FKs
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT HPID1_Player FOREIGN KEY HPID1_Player (HomePlayer1ID) " +
+        queryList.add("ALTER TABLE Match ADD CONSTRAINT HPID1_Player FOREIGN KEY HPID1_Player (HomePlayer1ID) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT HPID2_Player FOREIGN KEY HPID2_Player (HomePlayer2ID) " +
+        queryList.add("ALTER TABLE Match ADD CONSTRAINT HPID2_Player FOREIGN KEY HPID2_Player (HomePlayer2ID) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT APID1_Player FOREIGN KEY APID1_Player (AwayPlayer1ID) " +
+        queryList.add("ALTER TABLE Match ADD CONSTRAINT APID1_Player FOREIGN KEY APID1_Player (AwayPlayer1ID) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT APID2_Player FOREIGN KEY APID2_Player (AwayPlayer2ID) " +
+        queryList.add("ALTER TABLE Match ADD CONSTRAINT APID2_Player FOREIGN KEY APID2_Player (AwayPlayer2ID) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT MatchWinner_Team FOREIGN KEY MatchWinner_Team (WinnerID) " +
+        queryList.add("ALTER TABLE Match ADD CONSTRAINT MatchWinner_Team FOREIGN KEY MatchWinner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");
 
         // Player Table FKs
@@ -186,22 +197,22 @@ public class DatabaseManager {
 
         // Set Table FKs
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID) " +
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID) " +
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (PlayerIDForHomeTeam) " +
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (PlayerIDForHomeTeam) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDAT FOREIGN KEY PIDAT (PlayerIDForAwayTeam) " +
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT PIDAT FOREIGN KEY PIDAT (PlayerIDForAwayTeam) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT WinnerID_TeamID FOREIGN KEY WinnerID_TeamID (WinnerID) " +
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT WinnerID_TeamID FOREIGN KEY WinnerID_TeamID (WinnerID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES `match` (ID);");
+        queryList.add("ALTER TABLE Set ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES match (ID);");
 
 
         try {
@@ -212,7 +223,7 @@ public class DatabaseManager {
             /*
             PreparedStatement prep = conn.prepareStatement(queryList.get(queryList.size()-1));
 
-            prep.executeUpdate();*/
+            prep.insertData();*/
 
 
             for (String aQueryList : queryList) {
@@ -228,14 +239,11 @@ public class DatabaseManager {
         }
     }
 
-    /* QUERIES */
-
-
     // returns query from database in the form of a list of Player objects
     private static ArrayList<String[]> executeQuery(String query, ArrayList<String> expectedColumns) {
 
         // expectedColumns ArrayList allows us to make this data retrieval more generic, so we can retrieve any
-        // data we like in the form of StringBuilders, rather than having to individually hardcode every query's
+        // data we like in the form of ArrayLists of Strings, rather than having to individually hardcode every query's
         // data retrieval.
 
         // TODO: the current usage of lists feels a bit clunky, maybe change it later?
@@ -268,5 +276,27 @@ public class DatabaseManager {
         }
 
         return rows;
+    }
+
+    // use this to send data to the server - update = SQL command, data = data to be inputted
+    // TODO: add ability to add more than one column.
+    private static void insertData(String update, String data) {
+
+        data = "(\"" + data + "\")" + ";";
+
+        try {
+
+            Connection conn = openConnection();
+
+            System.out.println("Inserting " + data + " into database with command: " + update);
+
+            PreparedStatement prep = conn.prepareStatement(update);
+
+            prep.executeUpdate();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
     }
 }

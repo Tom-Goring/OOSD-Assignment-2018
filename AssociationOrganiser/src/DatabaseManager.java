@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class DatabaseManager {
 
@@ -23,15 +22,15 @@ public class DatabaseManager {
         ArrayList<String> expectedColumns = new ArrayList<>();
 
         expectedColumns.add("ID");
-        expectedColumns.add("PlayerName");
+        expectedColumns.add("Name");
         expectedColumns.add("TeamName");
 
         name = "(\"" + name + "\")" + ";";
 
-        String select = "select player.ID, player.PlayerName, team.TeamName from player " +
-                "inner join team on player.TeamID = team.ID where PlayerName in " + name;
+        String select = "select player.ID, player.Name, team.Name from player " +
+                "inner join team on player.TeamID = team.ID where Name in " + name;
 
-        LinkedList<String[]> players = retrieveData(select, expectedColumns);
+        ArrayList<String[]> players = executeQuery(select, expectedColumns);
 
         extractPlayersFromList(playerList, players);
 
@@ -47,22 +46,22 @@ public class DatabaseManager {
         ArrayList<String> columns = new ArrayList<>();
 
         columns.add("ID");
-        columns.add("PlayerName");
+        columns.add("Name");
         columns.add("TeamName");
 
         ID = "(\"" + ID + "\")" + ";";
 
-        String select = "select player.ID, player.PlayerName, team.TeamName from player " +
+        String select = "select player.ID, player.Name, team.TeamName from player " +
                 "inner join team on player.TeamID = team.ID where TeamID in " + ID;
 
-        LinkedList<String[]> players = retrieveData(select, columns);
+        ArrayList<String[]> players = executeQuery(select, columns);
 
         extractPlayersFromList(playerList, players);
 
         return playerList;
     }
 
-    private static void extractPlayersFromList(ArrayList<Player> playerList, LinkedList<String[]> players) {
+    private static void extractPlayersFromList(ArrayList<Player> playerList, ArrayList<String[]> players) {
         for (String[] player : players) {
 
             int player_id = Integer.parseInt(player[0]);
@@ -95,43 +94,100 @@ public class DatabaseManager {
 
     }
 
-    // TODO: finish method to create tables in case of disaster (and also allowing us both to have the same DB schema).
+    // TODO: Test this function properly when we have actual queries implemented.
     public static void createTables() {
 
-        // create team table
-        String createTeam = "create table team (" +
-                "ID int unsigned primary key," +
-                "TeamName varchar(20));";
-
-        // create player table
-        String createPlayer = "create table player (" +
-                "ID int unsigned primary key," +
-                "PlayerName varchar(20)," +
-                "TeamID int unsigned," +
-                "foreign key (TeamID) references team(ID);";
-
-        // create match table
-        String createMatch = "create table match (" +
-                "ID int unsigned primary key," +
-                "HomeTeamID int unsigned," +
-                "AwayTeamID int unsigned," +
-                "WinnerID int unsigned)," +
-                "foreign key (HomeTeamID) references team(ID)," +
-                "foreign key (AwayTeamID) references team(ID)," +
-                "foreign key (WinnerID) references team(ID));";
-
-        // create set table
-        String createSet = "create table set (" +
-                "";
+        ArrayList<String> queryList = new ArrayList<>();
 
         // create game table
+        queryList.add("CREATE TABLE Game (\n" +
+                        "GameID int NOT NULL AUTO_INCREMENT,\n" +
+                        "HomeTeamScore int NOT NULL,\n" +
+                        "AwayTeamScore int NOT NULL,\n" +
+                        "WinnerID int NOT NULL,\n" +
+                        "MatchID int NOT NULL,\n" +
+                        "Played bool NOT NULL,\n" +
+                        "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
+                        ");");
+
+        // create match table
+        queryList.add("CREATE TABLE `Match` (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "HomePlayerID int NOT NULL,\n" +
+                "AwayPlayerID int NOT NULL,\n" +
+                "WinnerID int NOT NULL,\n" +
+                "SetID int NOT NULL,\n" +
+                "Played bool NOT NULL,\n" +
+                "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create player table
+        queryList.add("CREATE TABLE Player (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Name varchar(20),\n" +
+                "TeamID int NOT NULL,\n" +
+                "CONSTRAINT Player_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create set table
+        queryList.add("CREATE TABLE `Set` (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "MatchID int NOT NULL,\n" +
+                "HomeTeamID int NOT NULL,\n" +
+                "AwayTeamID int NOT NULL,\n" +
+                "FinalScore int NOT NULL,\n" +
+                "WinnerID int NOT NULL,\n" +
+                "Played bool NOT NULL,\n" +
+                "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // create team table
+        queryList.add("CREATE TABLE Team (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Name varchar(20) NOT NULL,\n" +
+                "CONSTRAINT Team_pk PRIMARY KEY (ID)\n" +
+                ");");
+
+        // Set up foreign keys
+
+        queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (MatchID)\n" +
+                "REFERENCES `Match` (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT Match_Set FOREIGN KEY Match_Set (SetID)\n" +
+                "REFERENCES `Set` (ID);");
+
+        queryList.add("ALTER TABLE Player ADD CONSTRAINT Player_Team FOREIGN KEY Player_Team (TeamID)\n" +
+                "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID)\n" +
+                "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID)\n" +
+                "REFERENCES Team (ID);");
+
+
+        try {
+
+            Connection conn = openConnection();
+
+            for (String aQueryList : queryList) {
+
+                PreparedStatement preparedStatement = conn.prepareStatement(aQueryList);
+                System.out.println(aQueryList);
+                preparedStatement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
     }
 
     /* QUERIES */
 
 
     // returns query from database in the form of a list of Player objects
-    private static LinkedList<String[]> retrieveData(String query, ArrayList<String> expectedColumns) {
+    private static ArrayList<String[]> executeQuery(String query, ArrayList<String> expectedColumns) {
 
         // expectedColumns ArrayList allows us to make this data retrieval more generic, so we can retrieve any
         // data we like in the form of StringBuilders, rather than having to individually hardcode every query's
@@ -139,7 +195,7 @@ public class DatabaseManager {
 
         // TODO: the current usage of lists feels a bit clunky, maybe change it later?
         // LinkedList of LinkedLists
-        LinkedList<String[]> rows = new LinkedList<>();
+        ArrayList<String[]> rows = new ArrayList<>();
 
         try {
             Connection conn = openConnection();
@@ -151,7 +207,7 @@ public class DatabaseManager {
 
             while (rset.next()) {
 
-                String[] row = new String[3];
+                String[] row = new String[expectedColumns.size()];
 
                 for (int i = 0; i < expectedColumns.size(); i++) {
 

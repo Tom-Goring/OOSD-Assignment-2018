@@ -59,10 +59,7 @@ public class DatabaseManager {
         }
     }
 
-    // TODO: add method to insert a new player into database
     static void addPlayerToDatabase(String player_name, String team_name) {
-
-        // TODO: finish these queries for inserting players
 
         String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
 
@@ -80,7 +77,6 @@ public class DatabaseManager {
         // then send an insert with the player_name and team_id
     }
 
-    // TODO: add method to insert new team into database
     static void addTeamToDatabase(String team_name) {
 
         team_name = "(\"" + team_name + "\")" + ";";
@@ -94,6 +90,7 @@ public class DatabaseManager {
 
     // TODO: add method to fetch all teams and create / return fixtures using that data
     public void generateFixtures() {
+
 
     }
 
@@ -270,8 +267,7 @@ public class DatabaseManager {
         return table;
     }
 
-    // use this to send data to the server - update = SQL command, data = data to be inputted
-    // TODO: add ability to add more than one column.
+    // use this to send data to the server: update = SQL command
     private static void insertData(String update) {
 
         try {

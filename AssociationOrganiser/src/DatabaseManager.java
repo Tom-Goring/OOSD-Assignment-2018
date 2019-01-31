@@ -272,6 +272,7 @@ public class DatabaseManager {
 
                 // create a match every time
 
+
                 // fill in information about who plays later -> see page 4 spec
                 // then create the 5 sets for each game - should thus be 10n(n-1) sets total
                 //then create the 3 games per set - so 30n(n-1) games total (wowsers)
@@ -279,8 +280,12 @@ public class DatabaseManager {
         }
     }
 
-    static void createMatch() {
+    static void createMatch(int HTID, int ATID, int HP1ID, int HP2ID, int AP1ID, int AP2ID) {
 
+        // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
+        // All 4 players -> HP1 HP2 AP1 AP2
+        // Winner is added after game is played (naturally)
+        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID, HomePlayer1ID, HomePlayer2ID, AwayPlayer1ID, AwayPlayer2ID) VALUES ";
 
     }
 

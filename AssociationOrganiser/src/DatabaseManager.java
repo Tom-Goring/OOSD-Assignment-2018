@@ -73,7 +73,7 @@ public class DatabaseManager {
     }
 
     // TODO: add method to insert a new player into database
-    public static void addPlayerToDatabase(String player_name, String team_name) {
+    static void addPlayerToDatabase(String player_name, String team_name) {
 
         // TODO: finish these queries for inserting players
 
@@ -98,7 +98,7 @@ public class DatabaseManager {
     }
 
     // TODO: add method to insert new team into database
-    public static void addTeamToDatabase(String team_name) {
+    static void addTeamToDatabase(String team_name) {
 
         team_name = "(\"" + team_name + "\")" + ";";
 
@@ -115,7 +115,7 @@ public class DatabaseManager {
     }
 
     // TODO: Test this function properly when we have actual queries implemented.
-    public static void createTables() {
+    static void createTables() {
 
         ArrayList<String> queryList = new ArrayList<>();
 

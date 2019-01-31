@@ -16,42 +16,45 @@ public class DatabaseManager {
         return conn;
     }
 
+    // Just to avoid having to retype the columns - will probably add more of these for other tables.
+    // TODO: Perhaps consider putting this as an attribute of Player.
+    private static ArrayList<String> fillColumnsForPlayer() {
+
+        ArrayList<String> playerColumns = new ArrayList<>();
+
+        playerColumns.add("ID");
+        playerColumns.add("Name");
+        playerColumns.add("TeamName");
+
+        return playerColumns;
+    }
+
     static ArrayList<Player> getPlayerWithName(String name) {
 
         ArrayList<Player> playerList = new ArrayList<>();
-        ArrayList<String> expectedColumns = new ArrayList<>();
-
-        expectedColumns.add("ID");
-        expectedColumns.add("Name");
-        expectedColumns.add("TeamName");
 
         name = "(\"" + name + "\")" + ";";
 
-        String select = "select player.ID, player.Name, team.Name from player " +
-                "inner join team on player.TeamID = team.ID where Name in " + name;
+        String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
+                "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Name = " + name;
 
-        ArrayList<String[]> players = executeQuery(select, expectedColumns);
+        ArrayList<String[]> players = executeQuery(select, fillColumnsForPlayer());
 
         extractPlayersFromList(playerList, players);
 
         return playerList;
     }
 
-    static ArrayList<Player> getPlayersWithTeamID(String ID) {
+    static ArrayList<Player> getPlayersWithTeamName(String name) {
 
         ArrayList<Player> playerList = new ArrayList<>();
-        ArrayList<String> columns = new ArrayList<>();
 
-        columns.add("ID");
-        columns.add("Name");
-        columns.add("TeamName");
+        name = "(\"" + name + "\")" + ";";
 
-        ID = "(\"" + ID + "\")" + ";";
+        String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = " +
+                "Team.ID WHERE Team.Name = " + name;
 
-        String select = "select player.ID, player.Name, team.TeamName from player " +
-                "inner join team on player.TeamID = team.ID where TeamID in " + ID;
-
-        ArrayList<String[]> players = executeQuery(select, columns);
+        ArrayList<String[]> players = executeQuery(select, fillColumnsForPlayer());
 
         extractPlayersFromList(playerList, players);
 

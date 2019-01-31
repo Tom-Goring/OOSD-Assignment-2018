@@ -18,50 +18,21 @@ public class DatabaseManager {
 
     /***** DATA RETRIEVAL METHODS *****/
 
-    // returns query from database in the form of a list of Player objects
-    private static ArrayList<String[]> executeQuery(String query) {
-
-        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
-        ArrayList<String[]> table = new ArrayList<>();
-
-        try {
-            Connection conn = openConnection();
-
-            System.out.println("Sending query " + query);
-
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rset = pstmt.executeQuery();
-            ResultSetMetaData rsetMeta = rset.getMetaData();
-            int columnCount = rsetMeta.getColumnCount();
-
-            while (rset.next()) {
-
-                String[] row = new String[columnCount];
-
-                for (int i = 0; i < columnCount; i++) {
-
-                    row[i] = rset.getString(i+1);
-                }
-
-                table.add(row);
-            }
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return table;
-    }
-
-    static ArrayList<Player> getPlayerWithName(String name) {
+    static Player getPlayerWithName(String name) {
 
         name = "(\"" + name + "\")" + ";";
 
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
                 "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = " + name;
 
-        return extractPlayersFromList(executeQuery(select));
+        return extractPlayersFromList(executeQuery(select)).get(0);
+    }
+
+    static Team getTeamWithName(String name) {
+
+        String select = "SELECT * FROM Team WHERE Name = " +  "\"" + name + "\"" + ";";
+
+        return extractTeamsFromList(executeQuery(select)).get(0);
     }
 
     static ArrayList<Player> getPlayersWithTeamName(String name) {
@@ -99,6 +70,41 @@ public class DatabaseManager {
             teamList.add(new Team(Integer.parseInt(team[0]), team[1]));
         }
         return teamList;
+    }
+
+    private static ArrayList<String[]> executeQuery(String query) {
+
+        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
+        ArrayList<String[]> table = new ArrayList<>();
+
+        try {
+            Connection conn = openConnection();
+
+            System.out.println("Sending query " + query);
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            ResultSetMetaData rsetMeta = rset.getMetaData();
+            int columnCount = rsetMeta.getColumnCount();
+
+            while (rset.next()) {
+
+                String[] row = new String[columnCount];
+
+                for (int i = 0; i < columnCount; i++) {
+
+                    row[i] = rset.getString(i+1);
+                }
+
+                table.add(row);
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return table;
     }
 
     /***** DATA INSERTION METHODS *****/
@@ -140,8 +146,8 @@ public class DatabaseManager {
                 "HomePlayer2ID int NOT NULL,\n" +
                 "AwayPlayer1ID int NOT NULL,\n" +
                 "AwayPlayer2ID int NOT NULL,\n" +
-                "WinnerID int NOT NULL,\n" +
-                "Played bool NOT NULL,\n" +
+                "WinnerID int,\n" +
+                "Played bool,\n" +
                 "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -285,8 +291,12 @@ public class DatabaseManager {
         // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
         // All 4 players -> HP1 HP2 AP1 AP2
         // Winner is added after game is played (naturally)
-        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID, HomePlayer1ID, HomePlayer2ID, AwayPlayer1ID, AwayPlayer2ID) VALUES ";
+        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID, HomePlayer1ID, HomePlayer2ID, AwayPlayer1ID, " +
+                        "AwayPlayer2ID) VALUES (";
 
+        insert += HTID + ", " + ATID + ", " + HP1ID + ", " + HP2ID + ", " + AP1ID + ", " + AP2ID + ")";
+
+        insertData(insert);
     }
 
     static void addPlayerToDatabase(String player_name, String team_name) {

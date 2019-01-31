@@ -37,9 +37,6 @@ public class DatabaseManager {
         return playerList;
     }
 
-    // TODO: think about making these return arrays? I'm hoping we don't have to mess around with tokenising later.
-    // TODO: look at interacting with player class here
-    // Thinking about it, we almost certainly will. Goddamit.
     static ArrayList<Player> getPlayersWithTeamID(String ID) {
 
         ArrayList<Player> playerList = new ArrayList<>();

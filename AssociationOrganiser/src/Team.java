@@ -1,12 +1,16 @@
+import java.util.ArrayList;
+
 public class Team {
 
     private int teamID;
     private String teamName;
+    private ArrayList<Player> playerList;
 
     Team(int teamID, String teamName) {
 
         this.teamID = teamID;
         this.teamName = teamName;
+        this.playerList = new ArrayList<>();
     }
 
     public int getTeamID() {
@@ -23,6 +27,15 @@ public class Team {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void updatePlayerList() {
+
+        this.playerList = DatabaseManager.getPlayersWithTeamName(this.teamName);
     }
 
     @Override

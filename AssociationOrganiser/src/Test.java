@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Test {
 
     // Just a class to allow for some basic testing of functionality before main GUI is implemented
@@ -12,11 +10,6 @@ public class Test {
         DatabaseManager.addPlayerToDatabase("Tom", "UWE");
         DatabaseManager.addPlayerToDatabase("Louis", "UWE");
         DatabaseManager.addPlayerToDatabase("Tim", "UWE");
-
-        /*for (Player player : DatabaseManager.getPlayerWithName("Tom")) {
-
-            System.out.println(player.toString());
-        }*/
 
         for (Player player : DatabaseManager.getPlayersWithTeamName("UWE")) {
 

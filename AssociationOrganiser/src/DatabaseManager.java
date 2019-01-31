@@ -16,6 +16,44 @@ public class DatabaseManager {
         return conn;
     }
 
+    /***** DATA RETRIEVAL METHODS *****/
+
+    // returns query from database in the form of a list of Player objects
+    private static ArrayList<String[]> executeQuery(String query) {
+
+        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
+        ArrayList<String[]> table = new ArrayList<>();
+
+        try {
+            Connection conn = openConnection();
+
+            System.out.println("Sending query " + query);
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            ResultSetMetaData rsetMeta = rset.getMetaData();
+            int columnCount = rsetMeta.getColumnCount();
+
+            while (rset.next()) {
+
+                String[] row = new String[columnCount];
+
+                for (int i = 0; i < columnCount; i++) {
+
+                    row[i] = rset.getString(i+1);
+                }
+
+                table.add(row);
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return table;
+    }
+
     static ArrayList<Player> getPlayerWithName(String name) {
 
         ArrayList<Player> playerList = new ArrayList<>();
@@ -59,40 +97,7 @@ public class DatabaseManager {
         }
     }
 
-    static void addPlayerToDatabase(String player_name, String team_name) {
-
-        String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
-
-        ArrayList<String[]> data = executeQuery(getID);
-
-        String ID = data.get(0)[0];
-
-        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
-
-        insert += "\"" + player_name + "\"";
-        insert += ", " + ID + ")";
-
-        insertData(insert);
-
-        // then send an insert with the player_name and team_id
-    }
-
-    static void addTeamToDatabase(String team_name) {
-
-        team_name = "(\"" + team_name + "\")" + ";";
-
-        String insert = "INSERT INTO Team (Name) VALUES ";
-
-        insert += team_name;
-
-        insertData(insert);
-    }
-
-    // TODO: add method to fetch all teams and create / return fixtures using that data
-    public void generateFixtures() {
-
-
-    }
+    /***** DATA INSERTION METHODS *****/
 
     // TODO: Test this function properly when we have actual queries implemented.
     static void createTables() {
@@ -152,14 +157,14 @@ public class DatabaseManager {
 
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
-                        "GameID int NOT NULL AUTO_INCREMENT,\n" +
-                        "HomeTeamScore int NOT NULL,\n" +
-                        "AwayTeamScore int NOT NULL,\n" +
-                        "WinnerID int NOT NULL,\n" +
-                        "MatchID int NOT NULL,\n" +
-                        "Played bool NOT NULL,\n" +
-                        "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
-                        ");");
+                "GameID int NOT NULL AUTO_INCREMENT,\n" +
+                "HomeTeamScore int NOT NULL,\n" +
+                "AwayTeamScore int NOT NULL,\n" +
+                "WinnerID int NOT NULL,\n" +
+                "MatchID int NOT NULL,\n" +
+                "Played bool NOT NULL,\n" +
+                "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
+                ");");
 
         // Set up foreign keys
 
@@ -231,42 +236,6 @@ public class DatabaseManager {
         }
     }
 
-    // returns query from database in the form of a list of Player objects
-    private static ArrayList<String[]> executeQuery(String query) {
-
-        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
-        ArrayList<String[]> table = new ArrayList<>();
-
-        try {
-            Connection conn = openConnection();
-
-            System.out.println("Sending query " + query);
-
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rset = pstmt.executeQuery();
-            ResultSetMetaData rsetMeta = rset.getMetaData();
-            int columnCount = rsetMeta.getColumnCount();
-
-            while (rset.next()) {
-
-                String[] row = new String[columnCount];
-
-                for (int i = 0; i < columnCount; i++) {
-
-                    row[i] = rset.getString(i+1);
-                }
-
-                table.add(row);
-            }
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return table;
-    }
-
     // use this to send data to the server: update = SQL command
     private static void insertData(String update) {
 
@@ -284,5 +253,38 @@ public class DatabaseManager {
 
             e.printStackTrace();
         }
+    }
+
+    // TODO: add method to fetch all teams and create / return fixtures using that data
+    public void generateFixtures() {
+
+
+    }
+
+    static void addPlayerToDatabase(String player_name, String team_name) {
+
+        String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
+
+        ArrayList<String[]> data = executeQuery(getID);
+
+        String ID = data.get(0)[0];
+
+        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
+
+        insert += "\"" + player_name + "\"";
+        insert += ", " + ID + ")";
+
+        insertData(insert);
+    }
+
+    static void addTeamToDatabase(String team_name) {
+
+        team_name = "(\"" + team_name + "\")" + ";";
+
+        String insert = "INSERT INTO Team (Name) VALUES ";
+
+        insert += team_name;
+
+        insertData(insert);
     }
 }

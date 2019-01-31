@@ -56,45 +56,49 @@ public class DatabaseManager {
 
     static ArrayList<Player> getPlayerWithName(String name) {
 
-        ArrayList<Player> playerList = new ArrayList<>();
-
         name = "(\"" + name + "\")" + ";";
 
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
                 "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = " + name;
 
-        ArrayList<String[]> players = executeQuery(select);
-
-        extractPlayersFromList(playerList, players);
-
-        return playerList;
+        return extractPlayersFromList(executeQuery(select));
     }
 
     static ArrayList<Player> getPlayersWithTeamName(String name) {
-
-        ArrayList<Player> playerList = new ArrayList<>();
 
         name = "(\"" + name + "\")" + ";";
 
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = " +
                 "Team.ID WHERE Team.Name = " + name;
 
-        ArrayList<String[]> players = executeQuery(select);
+        return extractPlayersFromList(executeQuery(select));
+    }
 
-        extractPlayersFromList(playerList, players);
+    static ArrayList<Team> getTeamList() {
 
+        String select = "SELECT * FROM Team;";
+
+        return extractTeamsFromList(executeQuery(select));
+    }
+
+    private static ArrayList<Player> extractPlayersFromList(ArrayList<String[]> players) {
+
+        ArrayList<Player> playerList = new ArrayList<>();
+        for (String[] player : players) {
+
+            playerList.add(new Player(Integer.parseInt(player[0]), player[1], player[2]));
+        }
         return playerList;
     }
 
-    private static void extractPlayersFromList(ArrayList<Player> playerList, ArrayList<String[]> players) {
-        for (String[] player : players) {
+    private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {
 
-            int player_id = Integer.parseInt(player[0]);
-            String player_name = player[1];
-            String team_name = player[2];
+        ArrayList<Team> teamList = new ArrayList<>();
+        for (String[] team : teams) {
 
-            playerList.add(new Player(player_id, player_name, team_name));
+            teamList.add(new Team(Integer.parseInt(team[0]), team[1]));
         }
+        return teamList;
     }
 
     /***** DATA INSERTION METHODS *****/
@@ -258,7 +262,16 @@ public class DatabaseManager {
     // TODO: add method to fetch all teams and create / return fixtures using that data
     public void generateFixtures() {
 
+        // Every team plays 2 matches against every other team - there should be 2n(n-1) games (if my maths is ok)
 
+        // first obtain all teams
+        // iterate over every team, once per team - ignore when passing over self
+        // create a match every time
+        // fill in information about who plays later -> see page 4 spec
+
+        // then create the 5 sets for each game - should thus be 10n(n-1) sets total
+
+        //then create the 3 games per set - so 30n(n-1) games total (wowsers)
     }
 
     static void addPlayerToDatabase(String player_name, String team_name) {

@@ -2,7 +2,7 @@
 public class Team {
 
     private int teamID;
-    private String  teamName;
+    private String teamName;
 
     public Team(int teamID, String teamName) {
 

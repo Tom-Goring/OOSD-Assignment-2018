@@ -134,6 +134,8 @@ public class DatabaseManager {
         // create match table
         queryList.add("CREATE TABLE `Match` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "HomeTeamID int NOT NULL,\n" +
+                "AwayTeamID int NOT NULL,\n" +
                 "HomePlayer1ID int NOT NULL,\n" +
                 "HomePlayer2ID int NOT NULL,\n" +
                 "AwayPlayer1ID int NOT NULL,\n" +
@@ -147,8 +149,6 @@ public class DatabaseManager {
         queryList.add("CREATE TABLE `Set` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "MatchID int NOT NULL,\n" +
-                "HomeTeamID int NOT NULL,\n" +
-                "AwayTeamID int NOT NULL,\n" +
                 "PlayerIDForHomeTeam int NOT NULL,\n" +
                 "PlayerIDForAwayTeam int NOT NULL,\n" +
                 "FinalScore int NOT NULL,\n" +
@@ -183,6 +183,12 @@ public class DatabaseManager {
 
         // Match Table FKs
 
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT Match_HomeTeam FOREIGN KEY Match_HomeTeam (HomeTeamID) " +
+                "REFERENCES Team (ID);");
+
+        queryList.add("ALTER TABLE `Match` ADD CONSTRAINT Match_AwayTeam FOREIGN KEY Match_AwayTeam (AwayTeamID) " +
+                "REFERENCES Team (ID);");
+
         queryList.add("ALTER TABLE `Match` ADD CONSTRAINT HPID1_Player FOREIGN KEY HPID1_Player (HomePlayer1ID) " +
                 "REFERENCES Player (ID);");
 
@@ -204,12 +210,6 @@ public class DatabaseManager {
                 "REFERENCES Team (ID);");
 
         // Set Table FKs
-
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_AwayTeam FOREIGN KEY Set_AwayTeam (AwayTeamID) " +
-                "REFERENCES Team (ID);");
-
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT Set_HomeTeam FOREIGN KEY Set_HomeTeam (HomeTeamID) " +
-                "REFERENCES Team (ID);");
 
         queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (PlayerIDForHomeTeam) " +
                 "REFERENCES Player (ID);");
@@ -265,13 +265,23 @@ public class DatabaseManager {
         // Every team plays 2 matches against every other team - there should be 2n(n-1) games (if my maths is ok)
 
         // first obtain all teams
-        // iterate over every team, once per team - ignore when passing over self
-        // create a match every time
-        // fill in information about who plays later -> see page 4 spec
+        for (Team team_outer : getTeamList()) {
 
-        // then create the 5 sets for each game - should thus be 10n(n-1) sets total
+            // iterate over every team, once per team - ignore when passing over self
+            for (Team team_inner : getTeamList()) {
 
-        //then create the 3 games per set - so 30n(n-1) games total (wowsers)
+                // create a match every time
+
+                // fill in information about who plays later -> see page 4 spec
+                // then create the 5 sets for each game - should thus be 10n(n-1) sets total
+                //then create the 3 games per set - so 30n(n-1) games total (wowsers)
+            }
+        }
+    }
+
+    static void createMatch() {
+
+
     }
 
     static void addPlayerToDatabase(String player_name, String team_name) {

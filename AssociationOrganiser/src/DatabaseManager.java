@@ -236,14 +236,7 @@ public class DatabaseManager {
 
         try {
 
-
             Connection conn = openConnection();
-
-            /*
-            PreparedStatement prep = conn.prepareStatement(queryList.get(queryList.size()-1));
-
-            prep.insertData();*/
-
 
             for (String aQueryList : queryList) {
 

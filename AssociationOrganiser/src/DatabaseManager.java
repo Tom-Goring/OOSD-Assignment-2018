@@ -87,7 +87,12 @@ public class DatabaseManager {
 
         String ID = data.get(0)[0];
 
-        String insert = "INSERT INTO Player (Name, TeamID) VALUES ";
+        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
+
+        insert += "\"" + player_name + "\"";
+        insert += ", " + ID + ")";
+
+        insertData(insert);
 
         // then send an insert with the player_name and team_id
     }
@@ -95,9 +100,13 @@ public class DatabaseManager {
     // TODO: add method to insert new team into database
     public static void addTeamToDatabase(String team_name) {
 
+        team_name = "(\"" + team_name + "\")" + ";";
+
         String insert = "INSERT INTO Team (Name) VALUES ";
 
-        insertData(insert, team_name);
+        insert += team_name;
+
+        insertData(insert);
     }
 
     // TODO: add method to fetch all teams and create / return fixtures using that data
@@ -290,15 +299,12 @@ public class DatabaseManager {
 
     // use this to send data to the server - update = SQL command, data = data to be inputted
     // TODO: add ability to add more than one column.
-    private static void insertData(String update, String data) {
-
-        data = "(\"" + data + "\")" + ";";
+    private static void insertData(String update) {
 
         try {
-
             Connection conn = openConnection();
 
-            System.out.println("Inserting " + data + " into database with command: " + update);
+            System.out.println("Executing command: " + update);
 
             PreparedStatement prep = conn.prepareStatement(update);
 

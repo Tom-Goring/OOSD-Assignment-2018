@@ -5,6 +5,8 @@ public class Test {
 
         DatabaseManager.createTables();
 
-       //DatabaseManager.addPlayerToDatabase("Tom", "UWE");
+        DatabaseManager.addTeamToDatabase("UWE");
+
+        DatabaseManager.addPlayerToDatabase("Tom", "UWE");
     }
 }

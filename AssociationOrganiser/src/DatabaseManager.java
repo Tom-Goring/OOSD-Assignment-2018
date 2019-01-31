@@ -16,19 +16,6 @@ public class DatabaseManager {
         return conn;
     }
 
-    // Just to avoid having to retype the columns - will probably add more of these for other tables.
-    // TODO: Perhaps consider putting this as an attribute of Player.
-    private static ArrayList<String> fillColumnsForPlayer() {
-
-        ArrayList<String> playerColumns = new ArrayList<>();
-
-        playerColumns.add("ID");
-        playerColumns.add("Name"); // player Name
-        playerColumns.add("Name"); // team Name
-
-        return playerColumns;
-    }
-
     static ArrayList<Player> getPlayerWithName(String name) {
 
         ArrayList<Player> playerList = new ArrayList<>();
@@ -38,7 +25,7 @@ public class DatabaseManager {
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
                 "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = " + name;
 
-        ArrayList<String[]> players = executeQuery(select, fillColumnsForPlayer());
+        ArrayList<String[]> players = executeQuery(select);
 
         extractPlayersFromList(playerList, players);
 
@@ -54,7 +41,7 @@ public class DatabaseManager {
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = " +
                 "Team.ID WHERE Team.Name = " + name;
 
-        ArrayList<String[]> players = executeQuery(select, fillColumnsForPlayer());
+        ArrayList<String[]> players = executeQuery(select);
 
         extractPlayersFromList(playerList, players);
 
@@ -77,13 +64,9 @@ public class DatabaseManager {
 
         // TODO: finish these queries for inserting players
 
-        ArrayList<String> expectedColumns = new ArrayList<>();
-
-        expectedColumns.add("ID");
-
         String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
 
-        ArrayList<String[]> data = executeQuery(getID, expectedColumns);
+        ArrayList<String[]> data = executeQuery(getID);
 
         String ID = data.get(0)[0];
 
@@ -252,15 +235,10 @@ public class DatabaseManager {
     }
 
     // returns query from database in the form of a list of Player objects
-    private static ArrayList<String[]> executeQuery(String query, ArrayList<String> expectedColumns) {
-
-        // expectedColumns ArrayList allows us to make this data retrieval more generic, so we can retrieve any
-        // data we like in the form of ArrayLists of Strings, rather than having to individually hardcode every query's
-        // data retrieval.
+    private static ArrayList<String[]> executeQuery(String query) {
 
         // TODO: the current usage of lists feels a bit clunky, maybe change it later?
-        // LinkedList of LinkedLists
-        ArrayList<String[]> rows = new ArrayList<>();
+        ArrayList<String[]> table = new ArrayList<>();
 
         try {
             Connection conn = openConnection();
@@ -269,17 +247,19 @@ public class DatabaseManager {
 
             PreparedStatement pstmt = conn.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
+            ResultSetMetaData rsetMeta = rset.getMetaData();
+            int columnCount = rsetMeta.getColumnCount();
 
             while (rset.next()) {
 
-                String[] row = new String[expectedColumns.size()];
+                String[] row = new String[columnCount];
 
-                for (int i = 0; i < expectedColumns.size(); i++) {
+                for (int i = 0; i < columnCount; i++) {
 
-                    row[i] = rset.getString(expectedColumns.get(i));
+                    row[i] = rset.getString(i+1);
                 }
 
-                rows.add(row);
+                table.add(row);
             }
 
             conn.close();
@@ -287,7 +267,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
 
-        return rows;
+        return table;
     }
 
     // use this to send data to the server - update = SQL command, data = data to be inputted
@@ -295,6 +275,7 @@ public class DatabaseManager {
     private static void insertData(String update) {
 
         try {
+
             Connection conn = openConnection();
 
             System.out.println("Executing command: " + update);

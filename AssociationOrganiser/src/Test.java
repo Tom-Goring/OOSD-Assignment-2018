@@ -10,19 +10,15 @@ public class Test {
         DatabaseManager.addTeamToDatabase("UWE");
 
         DatabaseManager.addPlayerToDatabase("Tom", "UWE");
+        DatabaseManager.addPlayerToDatabase("Louis", "UWE");
+        DatabaseManager.addPlayerToDatabase("Tim", "UWE");
 
-        ArrayList<Player> playerList = new ArrayList<>();
-
-        playerList = DatabaseManager.getPlayerWithName("Tom");
-
-        for (Player player : playerList) {
+        /*for (Player player : DatabaseManager.getPlayerWithName("Tom")) {
 
             System.out.println(player.toString());
-        }
+        }*/
 
-        playerList = DatabaseManager.getPlayersWithTeamName("UWE");
-
-        for (Player player : playerList) {
+        for (Player player : DatabaseManager.getPlayersWithTeamName("UWE")) {
 
             System.out.println(player.toString());
         }

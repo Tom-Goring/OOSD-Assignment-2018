@@ -1,5 +1,3 @@
-import java.sql.*;
-
 // kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 // TODO: finish Player class

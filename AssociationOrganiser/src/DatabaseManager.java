@@ -23,8 +23,8 @@ public class DatabaseManager {
         ArrayList<String> playerColumns = new ArrayList<>();
 
         playerColumns.add("ID");
-        playerColumns.add("Name");
-        playerColumns.add("TeamName");
+        playerColumns.add("Name"); // player Name
+        playerColumns.add("Name"); // team Name
 
         return playerColumns;
     }
@@ -36,7 +36,7 @@ public class DatabaseManager {
         name = "(\"" + name + "\")" + ";";
 
         String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
-                "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Name = " + name;
+                "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = " + name;
 
         ArrayList<String[]> players = executeQuery(select, fillColumnsForPlayer());
 

@@ -35,7 +35,7 @@ public class Team {
 
     public void updatePlayerList() {
 
-        this.playerList = DatabaseManager.getPlayersWithTeamName(this.teamName);
+        this.playerList = Player.getPlayersWithTeamName(this.teamName);
     }
 
     private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {

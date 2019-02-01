@@ -82,6 +82,7 @@ public class Player {
 
     static void addPlayerToDatabase(String player_name, String team_name) {
 
+        // TODO: make this a query with a subquery instead of 2 consequtive queries
         String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
 
         ArrayList<String[]> data = DatabaseManager.executeQuery(getID);

@@ -1,10 +1,23 @@
+import java.util.ArrayList;
+
 // TODO: add Match class
 public class Match {
 
-    // Home Team
-    // Away Team
-    // Winner
-    // Array / List of Sets
+    int HomeTeamID;
+    String HomeTeamName;
+
+    int AwayTeamID;
+    String AwayTeamName;
+
+    ArrayList<Set> setList;
+
+    int WinnerID;
+    int WinnerName;
+
+    Match(int HomeTeamID, String HomeTeamName, int AwayTeamID, String AwayTeamName) {
+
+        // TODO: finish constructor for Match
+    }
 
     static void createMatch(int HTID, int ATID) {
 

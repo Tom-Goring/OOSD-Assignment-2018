@@ -5,14 +5,10 @@ public class Match {
 
     private int HomeTeamID;
     private String HomeTeamName;
-
     private int AwayTeamID;
     private String AwayTeamName;
-
     private ArrayList<Set> setList;
-
     private String finalScore;
-
     private int WinnerID;
     private int WinnerName;
 

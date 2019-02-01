@@ -74,7 +74,6 @@ public class DatabaseManager {
 
     private static ArrayList<String[]> executeQuery(String query) {
 
-        // TODO: the current usage of lists feels a bit clunky, maybe change it later?
         ArrayList<String[]> table = new ArrayList<>();
 
         try {
@@ -109,7 +108,7 @@ public class DatabaseManager {
 
     /***** DATA INSERTION METHODS *****/
 
-    // TODO: Test this function properly when we have actual queries implemented.
+    // TODO: test to make sure that database structure satisfies requirements
     static void createTables() {
 
         ArrayList<String> queryList = new ArrayList<>();
@@ -265,7 +264,7 @@ public class DatabaseManager {
         }
     }
 
-    // TODO: add method to fetch all teams and create / return fixtures using that data
+    // TODO: finish generateFixtures
     public void generateFixtures() {
 
         // Every team plays 2 matches against every other team - there should be 2n(n-1) games (if my maths is ok)

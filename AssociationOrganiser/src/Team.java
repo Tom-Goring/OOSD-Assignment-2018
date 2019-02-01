@@ -38,6 +38,41 @@ public class Team {
         this.playerList = DatabaseManager.getPlayersWithTeamName(this.teamName);
     }
 
+    private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {
+
+        ArrayList<Team> teamList = new ArrayList<>();
+        for (String[] team : teams) {
+
+            teamList.add(new Team(Integer.parseInt(team[0]), team[1]));
+        }
+        return teamList;
+    }
+
+    static Team getTeamWithName(String name) {
+
+        String select = "SELECT * FROM Team WHERE Name = " +  "\"" + name + "\"" + ";";
+
+        return extractTeamsFromList(DatabaseManager.executeQuery(select)).get(0);
+    }
+
+    static ArrayList<Team> getTeamList() {
+
+        String select = "SELECT * FROM Team;";
+
+        return extractTeamsFromList(DatabaseManager.executeQuery(select));
+    }
+
+    static void addTeamToDatabase(String team_name) {
+
+        team_name = "(\"" + team_name + "\")" + ";";
+
+        String insert = "INSERT INTO Team (Name) VALUES ";
+
+        insert += team_name;
+
+        DatabaseManager.insertData(insert);
+    }
+
     @Override
     public String toString() {
         return "Team{" +

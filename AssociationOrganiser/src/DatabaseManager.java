@@ -16,100 +16,6 @@ public class DatabaseManager {
         return conn;
     }
 
-    /***** DATA RETRIEVAL METHODS *****/
-
-    static Player getPlayerWithName(String name) {
-
-        name = "(\"" + name + "\")" + ";";
-
-        String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player " +
-                "INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = " + name;
-
-        return extractPlayersFromList(executeQuery(select)).get(0);
-    }
-
-    static Team getTeamWithName(String name) {
-
-        String select = "SELECT * FROM Team WHERE Name = " +  "\"" + name + "\"" + ";";
-
-        return extractTeamsFromList(executeQuery(select)).get(0);
-    }
-
-    static ArrayList<Player> getPlayersWithTeamName(String name) {
-
-        name = "(\"" + name + "\")" + ";";
-
-        String select = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = " +
-                "Team.ID WHERE Team.Name = " + name;
-
-        return extractPlayersFromList(executeQuery(select));
-    }
-
-    static ArrayList<Team> getTeamList() {
-
-        String select = "SELECT * FROM Team;";
-
-        return extractTeamsFromList(executeQuery(select));
-    }
-
-    private static ArrayList<Player> extractPlayersFromList(ArrayList<String[]> players) {
-
-        ArrayList<Player> playerList = new ArrayList<>();
-        for (String[] player : players) {
-
-            playerList.add(new Player(Integer.parseInt(player[0]), player[1], player[2]));
-        }
-        return playerList;
-    }
-
-    private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {
-
-        ArrayList<Team> teamList = new ArrayList<>();
-        for (String[] team : teams) {
-
-            teamList.add(new Team(Integer.parseInt(team[0]), team[1]));
-        }
-        return teamList;
-    }
-
-    private static ArrayList<String[]> executeQuery(String query) {
-
-        ArrayList<String[]> table = new ArrayList<>();
-
-        try {
-            Connection conn = openConnection();
-
-            System.out.println("Sending query " + query);
-
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rset = pstmt.executeQuery();
-            ResultSetMetaData rsetMeta = rset.getMetaData();
-            int columnCount = rsetMeta.getColumnCount();
-
-            while (rset.next()) {
-
-                String[] row = new String[columnCount];
-
-                for (int i = 0; i < columnCount; i++) {
-
-                    row[i] = rset.getString(i+1);
-                }
-
-                table.add(row);
-            }
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return table;
-    }
-
-    /***** DATA INSERTION METHODS *****/
-
-    //TODO: move class specific creation methods to corresponding classes - createMatch into Match for example.
-
     // TODO: test to make sure that database structure satisfies requirements
     static void createTables() {
 
@@ -244,8 +150,42 @@ public class DatabaseManager {
         }
     }
 
+    static ArrayList<String[]> executeQuery(String query) {
+
+        ArrayList<String[]> table = new ArrayList<>();
+
+        try {
+            Connection conn = openConnection();
+
+            System.out.println("Sending query " + query);
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            ResultSetMetaData rsetMeta = rset.getMetaData();
+            int columnCount = rsetMeta.getColumnCount();
+
+            while (rset.next()) {
+
+                String[] row = new String[columnCount];
+
+                for (int i = 0; i < columnCount; i++) {
+
+                    row[i] = rset.getString(i+1);
+                }
+
+                table.add(row);
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return table;
+    }
+
     // use this to send data to the server: update = SQL command
-    private static void insertData(String update) {
+    static void insertData(String update) {
 
         try {
 
@@ -261,70 +201,5 @@ public class DatabaseManager {
 
             e.printStackTrace();
         }
-    }
-
-    // TODO: finish generateFixtures
-    static void generateFixtures() {
-
-        // Every team plays 2 matches against every other team - there should be n(n-1) matches (if my maths is ok)
-
-        // first obtain all teams
-        for (Team team_outer : getTeamList()) {
-
-            // iterate over every team, once per team - ignore when passing over self
-            for (Team team_inner : getTeamList()) {
-
-                // create a match every time
-                if (team_inner.getTeamID() != team_outer.getTeamID()) {
-
-                    createMatch(team_inner.getTeamID(), team_outer.getTeamID());
-                }
-
-                // fill in information about who plays later -> see page 4 spec
-                // then create the 5 sets for each game - should thus be 10n(n-1) sets total
-                //then create the 3 games per set - so 30n(n-1) games total (wowsers)
-            }
-        }
-    }
-
-    private static void createMatch(int HTID, int ATID) {
-
-        // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
-        // Players select after game is played? I dont actually know
-        // Winner is added after game is played (naturally)
-        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (";
-
-        insert += HTID + ", " + ATID  + ")";
-
-        insertData(insert);
-
-        // createMatchSets
-    }
-
-    static void addPlayerToDatabase(String player_name, String team_name) {
-
-        String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
-
-        ArrayList<String[]> data = executeQuery(getID);
-
-        String ID = data.get(0)[0];
-
-        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
-
-        insert += "\"" + player_name + "\"";
-        insert += ", " + ID + ")";
-
-        insertData(insert);
-    }
-
-    static void addTeamToDatabase(String team_name) {
-
-        team_name = "(\"" + team_name + "\")" + ";";
-
-        String insert = "INSERT INTO Team (Name) VALUES ";
-
-        insert += team_name;
-
-        insertData(insert);
     }
 }

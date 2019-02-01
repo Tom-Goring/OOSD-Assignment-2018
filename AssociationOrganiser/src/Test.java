@@ -5,17 +5,17 @@ public class Test {
 
         DatabaseManager.createTables();
 
-        DatabaseManager.addTeamToDatabase("UWE");
-        DatabaseManager.addTeamToDatabase("Page");
-        DatabaseManager.addTeamToDatabase("Filton");
+        Team.addTeamToDatabase("UWE");
+        Team.addTeamToDatabase("Page");
+        Team.addTeamToDatabase("Filton");
 
-        DatabaseManager.addPlayerToDatabase("Tom", "UWE");
-        DatabaseManager.addPlayerToDatabase("Louis", "UWE");
-        DatabaseManager.addPlayerToDatabase("Tim", "UWE");
-        DatabaseManager.addPlayerToDatabase("Bob", "Page");
-        DatabaseManager.addPlayerToDatabase("Jun", "Page");
+        Player.addPlayerToDatabase("Tom", "UWE");
+        Player.addPlayerToDatabase("Louis", "UWE");
+        Player.addPlayerToDatabase("Tim", "UWE");
+        Player.addPlayerToDatabase("Bob", "Page");
+        Player.addPlayerToDatabase("Jun", "Page");
 
-        DatabaseManager.generateFixtures();
+        Fixtures.generateFixtures();
 
         System.out.println("Pause here.");
     }

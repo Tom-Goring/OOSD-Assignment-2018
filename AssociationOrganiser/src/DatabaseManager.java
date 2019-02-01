@@ -108,6 +108,8 @@ public class DatabaseManager {
 
     /***** DATA INSERTION METHODS *****/
 
+    //TODO: move class specific creation methods to corresponding classes - createMatch into Match for example.
+
     // TODO: test to make sure that database structure satisfies requirements
     static void createTables() {
 
@@ -141,12 +143,11 @@ public class DatabaseManager {
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "HomeTeamID int NOT NULL,\n" +
                 "AwayTeamID int NOT NULL,\n" +
-                "HomePlayer1ID int NOT NULL,\n" +
-                "HomePlayer2ID int NOT NULL,\n" +
-                "AwayPlayer1ID int NOT NULL,\n" +
-                "AwayPlayer2ID int NOT NULL,\n" +
+                "HomePlayer1ID int,\n" +
+                "HomePlayer2ID int,\n" +
+                "AwayPlayer1ID int,\n" +
+                "AwayPlayer2ID int,\n" +
                 "WinnerID int,\n" +
-                "Played bool,\n" +
                 "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -158,7 +159,6 @@ public class DatabaseManager {
                 "PlayerIDForAwayTeam int NOT NULL,\n" +
                 "FinalScore int NOT NULL,\n" +
                 "WinnerID int NOT NULL,\n" +
-                "Played bool NOT NULL,\n" +
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -171,7 +171,6 @@ public class DatabaseManager {
                 "AwayTeamScore int NOT NULL,\n" +
                 "WinnerID int NOT NULL,\n" +
                 "MatchID int NOT NULL,\n" +
-                "Played bool NOT NULL,\n" +
                 "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
                 ");");
 
@@ -265,9 +264,9 @@ public class DatabaseManager {
     }
 
     // TODO: finish generateFixtures
-    public void generateFixtures() {
+    static void generateFixtures() {
 
-        // Every team plays 2 matches against every other team - there should be 2n(n-1) games (if my maths is ok)
+        // Every team plays 2 matches against every other team - there should be n(n-1) matches (if my maths is ok)
 
         // first obtain all teams
         for (Team team_outer : getTeamList()) {
@@ -276,7 +275,10 @@ public class DatabaseManager {
             for (Team team_inner : getTeamList()) {
 
                 // create a match every time
+                if (team_inner.getTeamID() != team_outer.getTeamID()) {
 
+                    createMatch(team_inner.getTeamID(), team_outer.getTeamID());
+                }
 
                 // fill in information about who plays later -> see page 4 spec
                 // then create the 5 sets for each game - should thus be 10n(n-1) sets total
@@ -285,17 +287,18 @@ public class DatabaseManager {
         }
     }
 
-    static void createMatch(int HTID, int ATID, int HP1ID, int HP2ID, int AP1ID, int AP2ID) {
+    private static void createMatch(int HTID, int ATID) {
 
         // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
-        // All 4 players -> HP1 HP2 AP1 AP2
+        // Players select after game is played? I dont actually know
         // Winner is added after game is played (naturally)
-        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID, HomePlayer1ID, HomePlayer2ID, AwayPlayer1ID, " +
-                        "AwayPlayer2ID) VALUES (";
+        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (";
 
-        insert += HTID + ", " + ATID + ", " + HP1ID + ", " + HP2ID + ", " + AP1ID + ", " + AP2ID + ")";
+        insert += HTID + ", " + ATID  + ")";
 
         insertData(insert);
+
+        // createMatchSets
     }
 
     static void addPlayerToDatabase(String player_name, String team_name) {

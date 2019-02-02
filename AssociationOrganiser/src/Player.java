@@ -82,17 +82,10 @@ public class Player {
 
     static void addPlayerToDatabase(String player_name, String team_name) {
 
-        // TODO: make this a query with a subquery instead of 2 consecutive queries
-        String getID = "select * from Team where Name = " + "\"" + team_name + "\"";
-
-        ArrayList<String[]> data = DatabaseManager.executeQuery(getID);
-
-        String ID = data.get(0)[0];
-
         String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
 
         insert += "\"" + player_name + "\"";
-        insert += ", " + ID + ")";
+        insert += "," + " (" + "SELECT ID FROM Team WHERE Name = " + "\"" + team_name + "\"" + ")" + ")" + ";";
 
         DatabaseManager.insertData(insert);
     }

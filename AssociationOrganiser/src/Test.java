@@ -7,11 +7,9 @@ public class Test {
 
         Team.addTeamToDatabase("UWE");
         Team.addTeamToDatabase("Page");
-        Team.addTeamToDatabase("Filton");
 
         Player.addPlayerToDatabase("Tom", "UWE");
         Player.addPlayerToDatabase("Louis", "UWE");
-        Player.addPlayerToDatabase("Tim", "UWE");
         Player.addPlayerToDatabase("Bob", "Page");
         Player.addPlayerToDatabase("Jun", "Page");
 

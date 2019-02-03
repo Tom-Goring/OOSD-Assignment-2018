@@ -3,11 +3,7 @@ import java.util.ArrayList;
 // TODO: add Game class
 public class Game {
 
-    // Home Player
-    // Away Player
-    // Home Score
-    // Away Score
-    // Winner?
+    // TODO: add instance and class attributes and methods to Game
 
     static void generateGames() {
 

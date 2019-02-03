@@ -76,7 +76,7 @@ public class DatabaseManager {
                 "HomeTeamScore int NOT NULL,\n" +
                 "AwayTeamScore int NOT NULL,\n" +
                 "WinnerID int NOT NULL,\n" +
-                "MatchID int NOT NULL,\n" +
+                "SetID int NOT NULL,\n" +
                 "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
                 ");");
 

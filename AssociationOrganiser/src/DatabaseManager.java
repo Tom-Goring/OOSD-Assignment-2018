@@ -61,6 +61,7 @@ public class DatabaseManager {
         // create set table
         queryList.add("CREATE TABLE `Set` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "SetNumber int NOT NULL,\n" +
                 "MatchID int NOT NULL,\n" +
                 "HomePlayerID int,\n" +
                 "AwayPlayerID int,\n" +
@@ -74,6 +75,7 @@ public class DatabaseManager {
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "GameNumber int NOT NULL,\n" +
                 "HomeTeamScore int,\n" +
                 "AwayTeamScore int,\n" +
                 "WinnerID int,\n" +

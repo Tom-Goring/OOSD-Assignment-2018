@@ -15,7 +15,7 @@ public class Fixtures {
                 // create a match every time
                 if (team_inner.getTeamID() != team_outer.getTeamID()) {
 
-                    Match.createMatch(team_inner.getTeamID(), team_outer.getTeamID());
+                    Match.createMatch(team_inner.getTeamName(), team_outer.getTeamName());
                 }
 
                 // fill in information about who plays later -> see page 4 spec

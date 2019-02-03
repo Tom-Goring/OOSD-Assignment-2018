@@ -34,7 +34,7 @@ public class Match {
 
         DatabaseManager.insertData(insert);
 
-        // createMatchSets
+        Set.generateSetsForMatch(HomeTeamName, AwayTeamName);
     }
 
     public int getHomeTeamID() {

@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-
-// TODO: add Match class
 public class Match {
+
+    // TODO: add instance and class variables + methods for Match class
 
     static void generateMatches() {
 

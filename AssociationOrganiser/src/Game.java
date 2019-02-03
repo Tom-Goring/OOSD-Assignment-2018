@@ -5,6 +5,8 @@ public class Game {
 
     // TODO: add instance and class attributes and methods to Game
 
+    /**********************************************STATIC METHODS******************************************************/
+
     static void generateGames() {
 
         String getSets = "SELECT ID FROM `Set`";

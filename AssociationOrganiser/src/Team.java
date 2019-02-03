@@ -17,26 +17,19 @@ public class Team {
         return teamID;
     }
 
-    public void setTeamID(int teamID) {
-        this.teamID = teamID;
-    }
-
     public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    @Override
+    public String toString() {
+        return "Team{" +
+                "teamID=" + teamID +
+                ", teamName='" + teamName + '\'' +
+                '}';
     }
 
-    public ArrayList<Player> getPlayerList() {
-        return playerList;
-    }
-
-    public void updatePlayerList() {
-
-        this.playerList = Player.getPlayersWithTeamName(this.teamName);
-    }
+    /**********************************************STATIC METHODS******************************************************/
 
     private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {
 
@@ -73,11 +66,5 @@ public class Team {
         DatabaseManager.insertData(insert);
     }
 
-    @Override
-    public String toString() {
-        return "Team{" +
-                "teamID=" + teamID +
-                ", teamName='" + teamName + '\'' +
-                '}';
-    }
+
 }

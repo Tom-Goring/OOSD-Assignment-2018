@@ -2,6 +2,8 @@ public class Match {
 
     // TODO: add instance and class variables + methods for Match class
 
+    /**********************************************STATIC METHODS******************************************************/
+
     static void generateMatches() {
 
         for (Team team_outer : Team.getTeamList()) {

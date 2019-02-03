@@ -17,16 +17,17 @@ public class Game {
 
         for (String[] set : sets) {
 
-            for (int i = 0; i < 3; i++) {
+            // TODO: consider making gameNumber a class variable
+            for (int gameNumber = 0; gameNumber < 3; gameNumber++) {
 
-                createGame(Integer.parseInt(set[0]));
+                createGame(Integer.parseInt(set[0]), gameNumber+1);
             }
         }
     }
 
-    private static void createGame(int parentSet) {
+    private static void createGame(int parentSet, int gameNumber) {
 
-        String insert = "INSERT INTO Game (SetID) VALUES (" + parentSet + ")";
+        String insert = "INSERT INTO Game (SetID, GameNumber) VALUES (" + parentSet + ", " + gameNumber + ")";
 
         DatabaseManager.insertData(insert);
     }

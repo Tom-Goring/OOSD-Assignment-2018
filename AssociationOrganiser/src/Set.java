@@ -37,17 +37,17 @@ public class Set {
 
         for (String[] match : matches) {
 
-            for (int i = 0; i < 5; i++) {
+            for (int setNumber = 0; setNumber < 5; setNumber++) {
 
-                createSet(Integer.parseInt(match[0]));
+                createSet(Integer.parseInt(match[0]), setNumber+1);
             }
         }
     }
 
-    private static void createSet(int parentMatch) {
+    private static void createSet(int parentMatch, int setNumber) {
 
         //TODO: replace HomeTeamName and AwayTeamName with references to TeamID's
-        String insert = "INSERT INTO `Set` (MatchID) VALUES (" + parentMatch + ")";
+        String insert = "INSERT INTO `Set` (MatchID, SetNumber) VALUES (" + parentMatch + ", " + setNumber + ")";
 
         DatabaseManager.insertData(insert);
     }

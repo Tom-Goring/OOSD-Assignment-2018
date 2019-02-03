@@ -34,7 +34,7 @@ public class Set {
 
     static void generateSet(String HomeTeamName, String AwayTeamName) {
 
-        // now replace HomeTeamName and AwayTeamName with references to TeamID's
+        //TODO: replace HomeTeamName and AwayTeamName with references to TeamID's
         String insert = "INSERT INTO `Set` (MatchID) VALUES (";
         insert += "(SELECT ID FROM `Match` WHERE (" +
                 "HomeTeamName = \"UWE\"" +

@@ -78,7 +78,7 @@ public class DatabaseManager {
                 "AwayTeamScore int NOT NULL,\n" +
                 "WinnerID int NOT NULL,\n" +
                 "SetID int NOT NULL,\n" +
-                "CONSTRAINT Game_pk PRIMARY KEY (GameID)\n" +
+                "CONSTRAINT Game_pk PRIMARY KEY (ID)\n" +
                 ");");
 
         // Set up foreign keys
@@ -86,8 +86,8 @@ public class DatabaseManager {
         //queryList.clear();
 
         // Game Table FKs
-        queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (MatchID) " +
-                "REFERENCES `Match` (ID);");
+        queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (SetID) " +
+                "REFERENCES `Set` (ID);");
 
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Winner_Team FOREIGN KEY Winner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");

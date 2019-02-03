@@ -17,10 +17,6 @@ public class Fixtures {
 
                     Match.createMatch(team_inner.getTeamName(), team_outer.getTeamName());
                 }
-
-                // fill in information about who plays later -> see page 4 spec
-                // then create the 5 sets for each game - should thus be 10n(n-1) sets total
-                //then create the 3 games per set - so 30n(n-1) games total (wowsers)
             }
         }
     }

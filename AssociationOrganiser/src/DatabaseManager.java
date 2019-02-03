@@ -61,14 +61,14 @@ public class DatabaseManager {
         queryList.add("CREATE TABLE `Set` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "MatchID int NOT NULL,\n" +
-                "PlayerIDForHomeTeam int NOT NULL,\n" +
-                "PlayerIDForAwayTeam int NOT NULL,\n" +
-                "FinalScore int NOT NULL,\n" +
-                "WinnerID int NOT NULL,\n" +
+                "HomePlayerID int,\n" +
+                "AwayPlayerID int,\n" +
+                "FinalScore int,\n" +
+                "WinnerID int,\n" +
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
                 ");");
 
-        // TODO: consider moving game/set/match information into a seperate 1-1 table containing information.
+        // TODO: consider moving game/set/match information into a separate 1-1 table containing information.
 
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
@@ -121,10 +121,10 @@ public class DatabaseManager {
 
         // Set Table FKs
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (PlayerIDForHomeTeam) " +
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDHT FOREIGN KEY PIDHT (HomePlayerID) " +
                 "REFERENCES Player (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDAT FOREIGN KEY PIDAT (PlayerIDForAwayTeam) " +
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT PIDAT FOREIGN KEY PIDAT (AwayPlayerID) " +
                 "REFERENCES Player (ID);");
 
         queryList.add("ALTER TABLE `Set` ADD CONSTRAINT WinnerID_TeamID FOREIGN KEY WinnerID_TeamID (WinnerID) " +
@@ -148,6 +148,11 @@ public class DatabaseManager {
 
             e.printStackTrace();
         }
+    }
+
+    static String surroundWithQuotes(String string) {
+
+        return "\"" + string + "\"";
     }
 
     static ArrayList<String[]> executeQuery(String query) {

@@ -15,6 +15,7 @@ public class Set {
     private int AwayScore;
     private ArrayList<Game> gameList;
 
+    // TODO: consider pulling information from the DB using fewer params?
     public Set(int homePlayer1ID, String homePlayer1Name, int homePlayer2ID, String homePlayer2Name, int awayPlayer1ID, String awayPlayer1Name, int awayPlayer2ID, String awayPlayer2Name) {
         HomePlayer1ID = homePlayer1ID;
         HomePlayer1Name = homePlayer1Name;
@@ -27,30 +28,40 @@ public class Set {
         this.gameList = new ArrayList<>();
     }
 
-    static void generateSetsForMatch(String HomeTeamName, String AwayTeamName) {
+    static void generateSets() {
 
-        for (int i = 0; i < 5; i++) {
+        // get all matches
+        String getMatches = "SELECT ID FROM `Match`";
 
-            generateSet(HomeTeamName, AwayTeamName);
+        ArrayList<String[]> matches = DatabaseManager.executeQuery(getMatches);
+
+        for (String[] match : matches) {
+
+            for (int i = 0; i < 5; i++) {
+
+                createSet(Integer.parseInt(match[0]));
+            }
         }
     }
 
-    private static void generateSet(String HomeTeamName, String AwayTeamName) {
+    private static void createSet(int parentMatch) {
 
         //TODO: replace HomeTeamName and AwayTeamName with references to TeamID's
-        String insert = "INSERT INTO `Set` (MatchID) VALUES (";
-        insert += "(SELECT ID FROM `Match` WHERE (" +
-                "HomeTeamName = " + DatabaseManager.surroundWithQuotes(HomeTeamName) +
-                " AND " +
-                "AwayTeamName = "+ DatabaseManager.surroundWithQuotes(AwayTeamName) + ")));";
+        String insert = "INSERT INTO `Set` (MatchID) VALUES (" + parentMatch + ")";
 
         DatabaseManager.insertData(insert);
     }
 
     public static void updateMatchPlayers(String HomePlayer1Name, String HomePlayer2Name, String AwayPlayer1Name, String AwayPlayer2Name) {
 
-        // TODO: add updateMatchPlayers (and also an updateMatchScores?)
+        // TODO: add updateMatchPlayers (and also an updateMatchScores?) also think about passing in a Match class here
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // TODO: method to retrieve all the data about a set?
 
     public int getHomePlayer1ID() {
         return HomePlayer1ID;

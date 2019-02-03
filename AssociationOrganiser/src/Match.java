@@ -20,7 +20,23 @@ public class Match {
         this.AwayTeamName = AwayTeamName;
     }
 
-    static void createMatch(String HomeTeamName, String AwayTeamName) {
+    static void generateMatches() {
+
+        for (Team team_outer : Team.getTeamList()) {
+
+            // iterate over every team, once per team - ignore when passing over self
+            for (Team team_inner : Team.getTeamList()) {
+
+                // create a match every time
+                if (team_inner.getTeamID() != team_outer.getTeamID()) {
+
+                    Match.createMatch(team_inner.getTeamName(), team_outer.getTeamName());
+                }
+            }
+        }
+    }
+
+    private static void createMatch(String HomeTeamName, String AwayTeamName) {
 
         // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
         // Players select after game is played? I dont actually know
@@ -33,9 +49,9 @@ public class Match {
         insert += getHTID + "," + getATID + ");";
 
         DatabaseManager.insertData(insert);
-
-        Set.generateSetsForMatch(HomeTeamName, AwayTeamName);
     }
+
+
 
     public int getHomeTeamID() {
         return HomeTeamID;

@@ -20,14 +20,17 @@ public class Match {
         this.AwayTeamName = AwayTeamName;
     }
 
-    static void createMatch(int HTID, int ATID) {
+    static void createMatch(String HomeTeamName, String AwayTeamName) {
 
         // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
         // Players select after game is played? I dont actually know
         // Winner is added after game is played (naturally)
         String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (";
 
-        insert += HTID + ", " + ATID  + ")";
+        String getHTID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(HomeTeamName) + ")";
+        String getATID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(AwayTeamName) + ")";
+
+        insert += getHTID + "," + getATID + ");";
 
         DatabaseManager.insertData(insert);
 

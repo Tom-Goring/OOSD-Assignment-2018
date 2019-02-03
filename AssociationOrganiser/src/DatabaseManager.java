@@ -74,9 +74,9 @@ public class DatabaseManager {
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "HomeTeamScore int NOT NULL,\n" +
-                "AwayTeamScore int NOT NULL,\n" +
-                "WinnerID int NOT NULL,\n" +
+                "HomeTeamScore int,\n" +
+                "AwayTeamScore int,\n" +
+                "WinnerID int,\n" +
                 "SetID int NOT NULL,\n" +
                 "CONSTRAINT Game_pk PRIMARY KEY (ID)\n" +
                 ");");

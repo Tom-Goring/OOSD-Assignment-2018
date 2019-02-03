@@ -72,7 +72,7 @@ public class DatabaseManager {
 
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
-                "GameID int NOT NULL AUTO_INCREMENT,\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "HomeTeamScore int NOT NULL,\n" +
                 "AwayTeamScore int NOT NULL,\n" +
                 "WinnerID int NOT NULL,\n" +

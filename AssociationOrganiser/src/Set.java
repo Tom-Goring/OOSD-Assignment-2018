@@ -29,19 +29,27 @@ public class Set {
 
     static void generateSetsForMatch(String HomeTeamName, String AwayTeamName) {
 
+        for (int i = 0; i < 5; i++) {
 
+            generateSet(HomeTeamName, AwayTeamName);
+        }
     }
 
-    static void generateSet(String HomeTeamName, String AwayTeamName) {
+    private static void generateSet(String HomeTeamName, String AwayTeamName) {
 
         //TODO: replace HomeTeamName and AwayTeamName with references to TeamID's
         String insert = "INSERT INTO `Set` (MatchID) VALUES (";
         insert += "(SELECT ID FROM `Match` WHERE (" +
-                "HomeTeamName = \"UWE\"" +
+                "HomeTeamName = " + DatabaseManager.surroundWithQuotes(HomeTeamName) +
                 " AND " +
-                "AwayTeamName = \"Page\")));";
+                "AwayTeamName = "+ DatabaseManager.surroundWithQuotes(AwayTeamName) + ")));";
 
         DatabaseManager.insertData(insert);
+    }
+
+    public static void updateMatchPlayers(String HomePlayer1Name, String HomePlayer2Name, String AwayPlayer1Name, String AwayPlayer2Name) {
+
+        // TODO: add updateMatchPlayers (and also an updateMatchScores?)
     }
 
     public int getHomePlayer1ID() {

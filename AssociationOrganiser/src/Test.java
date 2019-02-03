@@ -13,8 +13,7 @@ public class Test {
         Player.addPlayerToDatabase("Bob", "Page");
         Player.addPlayerToDatabase("Jun", "Page");
 
-        Fixtures.generateFixtures();
-
+        Set.generateSet("UWE", "Page");
         System.out.println("Pause here.");
     }
 }

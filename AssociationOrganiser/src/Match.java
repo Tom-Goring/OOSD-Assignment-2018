@@ -18,12 +18,11 @@ public class Match {
 
     private String winningTeam;
 
-    public Match(String homeTeamName, String awayTeamName) {
+    Match(String homeTeamName, String awayTeamName) {
 
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
 
-        // TODO: consider adding constructor code that pulls relevant match from database
         retrieveMatchPlayers();
     }
 
@@ -37,7 +36,7 @@ public class Match {
         this.awayPlayer2 = awayPlayer2;
     }
 
-    public void retrieveMatchPlayers() {
+    private void retrieveMatchPlayers() {
 
         ArrayList<String[]> data = new ArrayList<>();
 
@@ -66,50 +65,34 @@ public class Match {
         this.awayPlayer2 = data.get(0)[3];
     }
 
-    // TODO: seperate out setters and sending player to DB
-    public void sendHomePlayer1ToDatabase(String playerName) {
+    private String generateSendPlayerQuery(String playerName) {
 
         String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
         String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
         String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
         String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET HomePlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
 
-        DatabaseManager.insertData(update);
+        return "UPDATE `Match` SET HomePlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
     }
 
+    void sendHomePlayer1ToDatabase(String playerName) {
 
-    public void sendHomePlayer2ToDatabase(String playerName) {
-
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET HomePlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-
-        DatabaseManager.insertData(update);
+        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
     }
 
-    public void sendAwayPlayer1ToDatabase(String playerName) {
+    void sendHomePlayer2ToDatabase(String playerName) {
 
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET AwayPlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-
-        DatabaseManager.insertData(update);
+        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
     }
 
-    public void sendAwayPlayer2ToDatabase(String playerName) {
+    void sendAwayPlayer1ToDatabase(String playerName) {
 
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET AwayPlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
+    }
 
-        DatabaseManager.insertData(update);
+    void sendAwayPlayer2ToDatabase(String playerName) {
+
+        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
     }
 
     /**********************************************STATIC METHODS******************************************************/
@@ -143,13 +126,6 @@ public class Match {
         insert += getHTID + "," + getATID + ");";
 
         DatabaseManager.insertData(insert);
-    }
-
-    static Match getMatchWithTeams(String homeTeamName, String awayTeamName) {
-
-        // TODO: add getMatchWithTeams()
-
-        return new Match(homeTeamName, awayTeamName);
     }
 
     /*********************************************GETTERS + SETTERS****************************************************/

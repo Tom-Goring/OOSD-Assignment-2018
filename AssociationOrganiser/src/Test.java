@@ -21,11 +21,11 @@ public class Test {
         Match match = new Match("UWE" , "Page");
 
         match.setHomePlayer1("Tom");
-        match.setHomePlayer1("Louis");
+        match.setHomePlayer2("Louis");
         match.setAwayPlayer1("Bob");
         match.setAwayPlayer2("Jun");
 
-        match.updateMatchPlayers();
+        match.sendMatchPlayersToDB();
 
         System.out.println("Pause here.");
     }

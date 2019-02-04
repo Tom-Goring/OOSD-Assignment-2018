@@ -18,19 +18,6 @@ public class Match {
 
     String WinningTeam;
 
-    public Match(String homeTeamName, String awayTeamName,
-                 String homePlayer1, String homePlayer2,
-                 String awayPlayer1, String awayPlayer2) {
-
-        HomeTeamName = homeTeamName;
-        AwayTeamName = awayTeamName;
-        HomePlayer1 = homePlayer1;
-        HomePlayer2 = homePlayer2;
-        AwayPlayer1 = awayPlayer1;
-        AwayPlayer2 = awayPlayer2;
-    }
-
-    // Placeholder
     public Match(String homeTeamName, String awayTeamName) {
 
         this.HomeTeamName = homeTeamName;
@@ -39,18 +26,38 @@ public class Match {
         // TODO: consider adding constructor code that pulls relevant match from database
     }
 
+    public void retrieveMatchPlayers() {
+
+        String select = "SELECT " +
+                "HP1.Name AS HPN1, \n" +
+                "HP2.Name AS HPN2, \n" +
+                "AP1.Name AS APN1, \n" +
+                "AP2.Name AS APN2 \n" +
+                //"Match.WinnerID, \n" +
+                //"Match.Played \n" +
+                "FROM \n" +
+                "`Match` as m \n" +
+                "INNER JOIN Player AS HP1 ON m.HomePlayer1ID = HP1.ID \n" +
+                "INNER JOIN Player AS HP2 ON m.HomePlayer2ID = HP2.ID \n" +
+                "INNER JOIN Player AS AP1 ON m.AwayPlayer1ID = AP1.ID \n" +
+                "INNER JOIN Player AS AP2 ON m.AwayPlayer1ID = AP2.ID ;";
+
+        ArrayList<String[]> data = DatabaseManager.executeQuery(select);
+    }
+
     // TODO: finish updateMatchPlayers - add proper WHERE statement
-    public void updateMatchPlayers() {
+    public void sendMatchPlayersToDB() {
 
         String WHERE = "WHERE (HomeTeamName = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + " AND "
                 + "AwayTeamName = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName);
 
         ArrayList<String> commandList = new ArrayList<>();
 
-        commandList.add("UPDATE `Match` SET HomePlayer1ID = " + this.HomePlayer1 + ";");
-        commandList.add("UPDATE `Match` SET HomePlayer2ID = " + this.HomePlayer2 + ";");
-        commandList.add("UPDATE `Match` SET AwayPlayer1ID = " + this.AwayPlayer1 + ";");
-        commandList.add("UPDATE `Match` SET AwayPlayer2ID = " + this.AwayPlayer2 + ";");
+        // TODO: replace these with subqueried ID
+        commandList.add("UPDATE `Match` SET HomePlayer1ID = " + "(SELECT ID FROM Player WHERE Name = " + DatabaseManager.surroundWithQuotes(this.HomePlayer1));
+        commandList.add("UPDATE `Match` SET HomePlayer1ID = " + "(SELECT ID FROM Player WHERE Name = " + DatabaseManager.surroundWithQuotes(this.HomePlayer1));
+        commandList.add("UPDATE `Match` SET AwayPlayer1ID = " + DatabaseManager.surroundWithQuotes(this.AwayPlayer1) + ";");
+        commandList.add("UPDATE `Match` SET AwayPlayer2ID = " + DatabaseManager.surroundWithQuotes(this.AwayPlayer2) + ";");
 
         for (String command : commandList) {
 

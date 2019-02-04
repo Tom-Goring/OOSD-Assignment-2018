@@ -13,10 +13,10 @@ public class Match {
     private String awayPlayer1;
     private String awayPlayer2;
 
-    int homeTeamSetsWon;
-    int awayTeamSetsWon;
+    private int homeTeamSetsWon;
+    private int awayTeamSetsWon;
 
-    String winningTeam;
+    private String winningTeam;
 
     public Match(String homeTeamName, String awayTeamName) {
 

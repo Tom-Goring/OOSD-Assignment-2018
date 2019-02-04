@@ -19,25 +19,27 @@ public class AdminPage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //new pane to work with
-        StackPane pane = new StackPane();
-
         //create new flowpane to work with
         FlowPane flowPane = new FlowPane();
 
         //create new button, add to pane's list of children
-        flowPane.getChildren().add(new Button("OKAY"));
-        flowPane.getChildren().add(new Button("OKAY2"));
-        flowPane.getChildren().add(new Button("OKAY3"));
+        flowPane.getChildren().add(new Button("Button"));
+        flowPane.getChildren().add(new Button("Button 2"));
+        flowPane.getChildren().add(new Button("Button 3"));
 
 
-
-
+        FlowPane flowPane2 = new FlowPane();
+        flowPane2.getChildren().add(flowPane);
+        flowPane2.getChildren().add(new Button("fp2Button"));
+        flowPane2.getChildren().add(new Button("fp2Button2"));
+        flowPane2.getChildren().add(new Button("fp2Button3"));
 
 
         //make new scene, with the pane
-        Scene scene = new Scene(flowPane, 350, 200);
-        flowPane.setHgap(10);
+        Scene scene = new Scene(flowPane2, 350, 200);
+
+
+        flowPane.setHgap(5);
         primaryStage.setTitle("Flowplanes");
         primaryStage.setScene(scene);
         primaryStage.show();

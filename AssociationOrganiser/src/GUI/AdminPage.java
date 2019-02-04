@@ -12,5 +12,23 @@ import javafx.stage.Stage;
 
 
 // TODO: make AdminPage GUI page
-public class AdminPage {
+public class AdminPage extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        Scene scene = new Scene(new Button("TESTING BUTTON"), 200, 200);
+        primaryStage.setTitle("TESTING STAGE");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+    }
+
+
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+
+
+
 }

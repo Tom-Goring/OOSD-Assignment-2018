@@ -53,7 +53,6 @@ public class Match {
 
         ArrayList<String> commandList = new ArrayList<>();
 
-        // TODO: replace these with subqueried ID
         commandList.add("UPDATE `Match` SET HomePlayer1ID = " + "(SELECT ID FROM Player WHERE Name = " + DatabaseManager.surroundWithQuotes(this.HomePlayer1));
         commandList.add("UPDATE `Match` SET HomePlayer1ID = " + "(SELECT ID FROM Player WHERE Name = " + DatabaseManager.surroundWithQuotes(this.HomePlayer2));
         commandList.add("UPDATE `Match` SET AwayPlayer1ID = " + "(SELECT ID FROM Player WHERE Name = " + DatabaseManager.surroundWithQuotes(this.AwayPlayer1));

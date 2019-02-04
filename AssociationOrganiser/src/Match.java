@@ -4,35 +4,45 @@ public class Match {
 
     // TODO: add instance and class variables + methods for Match class
 
-    private String HomeTeamName;
-    private String AwayTeamName;
+    private String homeTeamName;
+    private String awayTeamName;
 
     // TODO: consider making these actual player classes
-    private String HomePlayer1;
-    private String HomePlayer2;
-    private String AwayPlayer1;
-    private String AwayPlayer2;
+    private String homePlayer1;
+    private String homePlayer2;
+    private String awayPlayer1;
+    private String awayPlayer2;
 
-    int HomeTeamSetsWon;
-    int AwayTeamSetsWon;
+    int homeTeamSetsWon;
+    int awayTeamSetsWon;
 
-    String WinningTeam;
+    String winningTeam;
 
     public Match(String homeTeamName, String awayTeamName) {
 
-        this.HomeTeamName = homeTeamName;
-        this.AwayTeamName = awayTeamName;
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
 
         // TODO: consider adding constructor code that pulls relevant match from database
         retrieveMatchPlayers();
+    }
+
+    public Match(String homeTeamName, String awayTeamName, String homePlayer1, String homePlayer2, String awayPlayer1, String awayPlayer2) {
+
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
+        this.homePlayer1 = homePlayer1;
+        this.homePlayer2 = homePlayer2;
+        this.awayPlayer1 = awayPlayer1;
+        this.awayPlayer2 = awayPlayer2;
     }
 
     public void retrieveMatchPlayers() {
 
         ArrayList<String[]> data = new ArrayList<>();
 
-        String getHID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + ")";
-        String getAID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName) + ")";
+        String getHID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + ")";
+        String getAID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + ")";
         String getMatchID = "SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHID +") AND AwayTeamID = ("+ getAID + "));";
 
         String select = "SELECT \n" +
@@ -50,10 +60,56 @@ public class Match {
         data = DatabaseManager.executeQuery(select);
 
         // TODO: make these turn into names :)
-        this.HomePlayer1 = data.get(0)[0];
-        this.HomePlayer2 = data.get(0)[1];
-        this.AwayPlayer1 = data.get(0)[2];
-        this.AwayPlayer2 = data.get(0)[3];
+        this.homePlayer1 = data.get(0)[0];
+        this.homePlayer2 = data.get(0)[1];
+        this.awayPlayer1 = data.get(0)[2];
+        this.awayPlayer2 = data.get(0)[3];
+    }
+
+    // TODO: seperate out setters and sending player to DB
+    public void sendHomePlayer1ToDatabase(String playerName) {
+
+        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
+        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
+        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
+        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
+        String update = "UPDATE `Match` SET HomePlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+
+        DatabaseManager.insertData(update);
+    }
+
+
+    public void sendHomePlayer2ToDatabase(String playerName) {
+
+        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
+        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
+        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
+        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
+        String update = "UPDATE `Match` SET HomePlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+
+        DatabaseManager.insertData(update);
+    }
+
+    public void sendAwayPlayer1ToDatabase(String playerName) {
+
+        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
+        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
+        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
+        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
+        String update = "UPDATE `Match` SET AwayPlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+
+        DatabaseManager.insertData(update);
+    }
+
+    public void sendAwayPlayer2ToDatabase(String playerName) {
+
+        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
+        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
+        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
+        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
+        String update = "UPDATE `Match` SET AwayPlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+
+        DatabaseManager.insertData(update);
     }
 
     /**********************************************STATIC METHODS******************************************************/
@@ -96,51 +152,77 @@ public class Match {
         return new Match(homeTeamName, awayTeamName);
     }
 
-    /**********************************************GETTERS + SETTERS*******************************************************/
+    /*********************************************GETTERS + SETTERS****************************************************/
 
-    // TODO: seperate out setters and sending player to DB
-    public void setHomePlayer1(String playerName) {
-
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET HomePlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-
-        DatabaseManager.insertData(update);
+    public String getHomeTeamName() {
+        return homeTeamName;
     }
 
-
-    public void setHomePlayer2(String playerName) {
-
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET HomePlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-
-        DatabaseManager.insertData(update);
+    public void setHomeTeamName(String homeTeamName) {
+        this.homeTeamName = homeTeamName;
     }
 
-    public void setAwayPlayer1(String playerName) {
-
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET AwayPlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-
-        DatabaseManager.insertData(update);
+    public String getAwayTeamName() {
+        return awayTeamName;
     }
 
-    public void setAwayPlayer2(String playerName) {
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
+    }
 
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.HomeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.AwayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-        String update = "UPDATE `Match` SET AwayPlayer2ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
+    public String getHomePlayer1() {
+        return homePlayer1;
+    }
 
-        DatabaseManager.insertData(update);
+    public void setHomePlayer1(String homePlayer1) {
+        this.homePlayer1 = homePlayer1;
+    }
+
+    public String getHomePlayer2() {
+        return homePlayer2;
+    }
+
+    public void setHomePlayer2(String homePlayer2) {
+        this.homePlayer2 = homePlayer2;
+    }
+
+    public String getAwayPlayer1() {
+        return awayPlayer1;
+    }
+
+    public void setAwayPlayer1(String awayPlayer1) {
+        this.awayPlayer1 = awayPlayer1;
+    }
+
+    public String getAwayPlayer2() {
+        return awayPlayer2;
+    }
+
+    public void setAwayPlayer2(String awayPlayer2) {
+        this.awayPlayer2 = awayPlayer2;
+    }
+
+    public int getHomeTeamSetsWon() {
+        return homeTeamSetsWon;
+    }
+
+    public void setHomeTeamSetsWon(int homeTeamSetsWon) {
+        this.homeTeamSetsWon = homeTeamSetsWon;
+    }
+
+    public int getAwayTeamSetsWon() {
+        return awayTeamSetsWon;
+    }
+
+    public void setAwayTeamSetsWon(int awayTeamSetsWon) {
+        this.awayTeamSetsWon = awayTeamSetsWon;
+    }
+
+    public String getWinningTeam() {
+        return winningTeam;
+    }
+
+    public void setWinningTeam(String winningTeam) {
+        this.winningTeam = winningTeam;
     }
 }

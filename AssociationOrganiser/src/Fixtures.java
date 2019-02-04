@@ -9,5 +9,9 @@ public class Fixtures {
         Match.generateMatches();
         Set.generateSets();
         Game.generateGames();
+
+        //TEST
+
+
     }
 }

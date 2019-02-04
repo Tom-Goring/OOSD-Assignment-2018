@@ -3,7 +3,7 @@ public class Test {
     // Just a class to allow for some basic testing of functionality before main GUI is implemented
     public static void main(String[] args) {
 
-        DatabaseManager.createTables();
+        /*DatabaseManager.createTables();
 
         Team.addTeamToDatabase("UWE");
         Team.addTeamToDatabase("Page");
@@ -16,7 +16,7 @@ public class Test {
         Player.addPlayerToDatabase("John", "Filton");
         Player.addPlayerToDatabase("Frank", "Filton");
 
-        Fixtures.generateFixtures();
+        Fixtures.generateFixtures();*/
 
         Match match = new Match("UWE" , "Page");
 
@@ -25,8 +25,10 @@ public class Test {
         match.setAwayPlayer1("Bob");
         match.setAwayPlayer2("Jun");
 
-        match.sendMatchPlayersToDB();
+        Match match2 = new Match("UWE", "Page");
 
         System.out.println("Pause here.");
+
+
     }
 }

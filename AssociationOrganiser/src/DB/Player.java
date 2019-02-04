@@ -1,4 +1,4 @@
-// kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+package DB;// kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 import java.util.ArrayList;
 
@@ -19,11 +19,20 @@ public class Player {
                 '}';
     }
 
-    public Player(int player_id, String name, String team_name) {
+    public Player(String name, String team_name) {
 
-        this.player_id = player_id;
         this.player_name = name;
         this.team_name = team_name;
+    }
+
+    public void addPlayerToDatabase() {
+
+        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
+
+        insert += "\"" + this.player_name + "\"";
+        insert += "," + " (" + "SELECT ID FROM Team WHERE Name = " + "\"" + this.team_name + "\"" + ")" + ")" + ";";
+
+        DatabaseManager.insertData(insert);
     }
 
     /**********************************************STATIC METHODS******************************************************/
@@ -33,7 +42,7 @@ public class Player {
         ArrayList<Player> playerList = new ArrayList<>();
         for (String[] player : players) {
 
-            playerList.add(new Player(Integer.parseInt(player[0]), player[1], player[2]));
+            playerList.add(new Player(player[1], player[2]));
         }
         return playerList;
     }
@@ -57,15 +66,4 @@ public class Player {
 
         return extractPlayersFromList(DatabaseManager.executeQuery(select));
     }
-
-    static void addPlayerToDatabase(String player_name, String team_name) {
-
-        String insert = "INSERT INTO Player (Name, TeamID) VALUES (";
-
-        insert += "\"" + player_name + "\"";
-        insert += "," + " (" + "SELECT ID FROM Team WHERE Name = " + "\"" + team_name + "\"" + ")" + ")" + ";";
-
-        DatabaseManager.insertData(insert);
-    }
-
 }

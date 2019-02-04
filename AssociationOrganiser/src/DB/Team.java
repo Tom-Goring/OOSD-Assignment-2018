@@ -1,3 +1,5 @@
+package DB;
+
 import java.util.ArrayList;
 
 public class Team {
@@ -6,9 +8,9 @@ public class Team {
     private String teamName;
     private ArrayList<Player> playerList;
 
-    Team(int teamID, String teamName) {
+    // TODO: make this auto pull data? maybe add a constructor with an import option
+    public Team(String teamName) {
 
-        this.teamID = teamID;
         this.teamName = teamName;
         this.playerList = new ArrayList<>();
     }
@@ -29,6 +31,17 @@ public class Team {
                 '}';
     }
 
+    public void addTeamToDatabase() {
+
+        this.teamName = "(\"" + this.teamName + "\")" + ";";
+
+        String insert = "INSERT INTO Team (Name) VALUES ";
+
+        insert += this.teamName;
+
+        DatabaseManager.insertData(insert);
+    }
+
     /**********************************************STATIC METHODS******************************************************/
 
     private static ArrayList<Team> extractTeamsFromList(ArrayList<String[]> teams) {
@@ -36,7 +49,7 @@ public class Team {
         ArrayList<Team> teamList = new ArrayList<>();
         for (String[] team : teams) {
 
-            teamList.add(new Team(Integer.parseInt(team[0]), team[1]));
+            teamList.add(new Team(team[1]));
         }
         return teamList;
     }
@@ -54,17 +67,4 @@ public class Team {
 
         return extractTeamsFromList(DatabaseManager.executeQuery(select));
     }
-
-    static void addTeamToDatabase(String team_name) {
-
-        team_name = "(\"" + team_name + "\")" + ";";
-
-        String insert = "INSERT INTO Team (Name) VALUES ";
-
-        insert += team_name;
-
-        DatabaseManager.insertData(insert);
-    }
-
-
 }

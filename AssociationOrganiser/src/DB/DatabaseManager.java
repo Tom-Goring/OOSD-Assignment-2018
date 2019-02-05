@@ -1,3 +1,5 @@
+package DB;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -143,7 +145,7 @@ public class DatabaseManager {
             for (String aQueryList : queryList) {
 
                 PreparedStatement preparedStatement = conn.prepareStatement(aQueryList);
-                //System.out.println(aQueryList);
+                System.out.println(aQueryList);
                 preparedStatement.executeUpdate();
             }
 
@@ -165,7 +167,7 @@ public class DatabaseManager {
         try {
             Connection conn = openConnection();
 
-            //System.out.println("Sending query " + query);
+            System.out.println("Sending query " + query);
 
             PreparedStatement pstmt = conn.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
@@ -199,7 +201,7 @@ public class DatabaseManager {
 
             Connection conn = openConnection();
 
-            //System.out.println("Executing command: " + update);
+            System.out.println("Executing command: " + update);
 
             PreparedStatement prep = conn.prepareStatement(update);
 

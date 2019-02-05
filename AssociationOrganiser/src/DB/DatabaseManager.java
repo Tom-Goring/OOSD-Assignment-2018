@@ -20,7 +20,7 @@ public class DatabaseManager {
 
     // TODO: consider moving each table query into the relevant class?
     // TODO: test to make sure that database structure satisfies requirements
-    static void createTables() {
+    public static void createTables() {
 
         ArrayList<String> queryList = new ArrayList<>();
 

@@ -25,10 +25,7 @@ public class Team {
 
     @Override
     public String toString() {
-        return "Team{" +
-                "teamID=" + teamID +
-                ", teamName='" + teamName + '\'' +
-                '}';
+        return teamName + "\n";
     }
 
     public void addTeamToDatabase() {
@@ -61,7 +58,7 @@ public class Team {
         return extractTeamsFromList(DatabaseManager.executeQuery(select)).get(0);
     }
 
-    static ArrayList<Team> getTeamList() {
+    public static ArrayList<Team> getTeamList() {
 
         String select = "SELECT * FROM Team;";
 

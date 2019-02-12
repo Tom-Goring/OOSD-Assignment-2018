@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,7 +27,7 @@ public class TestGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("Tabs");
+        primaryStage.setTitle("Table Tennis Association Manager");
         Scene scene = new Scene(new VBox(), 400, 350);
         scene.setFill(Color.OLDLACE);
 
@@ -53,10 +54,10 @@ public class TestGUI extends Application {
 
         ((VBox) scene.getRoot()).getChildren().addAll(menubar, tabpane);
 
+        Image image = new Image("/images/tennis.png");
+        primaryStage.getIcons().add(image);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     private GridPane getPlayerGrid() {

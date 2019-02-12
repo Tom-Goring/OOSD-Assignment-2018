@@ -25,7 +25,7 @@ public class Team {
 
     @Override
     public String toString() {
-        return teamName + "\n";
+        return teamName;
     }
 
     public void addTeamToDatabase() {

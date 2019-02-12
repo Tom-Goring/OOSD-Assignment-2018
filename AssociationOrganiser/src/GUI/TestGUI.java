@@ -2,10 +2,18 @@ package GUI;
 
 import DB.*;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class TestGUI extends Application {
@@ -32,16 +40,16 @@ public class TestGUI extends Application {
         menubar.getMenus().addAll(menuFile, menuEdit, menuView);
 
         // make tabs
-
         TabPane tabpane = new TabPane();
 
-        for (int i = 0; i < 3; i++) {
+        // make first tabs contents
+        Tab player_t = new Tab("Player");
+        player_t.setContent(getPlayerGrid());
+        tabpane.getTabs().add(player_t);
 
-            Tab tab = new Tab("Tab_" + (i+1));
-            Label label = new Label("This is Tab: " + (i+1));
-            tab.setContent(label);
-            tabpane.getTabs().add(tab);
-        }
+        Tab team_t = new Tab("Team");
+        team_t.setContent(getTeamGrid());
+        tabpane.getTabs().add(team_t);
 
         ((VBox) scene.getRoot()).getChildren().addAll(menubar, tabpane);
 
@@ -49,5 +57,71 @@ public class TestGUI extends Application {
         primaryStage.show();
 
 
+    }
+
+    private GridPane getPlayerGrid() {
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Text scenetitle = new Text("Player");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Label addPlayer_l = new Label("Player Name:");
+        grid.add(addPlayer_l, 0, 1);
+
+        TextField enterName = new TextField();
+        grid.add(enterName, 1, 1);
+
+        Label fillTeam_l = new Label("Select Team:");
+        grid.add(fillTeam_l, 0, 2);
+
+        ObservableList<Team> teams = FXCollections.observableArrayList(Team.getTeamList());
+        ComboBox<Team> selectTeam = new ComboBox<>(teams);
+
+        selectTeam.setOnMouseClicked(event -> {
+
+            selectTeam.getItems().clear();
+            selectTeam.getItems().addAll(Team.getTeamList());
+        });
+
+        grid.add(selectTeam, 1, 2);
+
+        return grid;
+    }
+
+    private GridPane getTeamGrid() {
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Text scenetitle = new Text("Team");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Label addPlayer_l = new Label("Team Name:");
+        grid.add(addPlayer_l, 0, 1);
+
+        TextField enterName = new TextField();
+        grid.add(enterName, 1, 1);
+
+        Button button = new Button("Add Team");
+        button.setOnAction(actionEvent -> {
+
+            // TODO: add a check to make sure the same team name isnt already present (maybe make this a database thing?)
+            Team team = new Team(enterName.getText());
+            team.addTeamToDatabase();
+        });
+
+        grid.add(button, 2, 1);
+
+        return grid;
     }
 }

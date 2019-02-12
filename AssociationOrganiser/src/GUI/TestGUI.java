@@ -33,6 +33,7 @@ public class TestGUI extends Application {
 
         // make menus
 
+        // TODO: add functionality to menu
         MenuBar menubar = new MenuBar();
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");

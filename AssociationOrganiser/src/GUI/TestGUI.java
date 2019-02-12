@@ -43,6 +43,7 @@ public class TestGUI extends Application {
 
         // make tabs
         TabPane tabpane = new TabPane();
+        tabpane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         // make first tabs contents
         Tab player_t = new Tab("Player");
@@ -61,6 +62,8 @@ public class TestGUI extends Application {
         primaryStage.show();
     }
 
+    // TODO: make admin, viewer, and score tabs
+
     private GridPane getPlayerGrid() {
 
         GridPane grid = new GridPane();
@@ -76,22 +79,35 @@ public class TestGUI extends Application {
         Label addPlayer_l = new Label("Player Name:");
         grid.add(addPlayer_l, 0, 1);
 
-        TextField enterName = new TextField();
-        grid.add(enterName, 1, 1);
+        TextField tf_enterName = new TextField();
+        grid.add(tf_enterName, 1, 1);
 
         Label fillTeam_l = new Label("Select Team:");
         grid.add(fillTeam_l, 0, 2);
 
         ObservableList<Team> teams = FXCollections.observableArrayList(Team.getTeamList());
-        ComboBox<Team> selectTeam = new ComboBox<>(teams);
+        ComboBox<Team> cb_selectTeam = new ComboBox<>(teams);
 
-        selectTeam.setOnMouseClicked(event -> {
+        cb_selectTeam.setOnMouseClicked(event -> {
 
-            selectTeam.getItems().clear();
-            selectTeam.getItems().addAll(Team.getTeamList());
+            cb_selectTeam.getItems().clear();
+            cb_selectTeam.getItems().addAll(Team.getTeamList());
         });
 
-        grid.add(selectTeam, 1, 2);
+        grid.add(cb_selectTeam, 1, 2);
+
+        Button b_addPlayer = new Button("Add Player");
+
+        b_addPlayer.setOnAction(actionEvent-> {
+
+            // TODO: verify player isnt present? make DB do this?
+            Player player = new Player(tf_enterName.getText(), cb_selectTeam.getValue().toString());
+            player.addPlayerToDatabase();
+        });
+
+        grid.add(b_addPlayer, 1, 15);
+
+        grid.setGridLinesVisible(false);
 
         return grid;
     }
@@ -123,6 +139,8 @@ public class TestGUI extends Application {
         });
 
         grid.add(button, 2, 1);
+
+        grid.setGridLinesVisible(true);
 
         return grid;
     }

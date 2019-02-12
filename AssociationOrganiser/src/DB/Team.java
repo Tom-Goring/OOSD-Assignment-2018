@@ -67,4 +67,6 @@ public class Team {
 
         return extractTeamsFromList(DatabaseManager.executeQuery(select));
     }
+
+    // TODO: add a delete team function (will also delete all related players?)
 }

@@ -1,34 +1,16 @@
 package GUI;
 
-
-import DB.Player;
-import DB.Team;
+import DB.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import static javafx.application.Application.launch;
 
 public class TestGUI extends Application {
 
     public static void main(String[] args) {
-
-        Team UWE = new Team("UWE");
-        UWE.addTeamToDatabase();
 
         launch(args);
     }
@@ -36,49 +18,36 @@ public class TestGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("JavaFX Welcome.");
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        primaryStage.setTitle("Tabs");
+        Scene scene = new Scene(new VBox(), 400, 350);
+        scene.setFill(Color.OLDLACE);
 
-        Text scenetitle = new Text("Welcome");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        grid.add(scenetitle, 0, 0, 2, 1);
+        // make menus
 
-        Label userName = new Label("Player Name:");
-        grid.add(userName, 0, 1);
+        MenuBar menubar = new MenuBar();
+        Menu menuFile = new Menu("File");
+        Menu menuEdit = new Menu("Edit");
+        Menu menuView = new Menu("View");
 
-        TextField userTextField = new TextField();
-        grid.add(userTextField, 1, 1);
+        menubar.getMenus().addAll(menuFile, menuEdit, menuView);
 
-        Label pw = new Label("Team:");
-        grid.add(pw, 0, 2);
+        // make tabs
 
-        TextField teamTextField = new TextField();
-        grid.add(teamTextField, 1, 2);
+        TabPane tabpane = new TabPane();
 
-        Button btn = new Button("Sign in");
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 4);
+        for (int i = 0; i < 3; i++) {
 
-        final Text actiontarget = new Text();
-        grid.add(actiontarget, 1, 6);
+            Tab tab = new Tab("Tab_" + (i+1));
+            Label label = new Label("This is Tab: " + (i+1));
+            tab.setContent(label);
+            tabpane.getTabs().add(tab);
+        }
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        ((VBox) scene.getRoot()).getChildren().addAll(menubar, tabpane);
 
-                Player player = new Player(userTextField.getText(), teamTextField.getText());
-                player.addPlayerToDatabase();
-            }
-        });
-
-        Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 }

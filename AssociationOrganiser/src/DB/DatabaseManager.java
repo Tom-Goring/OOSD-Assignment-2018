@@ -5,16 +5,14 @@ import java.util.ArrayList;
 
 public class DatabaseManager {
 
-    private static Connection openConnection() throws SQLException {
+    static String url = "jdbc:mysql://localhost:3306/tournament?allowPublicKeyRetrieval=true&&useSSL=false";
+    static String user = "root";
+    static String password = "password";
 
-        String url = "jdbc:mysql://localhost:3306/tournament?allowPublicKeyRetrieval=true&&useSSL=false";
-        String user = "root";
-        String password = "password";
+    static Connection openConnection() throws SQLException{
 
         Connection conn;
-
         conn = DriverManager.getConnection(url, user, password);
-
         return conn;
     }
 
@@ -164,11 +162,13 @@ public class DatabaseManager {
         }
     }
 
+    // Deprecate this
     static String surroundWithQuotes(String string) {
 
         return "\"" + string + "\"";
     }
 
+    // Deprecate this
     static ArrayList<String[]> executeQuery(String query) {
 
         ArrayList<String[]> table = new ArrayList<>();
@@ -203,7 +203,7 @@ public class DatabaseManager {
         return table;
     }
 
-    // use this to send data to the server: update = SQL command
+    // Deprecate this
     static void insertData(String update) {
 
         try {

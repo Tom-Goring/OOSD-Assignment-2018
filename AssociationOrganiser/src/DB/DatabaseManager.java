@@ -32,6 +32,12 @@ public class DatabaseManager {
         queryList.add("DROP TABLE if exists Team");
         queryList.add("SET FOREIGN_KEY_CHECKS = 1");
 
+        queryList.add("CREATE TABLE User (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Username varchar(20),\n" +
+                "PasswordSalt varchar(128),\n" +
+                "HashedPassword varchar(128) );");
+
         // create player table
         queryList.add("CREATE TABLE Player (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +

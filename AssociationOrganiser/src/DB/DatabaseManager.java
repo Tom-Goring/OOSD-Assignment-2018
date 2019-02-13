@@ -37,7 +37,7 @@ public class DatabaseManager {
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "Username varchar(20),\n" +
                 "PasswordSalt varchar(128),\n" +
-                "HashedPassword varchar(128)" +
+                "HashedPassword varchar(128)," +
                 "CONSTRAINT User_pk PRIMARY KEY (ID)\n" +
                 ");");
 

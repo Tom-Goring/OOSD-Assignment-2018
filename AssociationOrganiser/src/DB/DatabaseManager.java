@@ -25,6 +25,7 @@ public class DatabaseManager {
         ArrayList<String> queryList = new ArrayList<>();
 
         queryList.add("SET FOREIGN_KEY_CHECKS = 0");
+        queryList.add("DROP TABLE if exists User;");
         queryList.add("DROP TABLE if exists Player;");
         queryList.add("DROP TABLE if exists Game;");
         queryList.add("DROP TABLE if exists `Match`");
@@ -36,7 +37,9 @@ public class DatabaseManager {
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "Username varchar(20),\n" +
                 "PasswordSalt varchar(128),\n" +
-                "HashedPassword varchar(128) );");
+                "HashedPassword varchar(128)" +
+                "CONSTRAINT User_pk PRIMARY KEY (ID)\n" +
+                ");");
 
         // create player table
         queryList.add("CREATE TABLE Player (\n" +

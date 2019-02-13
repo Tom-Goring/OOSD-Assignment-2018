@@ -134,6 +134,7 @@ public class TestGUI extends Application {
         button.setOnAction(actionEvent -> {
 
             // TODO: add a check to make sure the same team name isnt already present (maybe make this a database thing?)
+            // maybe append a number to the end of non unique names
             Team team = new Team(enterName.getText());
             team.addTeamToDatabase();
         });

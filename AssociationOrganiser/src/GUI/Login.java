@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 public class Login extends Application {
 
+    // TODO: add database backend for logins + pw hashing
     private String userName = "Tom";
     private String pw = "password";
     private String checkUser, checkPw;

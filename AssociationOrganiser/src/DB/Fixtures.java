@@ -8,9 +8,9 @@ public class Fixtures {
     // TODO: finish generateFixtures
     static void generateFixtures() {
 
-        Match.generateMatches();
+        /*Match.generateMatches();
         Set.generateSets();
-        Game.generateGames();
+        Game.generateGames();*/
 
         //TEST
 

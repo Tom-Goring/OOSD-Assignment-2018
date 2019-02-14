@@ -147,25 +147,20 @@ public class DatabaseManager {
 
         try {
 
-            Connection conn = openConnection();
-
             for (String aQueryList : queryList) {
 
-                PreparedStatement preparedStatement = conn.prepareStatement(aQueryList);
+                PreparedStatement preparedStatement = Connect_DB.getConnection().prepareStatement(aQueryList);
                 System.out.println(aQueryList);
                 preparedStatement.executeUpdate();
             }
-
         } catch (SQLException e) {
 
             e.printStackTrace();
         }
     }
 
-
     static public void sendTeamToDatabase(Team team) {
 
-        Connection conn = null;
         String insert = "INSERT INTO Team (Name) VALUES (?);";
 
         try {
@@ -176,6 +171,28 @@ public class DatabaseManager {
             insertTeam.executeUpdate();
         }
         catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    // TODO: load players too
+    static Team loadTeamInformation(String name) {
+
+        String query = "SELECT * FROM Team WHERE (Name = ?);";
+
+        try {
+
+            PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
+            selectTeam.setString(1, name);
+            ResultSet rset = selectTeam.executeQuery();
+
+            while (rset.next()) {
+
+                Team team = new Team();
+                team.setTeamName(rset.getString("Name"));
+                return team;
+            }
+        }
+        catch (SQLException e) {e.printStackTrace();}
+        return null;
     }
 
     // Deprecate this

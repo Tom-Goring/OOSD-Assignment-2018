@@ -13,9 +13,8 @@ public class User {
     private String salt;
     private String hashedPassword;
 
-    public void getUser(String enteredUsername) {
+    public void loadUserInformation(String enteredUsername) {
 
-        Connection conn = null;
         String query = "SELECT * FROM User WHERE (Username = ?)";
 
         try {

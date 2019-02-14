@@ -7,6 +7,12 @@ public class Team {
     private String teamName;
     private ArrayList<Player> playerList;
 
+    // TODO: add second constructor + playerlist?
+    public Team(String teamName) {
+
+        this.teamName = teamName;
+    }
+
     public String getTeamName() {
         return teamName;
     }

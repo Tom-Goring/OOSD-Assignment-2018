@@ -162,6 +162,22 @@ public class DatabaseManager {
         }
     }
 
+
+    static public void sendTeamToDatabase(Team team) {
+
+        Connection conn = null;
+        String insert = "INSERT INTO Team (Name) VALUES (?);";
+
+        try {
+
+            PreparedStatement insertTeam = Connect_DB.getConnection().prepareStatement(insert);
+            insertTeam.setString(1, team.getTeamName());
+            System.out.println(insertTeam);
+            insertTeam.executeUpdate();
+        }
+        catch (SQLException e) { e.printStackTrace(); }
+    }
+
     // Deprecate this
     static String surroundWithQuotes(String string) {
 

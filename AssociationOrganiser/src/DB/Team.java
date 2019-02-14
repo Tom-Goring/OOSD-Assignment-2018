@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Team {
 
-    private int teamID;
     private String teamName;
     private ArrayList<Player> playerList;
 
@@ -13,10 +12,6 @@ public class Team {
 
         this.teamName = teamName;
         this.playerList = new ArrayList<>();
-    }
-
-    public int getTeamID() {
-        return teamID;
     }
 
     public String getTeamName() {
@@ -28,16 +23,7 @@ public class Team {
         return teamName;
     }
 
-    public void addTeamToDatabase() {
 
-        this.teamName = "(\"" + this.teamName + "\")" + ";";
-
-        String insert = "INSERT INTO Team (Name) VALUES ";
-
-        insert += this.teamName;
-
-        DatabaseManager.insertData(insert);
-    }
 
     /**********************************************STATIC METHODS******************************************************/
 

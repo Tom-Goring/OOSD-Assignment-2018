@@ -11,5 +11,8 @@ public class Test {
         DatabaseManager.Team.sendTeamToDatabase(uwe);
 
         DatabaseManager.Player.sendNewPlayerToDB(new Player("Tom", "UWE"));
+        Player tom = DatabaseManager.Player.loadPlayerInformation("Tom");
+        System.out.println(tom.getPlayerName());
+        System.out.println(tom.getTeamName());
     }
 }

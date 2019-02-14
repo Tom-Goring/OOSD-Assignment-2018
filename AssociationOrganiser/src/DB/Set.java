@@ -5,6 +5,14 @@ import java.util.ArrayList;
 // TODO: add Set class
 public class Set {
 
+    private String homePlayerName;
+    private String awayPlayerName;
+    private String winningTeamName;
+    private int homeTeamScore;
+    private int awayTeamScore;
+    private ArrayList<Game> gameList;
+    boolean complete;
+
     /*static void generateSets() {
 
         // get all matches

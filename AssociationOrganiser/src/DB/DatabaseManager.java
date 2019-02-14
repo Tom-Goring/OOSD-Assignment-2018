@@ -225,14 +225,14 @@ public class DatabaseManager {
         }
 
         // TODO: load players too
-        static DB.Team loadTeamInformation(String name) {
+        static DB.Team loadTeamInformation(String teamName) {
 
             String query = "SELECT * FROM Team WHERE (Name = ?);";
 
             try {
 
                 PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
-                selectTeam.setString(1, name);
+                selectTeam.setString(1, teamName);
                 ResultSet rset = selectTeam.executeQuery();
 
                 rset.next();
@@ -241,6 +241,42 @@ public class DatabaseManager {
             }
             catch (SQLException e) {e.printStackTrace();}
             return null;
+        }
+    }
+
+    static class Player {
+
+        static void sendNewPlayerToDB(DB.Player player) {
+
+            String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
+
+            try {
+
+                PreparedStatement insertPlayer = Connect_DB.getConnection().prepareStatement(insert);
+                insertPlayer.setString(1, player.getPlayerName());
+                insertPlayer.setString(2, player.getTeamName());
+            }
+            catch (SQLException e) {e.printStackTrace();}
+        }
+
+        static DB.Player loadPlayerInformation(String playerName) {
+
+            String query = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = ?";
+
+            try {
+
+                PreparedStatement findPlayer = Connect_DB.getConnection().prepareStatement(query);
+                findPlayer.setString(1, playerName);
+                ResultSet rset = findPlayer.executeQuery();
+
+                rset.next();
+
+                return new DB.Player(playerName, rset.getString("Team.Name"));
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }

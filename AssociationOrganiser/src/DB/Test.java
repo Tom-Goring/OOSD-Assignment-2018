@@ -6,5 +6,8 @@ public class Test {
     public static void main(String[] args) {
 
         DatabaseManager.createTables();
+
+        Team uwe = new Team("UWE");
+        DatabaseManager.sendTeamToDatabase(uwe);
     }
 }

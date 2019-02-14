@@ -237,6 +237,7 @@ public class DatabaseManager {
 
                 PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
                 selectTeam.setString(1, teamName);
+                System.out.println(selectTeam);
                 ResultSet rset = selectTeam.executeQuery();
 
                 rset.next();
@@ -259,6 +260,7 @@ public class DatabaseManager {
                 PreparedStatement insertPlayer = Connect_DB.getConnection().prepareStatement(insert);
                 insertPlayer.setString(1, player.getPlayerName());
                 insertPlayer.setString(2, player.getTeamName());
+                System.out.println(insertPlayer);
                 insertPlayer.executeUpdate();
             }
             catch (SQLException e) {e.printStackTrace();}
@@ -272,6 +274,7 @@ public class DatabaseManager {
 
                 PreparedStatement findPlayer = Connect_DB.getConnection().prepareStatement(query);
                 findPlayer.setString(1, playerName);
+                System.out.println(findPlayer);
                 ResultSet rset = findPlayer.executeQuery();
 
                 rset.next();
@@ -281,6 +284,59 @@ public class DatabaseManager {
             catch (SQLException e) {
                 e.printStackTrace();
                 return null;
+            }
+        }
+    }
+
+    static class Match {
+
+        static void sendNewMatchToDB(DB.Match match) {
+
+            String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
+                    "(SELECT ID FROM team WHERE Name = ?), " +
+                    "(SELECT ID FROM team WHERE Name = ?));";
+
+            try {
+
+                PreparedStatement insertMatch = Connect_DB.getConnection().prepareStatement(insert);
+                insertMatch.setString(1, match.getHomeTeamName());
+                insertMatch.setString(2, match.getAwayTeamName());
+
+                System.out.println(insertMatch);
+                insertMatch.executeUpdate();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Function assumes the match has been played and all data is available
+        static void updateMatchInformation(DB.Match match) {
+
+            String update = "UPDATE `Match` " +
+                    "SET " +
+                    "HomePlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +
+                    "HomePlayer2ID = (SELECT ID FROM player WHERE Name = ?), " +
+                    "AwayPlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +
+                    "AwayPlayer2ID = (SELECT ID FROM player WHERE Name = ?)," +
+                    "WinnerID = (SELECT ID FROM team WHERE Name = ?);";
+
+            // TODO: make this update sets and games
+            try {
+
+                PreparedStatement updateMatch = Connect_DB.getConnection().prepareStatement(update);
+                updateMatch.setString(1, match.getHomePlayer1Name());
+                updateMatch.setString(2 , match.getHomePlayer2Name());
+                updateMatch.setString(3 , match.getAwayPlayer1Name());
+                updateMatch.setString(4 , match.getAwayPlayer2Name());
+                updateMatch.setString(5, match.getWinningTeamName());
+
+                System.out.println(updateMatch);
+                updateMatch.executeUpdate();
+
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

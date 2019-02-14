@@ -8,35 +8,114 @@ public class Match {
 
     private String homeTeamName;
     private String awayTeamName;
-
-    // TODO: consider making these actual player classes
-    private String homePlayer1;
-    private String homePlayer2;
-    private String awayPlayer1;
-    private String awayPlayer2;
-
+    private String winningTeamName;
+    private String homePlayer1Name;
+    private String homePlayer2Name;
+    private String awayPlayer1Name;
+    private String awayPlayer2Name;
+    private ArrayList<Set> sets;
+    private boolean complete;
     private int homeTeamSetsWon;
     private int awayTeamSetsWon;
 
-    private String winningTeam;
-
-    Match(String homeTeamName, String awayTeamName) {
-
+    public Match(String homeTeamName, String awayTeamName) {
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
-
-        //retrieveMatchPlayers();
+        this.complete = false;
     }
 
-    public Match(String homeTeamName, String awayTeamName, String homePlayer1, String homePlayer2, String awayPlayer1, String awayPlayer2) {
-
+    public Match(String homeTeamName, String awayTeamName, String homePlayer1Name, String homePlayer2Name, String awayPlayer1Name, String awayPlayer2Name, String winningTeamName, int homeTeamSetsWon, int awayTeamSetsWon) {
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
-        this.homePlayer1 = homePlayer1;
-        this.homePlayer2 = homePlayer2;
-        this.awayPlayer1 = awayPlayer1;
-        this.awayPlayer2 = awayPlayer2;
+        this.homePlayer1Name = homePlayer1Name;
+        this.homePlayer2Name = homePlayer2Name;
+        this.awayPlayer1Name = awayPlayer1Name;
+        this.awayPlayer2Name = awayPlayer2Name;
+        this.winningTeamName = winningTeamName;
+        this.homeTeamSetsWon = homeTeamSetsWon;
+        this.awayTeamSetsWon = awayTeamSetsWon;
+        this.complete = true;
+        // TODO: load in sets here
     }
+
+    public String getHomeTeamName() {
+        return homeTeamName;
+    }
+
+    public void setHomeTeamName(String homeTeamName) { this.homeTeamName = homeTeamName; }
+
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
+    }
+
+    public String getWinningTeamName() {
+        return winningTeamName;
+    }
+
+    public void setWinningTeamName(String winningTeamName) {
+        this.winningTeamName = winningTeamName;
+    }
+
+    public String getHomePlayer1Name() {
+        return homePlayer1Name;
+    }
+
+    public void setHomePlayer1Name(String homePlayer1Name) {
+        this.homePlayer1Name = homePlayer1Name;
+    }
+
+    public String getHomePlayer2Name() {
+        return homePlayer2Name;
+    }
+
+    public void setHomePlayer2Name(String homePlayer2Name) {
+        this.homePlayer2Name = homePlayer2Name;
+    }
+
+    public String getAwayPlayer1Name() {
+        return awayPlayer1Name;
+    }
+
+    public void setAwayPlayer1Name(String awayPlayer1Name) {
+        this.awayPlayer1Name = awayPlayer1Name;
+    }
+
+    public String getAwayPlayer2Name() {
+        return awayPlayer2Name;
+    }
+
+    public void setAwayPlayer2Name(String awayPlayer2Name) {
+        this.awayPlayer2Name = awayPlayer2Name;
+    }
+
+    public ArrayList<Set> getSets() {
+        return sets;
+    }
+
+    public void setSets(ArrayList<Set> sets) {
+        this.sets = sets;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) { this.complete = complete; }
+
+    public int getHomeTeamSetsWon() {
+        return homeTeamSetsWon;
+    }
+
+    public void setHomeTeamSetsWon(int homeTeamSetsWon) { this.homeTeamSetsWon = homeTeamSetsWon; }
+
+    public int getAwayTeamSetsWon() { return awayTeamSetsWon; }
+
+    public void setAwayTeamSetsWon(int awayTeamSetsWon) { this.awayTeamSetsWon = awayTeamSetsWon; }
+}
 
     /*private void retrieveMatchPlayers() {
 
@@ -129,78 +208,3 @@ public class Match {
 
         DatabaseManager.insertData(insert);
     }*/
-
-    /*********************************************GETTERS + SETTERS****************************************************/
-
-    public String getHomeTeamName() {
-        return homeTeamName;
-    }
-
-    public void setHomeTeamName(String homeTeamName) {
-        this.homeTeamName = homeTeamName;
-    }
-
-    public String getAwayTeamName() {
-        return awayTeamName;
-    }
-
-    public void setAwayTeamName(String awayTeamName) {
-        this.awayTeamName = awayTeamName;
-    }
-
-    public String getHomePlayer1() {
-        return homePlayer1;
-    }
-
-    public void setHomePlayer1(String homePlayer1) {
-        this.homePlayer1 = homePlayer1;
-    }
-
-    public String getHomePlayer2() {
-        return homePlayer2;
-    }
-
-    public void setHomePlayer2(String homePlayer2) {
-        this.homePlayer2 = homePlayer2;
-    }
-
-    public String getAwayPlayer1() {
-        return awayPlayer1;
-    }
-
-    public void setAwayPlayer1(String awayPlayer1) {
-        this.awayPlayer1 = awayPlayer1;
-    }
-
-    public String getAwayPlayer2() {
-        return awayPlayer2;
-    }
-
-    public void setAwayPlayer2(String awayPlayer2) {
-        this.awayPlayer2 = awayPlayer2;
-    }
-
-    public int getHomeTeamSetsWon() {
-        return homeTeamSetsWon;
-    }
-
-    public void setHomeTeamSetsWon(int homeTeamSetsWon) {
-        this.homeTeamSetsWon = homeTeamSetsWon;
-    }
-
-    public int getAwayTeamSetsWon() {
-        return awayTeamSetsWon;
-    }
-
-    public void setAwayTeamSetsWon(int awayTeamSetsWon) {
-        this.awayTeamSetsWon = awayTeamSetsWon;
-    }
-
-    public String getWinningTeam() {
-        return winningTeam;
-    }
-
-    public void setWinningTeam(String winningTeam) {
-        this.winningTeam = winningTeam;
-    }
-}

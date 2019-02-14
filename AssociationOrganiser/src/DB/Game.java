@@ -1,13 +1,11 @@
 package DB;
 
-import java.util.ArrayList;
-
 // TODO: add Game class
 public class Game {
 
-    // TODO: add instance and class attributes and methods to Game
-
-    /**********************************************STATIC METHODS******************************************************/
+    int homeTeamScore;
+    int awayTeamScore;
+    boolean complete;
 
     /*static void generateGames() {
 

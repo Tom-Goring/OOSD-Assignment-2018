@@ -50,7 +50,7 @@ public class DatabaseManager {
         // create team table
         queryList.add("CREATE TABLE Team (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "Name varchar(20) NOT NULL,\n" +
+                "Name varchar(20) NOT NULL UNIQUE,\n" +
                 "CONSTRAINT Team_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -170,7 +170,14 @@ public class DatabaseManager {
             System.out.println(insertTeam);
             insertTeam.executeUpdate();
         }
-        catch (SQLException e) { e.printStackTrace(); }
+        catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                System.out.println("ERROR: Team name \""+ team.getTeamName() +"\" already present.");
+            }
+            else {
+                e.printStackTrace();
+            }
+        }
     }
 
     // TODO: load players too
@@ -184,12 +191,9 @@ public class DatabaseManager {
             selectTeam.setString(1, name);
             ResultSet rset = selectTeam.executeQuery();
 
-            while (rset.next()) {
+            rset.next();
 
-                Team team = new Team();
-                team.setTeamName(rset.getString("Name"));
-                return team;
-            }
+            return new Team(rset.getString("Name"));
         }
         catch (SQLException e) {e.printStackTrace();}
         return null;

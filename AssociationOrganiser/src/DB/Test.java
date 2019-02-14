@@ -8,6 +8,8 @@ public class Test {
         DatabaseManager.createTables();
 
         Team uwe = new Team("UWE");
-        DatabaseManager.sendTeamToDatabase(uwe);
+        DatabaseManager.Team.sendTeamToDatabase(uwe);
+
+        DatabaseManager.Player.sendNewPlayerToDB(new Player("Tom", "UWE"));
     }
 }

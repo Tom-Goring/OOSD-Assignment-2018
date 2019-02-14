@@ -5,16 +5,14 @@ import java.util.ArrayList;
 
 public class DatabaseManager {
 
-    private static Connection openConnection() throws SQLException {
+    static String url = "jdbc:mysql://localhost:3306/tournament?allowPublicKeyRetrieval=true&&useSSL=false";
+    static String user = "root";
+    static String password = "password";
 
-        String url = "jdbc:mysql://localhost:3306/tournament?allowPublicKeyRetrieval=true&&useSSL=false";
-        String user = "root";
-        String password = "password";
+    static Connection openConnection() throws SQLException{
 
         Connection conn;
-
         conn = DriverManager.getConnection(url, user, password);
-
         return conn;
     }
 
@@ -25,12 +23,21 @@ public class DatabaseManager {
         ArrayList<String> queryList = new ArrayList<>();
 
         queryList.add("SET FOREIGN_KEY_CHECKS = 0");
+        queryList.add("DROP TABLE if exists User;");
         queryList.add("DROP TABLE if exists Player;");
         queryList.add("DROP TABLE if exists Game;");
         queryList.add("DROP TABLE if exists `Match`");
         queryList.add("DROP TABLE if exists `Set`;");
         queryList.add("DROP TABLE if exists Team");
         queryList.add("SET FOREIGN_KEY_CHECKS = 1");
+
+        queryList.add("CREATE TABLE User (\n" +
+                "ID int NOT NULL AUTO_INCREMENT,\n" +
+                "Username varchar(20),\n" +
+                "PasswordSalt varchar(128),\n" +
+                "HashedPassword varchar(128)," +
+                "CONSTRAINT User_pk PRIMARY KEY (ID)\n" +
+                ");");
 
         // create player table
         queryList.add("CREATE TABLE Player (\n" +
@@ -155,11 +162,29 @@ public class DatabaseManager {
         }
     }
 
+
+    static public void sendTeamToDatabase(Team team) {
+
+        Connection conn = null;
+        String insert = "INSERT INTO Team (Name) VALUES (?);";
+
+        try {
+
+            PreparedStatement insertTeam = Connect_DB.getConnection().prepareStatement(insert);
+            insertTeam.setString(1, team.getTeamName());
+            System.out.println(insertTeam);
+            insertTeam.executeUpdate();
+        }
+        catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    // Deprecate this
     static String surroundWithQuotes(String string) {
 
         return "\"" + string + "\"";
     }
 
+    // Deprecate this
     static ArrayList<String[]> executeQuery(String query) {
 
         ArrayList<String[]> table = new ArrayList<>();
@@ -194,7 +219,7 @@ public class DatabaseManager {
         return table;
     }
 
-    // use this to send data to the server: update = SQL command
+    // Deprecate this
     static void insertData(String update) {
 
         try {

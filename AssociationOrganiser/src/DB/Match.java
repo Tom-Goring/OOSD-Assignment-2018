@@ -99,7 +99,7 @@ public class Match {
 
     /**********************************************STATIC METHODS******************************************************/
 
-    static void generateMatches() {
+    /*static void generateMatches() {
 
         for (Team team_outer : Team.getTeamList()) {
 
@@ -113,7 +113,7 @@ public class Match {
                 }
             }
         }
-    }
+    }*/
 
     private static void createMatch(String HomeTeamName, String AwayTeamName) {
 

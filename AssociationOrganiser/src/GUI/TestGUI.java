@@ -1,37 +1,25 @@
 package GUI;
 
-
-import DB.DatabaseManager;
-import DB.Player;
-import DB.Team;
+import DB.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static javafx.application.Application.launch;
-
 public class TestGUI extends Application {
 
     public static void main(String[] args) {
-
-        DatabaseManager.createTables();
-
-        Team UWE = new Team("UWE");
-        UWE.addTeamToDatabase();
 
         launch(args);
     }
@@ -39,49 +27,122 @@ public class TestGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("JavaFX Welcome.");
+        primaryStage.setTitle("Table Tennis Association Manager");
+        Scene scene = new Scene(new VBox(), 400, 350);
+        scene.setFill(Color.OLDLACE);
+
+        // make menus
+
+        // TODO: add functionality to menu
+        MenuBar menubar = new MenuBar();
+        Menu menuFile = new Menu("File");
+        Menu menuEdit = new Menu("Edit");
+        Menu menuView = new Menu("View");
+
+        menubar.getMenus().addAll(menuFile, menuEdit, menuView);
+
+        // make tabs
+        TabPane tabpane = new TabPane();
+        tabpane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        // make first tabs contents
+        Tab player_t = new Tab("Player");
+        player_t.setContent(getPlayerGrid());
+        tabpane.getTabs().add(player_t);
+
+        Tab team_t = new Tab("Team");
+        team_t.setContent(getTeamGrid());
+        tabpane.getTabs().add(team_t);
+
+        ((VBox) scene.getRoot()).getChildren().addAll(menubar, tabpane);
+
+        Image image = new Image("/images/tennis.png");
+        primaryStage.getIcons().add(image);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    // TODO: make admin, viewer, and score tabs
+
+    private GridPane getPlayerGrid() {
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Text scenetitle = new Text("Welcome");
+        Text scenetitle = new Text("Player");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
 
-        Label userName = new Label("Player Name:");
-        grid.add(userName, 0, 1);
+        Label addPlayer_l = new Label("Player Name:");
+        grid.add(addPlayer_l, 0, 1);
 
-        TextField userTextField = new TextField();
-        grid.add(userTextField, 1, 1);
+        TextField tf_enterName = new TextField();
+        grid.add(tf_enterName, 1, 1);
 
-        Label pw = new Label("Team:");
-        grid.add(pw, 0, 2);
+        Label fillTeam_l = new Label("Select Team:");
+        grid.add(fillTeam_l, 0, 2);
 
-        TextField teamTextField = new TextField();
-        grid.add(teamTextField, 1, 2);
+        ObservableList<Team> teams = FXCollections.observableArrayList(Team.getTeamList());
+        ComboBox<Team> cb_selectTeam = new ComboBox<>(teams);
 
-        Button btn = new Button("Sign in");
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 4);
+        cb_selectTeam.setOnMouseClicked(event -> {
 
-        final Text actiontarget = new Text();
-        grid.add(actiontarget, 1, 6);
-
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                Player player = new Player(userTextField.getText(), teamTextField.getText());
-                player.addPlayerToDatabase();
-            }
+            cb_selectTeam.getItems().clear();
+            cb_selectTeam.getItems().addAll(Team.getTeamList());
         });
 
-        Scene scene = new Scene(grid, 300, 275);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        grid.add(cb_selectTeam, 1, 2);
+
+        Button b_addPlayer = new Button("Add Player");
+
+        b_addPlayer.setOnAction(actionEvent-> {
+
+            // TODO: verify player isnt present? make DB do this?
+            Player player = new Player(tf_enterName.getText(), cb_selectTeam.getValue().toString());
+            player.addPlayerToDatabase();
+        });
+
+        grid.add(b_addPlayer, 1, 15);
+
+        grid.setGridLinesVisible(false);
+
+        return grid;
+    }
+
+    private GridPane getTeamGrid() {
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Text scenetitle = new Text("Team");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Label addPlayer_l = new Label("Team Name:");
+        grid.add(addPlayer_l, 0, 1);
+
+        TextField enterName = new TextField();
+        grid.add(enterName, 1, 1);
+
+        Button button = new Button("Add Team");
+        /*button.setOnAction(actionEvent -> {
+
+            // TODO: add a check to make sure the same team name isnt already present (maybe make this a database thing?)
+            // maybe append a number to the end of non unique names
+            Team team = new Team(enterName.getText());
+            team.addTeamToDatabase();
+        });*/
+
+        grid.add(button, 2, 1);
+
+        grid.setGridLinesVisible(true);
+
+        return grid;
     }
 }

@@ -27,17 +27,14 @@ public class AdminPage extends Application {
         flowPane.getChildren().add(new Button("Button 2"));
         flowPane.getChildren().add(new Button("Button 3"));
 
-
         FlowPane flowPane2 = new FlowPane();
         flowPane2.getChildren().add(flowPane);
         flowPane2.getChildren().add(new Button("fp2Button"));
         flowPane2.getChildren().add(new Button("fp2Button2"));
         flowPane2.getChildren().add(new Button("fp2Button3"));
 
-
         //make new scene, with the pane
         Scene scene = new Scene(flowPane2, 350, 200);
-
 
         flowPane.setHgap(5);
         primaryStage.setTitle("Flowplanes");
@@ -45,12 +42,8 @@ public class AdminPage extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
+
         Application.launch(args);
     }
-
-
-
-
 }

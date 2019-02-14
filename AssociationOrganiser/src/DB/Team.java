@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Team {
 
-    private int teamID;
     private String teamName;
     private ArrayList<Player> playerList;
 
@@ -15,32 +14,16 @@ public class Team {
         this.playerList = new ArrayList<>();
     }
 
-    public int getTeamID() {
-        return teamID;
-    }
-
     public String getTeamName() {
         return teamName;
     }
 
     @Override
     public String toString() {
-        return "Team{" +
-                "teamID=" + teamID +
-                ", teamName='" + teamName + '\'' +
-                '}';
+        return teamName;
     }
 
-    public void addTeamToDatabase() {
 
-        this.teamName = "(\"" + this.teamName + "\")" + ";";
-
-        String insert = "INSERT INTO Team (Name) VALUES ";
-
-        insert += this.teamName;
-
-        DatabaseManager.insertData(insert);
-    }
 
     /**********************************************STATIC METHODS******************************************************/
 
@@ -61,10 +44,12 @@ public class Team {
         return extractTeamsFromList(DatabaseManager.executeQuery(select)).get(0);
     }
 
-    static ArrayList<Team> getTeamList() {
+    public static ArrayList<Team> getTeamList() {
 
         String select = "SELECT * FROM Team;";
 
         return extractTeamsFromList(DatabaseManager.executeQuery(select));
     }
+
+    // TODO: add a delete team function (will also delete all related players?)
 }

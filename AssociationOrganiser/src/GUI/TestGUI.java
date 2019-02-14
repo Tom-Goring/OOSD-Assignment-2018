@@ -85,7 +85,7 @@ public class TestGUI extends Application {
         Label fillTeam_l = new Label("Select Team:");
         grid.add(fillTeam_l, 0, 2);
 
-        ObservableList<Team> teams = FXCollections.observableArrayList(Team.getTeamList());
+        /*ObservableList<Team> teams = FXCollections.observableArrayList(Team.getTeamList());
         ComboBox<Team> cb_selectTeam = new ComboBox<>(teams);
 
         cb_selectTeam.setOnMouseClicked(event -> {
@@ -103,9 +103,9 @@ public class TestGUI extends Application {
             // TODO: verify player isnt present? make DB do this?
             Player player = new Player(tf_enterName.getText(), cb_selectTeam.getValue().toString());
             player.addPlayerToDatabase();
-        });
+        });*/
 
-        grid.add(b_addPlayer, 1, 15);
+        //grid.add(b_addPlayer, 1, 15);
 
         grid.setGridLinesVisible(false);
 

@@ -49,13 +49,5 @@ public class User {
             addNewUser.setString(3, hashedPassword);
         }
         catch (SQLException e) { e.printStackTrace(); }
-        finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-            catch (SQLException e) {e.printStackTrace();}
-        }
     }
 }

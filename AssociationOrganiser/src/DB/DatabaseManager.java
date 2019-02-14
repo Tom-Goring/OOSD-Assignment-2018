@@ -147,12 +147,16 @@ public class DatabaseManager {
 
         try {
 
-            for (String aQueryList : queryList) {
+            Statement Statement = Connect_DB.getConnection().createStatement();
 
-                PreparedStatement preparedStatement = Connect_DB.getConnection().prepareStatement(aQueryList);
-                System.out.println(aQueryList);
-                preparedStatement.executeUpdate();
+            for (String query : queryList) {
+
+                Statement.addBatch(query);
             }
+
+            Statement.executeBatch();
+
+
         } catch (SQLException e) {
 
             e.printStackTrace();
@@ -255,6 +259,7 @@ public class DatabaseManager {
                 PreparedStatement insertPlayer = Connect_DB.getConnection().prepareStatement(insert);
                 insertPlayer.setString(1, player.getPlayerName());
                 insertPlayer.setString(2, player.getTeamName());
+                insertPlayer.executeUpdate();
             }
             catch (SQLException e) {e.printStackTrace();}
         }

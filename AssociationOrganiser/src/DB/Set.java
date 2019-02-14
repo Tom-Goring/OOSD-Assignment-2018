@@ -5,7 +5,7 @@ import java.util.ArrayList;
 // TODO: add Set class
 public class Set {
 
-    static void generateSets() {
+    /*static void generateSets() {
 
         // get all matches
         String getMatches = "SELECT ID FROM `Match`";
@@ -32,7 +32,7 @@ public class Set {
     public static void updateMatchPlayers(String HomePlayer1Name, String HomePlayer2Name, String AwayPlayer1Name, String AwayPlayer2Name) {
 
         // TODO: add updateMatchPlayers (and also an updateMatchScores?) also think about passing in a Match class here
-    }
+    }*/
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

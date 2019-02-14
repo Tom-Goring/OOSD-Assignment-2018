@@ -9,7 +9,7 @@ public class Game {
 
     /**********************************************STATIC METHODS******************************************************/
 
-    static void generateGames() {
+    /*static void generateGames() {
 
         String getSets = "SELECT ID FROM `Set`";
 
@@ -30,5 +30,5 @@ public class Game {
         String insert = "INSERT INTO Game (SetID, GameNumber) VALUES (" + parentSet + ", " + gameNumber + ")";
 
         DatabaseManager.insertData(insert);
-    }
+    }*/
 }

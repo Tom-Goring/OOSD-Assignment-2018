@@ -25,7 +25,7 @@ public class Match {
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
 
-        retrieveMatchPlayers();
+        //retrieveMatchPlayers();
     }
 
     public Match(String homeTeamName, String awayTeamName, String homePlayer1, String homePlayer2, String awayPlayer1, String awayPlayer2) {
@@ -38,7 +38,7 @@ public class Match {
         this.awayPlayer2 = awayPlayer2;
     }
 
-    private void retrieveMatchPlayers() {
+    /*private void retrieveMatchPlayers() {
 
         ArrayList<String[]> data = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class Match {
     void sendAwayPlayer2ToDatabase(String playerName) {
 
         DatabaseManager.insertData(generateSendPlayerQuery(playerName));
-    }
+    }*/
 
     /**********************************************STATIC METHODS******************************************************/
 
@@ -115,7 +115,7 @@ public class Match {
         }
     }*/
 
-    private static void createMatch(String HomeTeamName, String AwayTeamName) {
+    /*private static void createMatch(String HomeTeamName, String AwayTeamName) {
 
         // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
         // Players select after game is played? I dont actually know
@@ -128,7 +128,7 @@ public class Match {
         insert += getHTID + "," + getATID + ");";
 
         DatabaseManager.insertData(insert);
-    }
+    }*/
 
     /*********************************************GETTERS + SETTERS****************************************************/
 

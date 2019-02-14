@@ -159,103 +159,88 @@ public class DatabaseManager {
         }
     }
 
-    static public void sendTeamToDatabase(Team team) {
+    static class User {
 
-        String insert = "INSERT INTO Team (Name) VALUES (?);";
+        public static DB.User loadUserUsingUsername(String username) {
 
-        try {
+            String query = "SELECT * FROM User WHERE (Username = ?)";
 
-            PreparedStatement insertTeam = Connect_DB.getConnection().prepareStatement(insert);
-            insertTeam.setString(1, team.getTeamName());
-            System.out.println(insertTeam);
-            insertTeam.executeUpdate();
-        }
-        catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                System.out.println("ERROR: Team name \""+ team.getTeamName() +"\" already present.");
+            try {
+
+                PreparedStatement selectUser = Connect_DB.getConnection().prepareStatement(query);
+                selectUser.setString(1, username);
+                ResultSet rset = selectUser.executeQuery();
+
+                rset.next();
+
+                DB.User user = new DB.User();
+
+                user.setUsername(rset.getString("Username"));
+                user.setSalt(rset.getString("PasswordSalt"));;
+                user.setHashedPassword(rset.getString("HashedPassword"));
+                return user;
             }
-            else {
+            catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
         }
-    }
 
-    // TODO: load players too
-    static Team loadTeamInformation(String name) {
+        public void sendNewUserToDB(DB.User user) {
 
-        String query = "SELECT * FROM Team WHERE (Name = ?);";
+            String query = "INSERT INTO User VALUES (?, ?, ?);";
 
-        try {
+            try {
 
-            PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
-            selectTeam.setString(1, name);
-            ResultSet rset = selectTeam.executeQuery();
-
-            rset.next();
-
-            return new Team(rset.getString("Name"));
+                PreparedStatement addNewUser = Connect_DB.getConnection().prepareStatement(query);
+                addNewUser.setString(1, user.getUsername());
+                addNewUser.setString(2, user.getSalt());
+                addNewUser.setString(3, user.getHashedPassword());
+            }
+            catch (SQLException e) { e.printStackTrace(); }
         }
-        catch (SQLException e) {e.printStackTrace();}
-        return null;
     }
 
-    // Deprecate this
-    static String surroundWithQuotes(String string) {
+    static class Team {
 
-        return "\"" + string + "\"";
-    }
+        static public void sendTeamToDatabase(DB.Team team) {
 
-    // Deprecate this
-    static ArrayList<String[]> executeQuery(String query) {
+            String insert = "INSERT INTO Team (Name) VALUES (?);";
 
-        ArrayList<String[]> table = new ArrayList<>();
+            try {
 
-        try {
-            Connection conn = openConnection();
-
-            System.out.println("Sending query " + query);
-
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rset = pstmt.executeQuery();
-            ResultSetMetaData rsetMeta = rset.getMetaData();
-            int columnCount = rsetMeta.getColumnCount();
-
-            while (rset.next()) {
-
-                String[] row = new String[columnCount];
-
-                for (int i = 0; i < columnCount; i++) {
-
-                    row[i] = rset.getString(i+1);
+                PreparedStatement insertTeam = Connect_DB.getConnection().prepareStatement(insert);
+                insertTeam.setString(1, team.getTeamName());
+                System.out.println(insertTeam);
+                insertTeam.executeUpdate();
+            }
+            catch (SQLException e) {
+                if (e.getErrorCode() == 1062) {
+                    System.out.println("ERROR: Team name \""+ team.getTeamName() +"\" already present.");
                 }
-
-                table.add(row);
+                else {
+                    e.printStackTrace();
+                }
             }
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
-        return table;
-    }
+        // TODO: load players too
+        static DB.Team loadTeamInformation(String name) {
 
-    // Deprecate this
-    static void insertData(String update) {
+            String query = "SELECT * FROM Team WHERE (Name = ?);";
 
-        try {
+            try {
 
-            Connection conn = openConnection();
+                PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
+                selectTeam.setString(1, name);
+                ResultSet rset = selectTeam.executeQuery();
 
-            System.out.println("Executing command: " + update);
+                rset.next();
 
-            PreparedStatement prep = conn.prepareStatement(update);
-
-            prep.executeUpdate();
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
+                return new DB.Team(rset.getString("Name"));
+            }
+            catch (SQLException e) {e.printStackTrace();}
+            return null;
         }
     }
 }

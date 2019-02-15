@@ -4,92 +4,186 @@ import java.util.ArrayList;
 
 public class Match {
 
-    // TODO: add instance and class variables + methods for Match class
+    protected class Set {
 
-    private String homeTeamName;
-    private String awayTeamName;
-    private String winningTeamName;
-    private String homePlayer1Name;
-    private String homePlayer2Name;
-    private String awayPlayer1Name;
-    private String awayPlayer2Name;
+        public int getSetNumber() {
+            return setNumber;
+        }
+
+        public void setSetNumber(int setNumber) {
+            this.setNumber = setNumber;
+        }
+
+        public int getWinningTeam() {
+            return winningTeam;
+        }
+
+        public void setWinningTeam(int winningTeam) {
+            this.winningTeam = winningTeam;
+        }
+
+        public Player getHomeTeamPlayer() {
+            return homeTeamPlayer;
+        }
+
+        public void setHomeTeamPlayer(Player homeTeamPlayer) {
+            this.homeTeamPlayer = homeTeamPlayer;
+        }
+
+        public Player getAwayTeamPlayer() {
+            return awayTeamPlayer;
+        }
+
+        public void setAwayTeamPlayer(Player awayTeamPlayer) {
+            this.awayTeamPlayer = awayTeamPlayer;
+        }
+
+        public ArrayList<Game> getGames() {
+            return games;
+        }
+
+        protected class Game {
+
+            // Game attributes
+            private int gameNumber;
+            private int homeTeamScore;
+            private int awayTeamScore;
+            private Team winningTeam;
+
+            public int getGameNumber() {
+                return gameNumber;
+            }
+
+            public void setGameNumber(int gameNumber) {
+                this.gameNumber = gameNumber;
+            }
+
+            public int getHomeTeamScore() {
+                return homeTeamScore;
+            }
+
+            public void setHomeTeamScore(int homeTeamScore) {
+                this.homeTeamScore = homeTeamScore;
+            }
+
+            public int getAwayTeamScore() {
+                return awayTeamScore;
+            }
+
+            public void setAwayTeamScore(int awayTeamScore) {
+                this.awayTeamScore = awayTeamScore;
+            }
+
+            public Team getWinningTeam() {
+                return winningTeam;
+            }
+
+            public void setWinningTeam(Team winningTeam) {
+                this.winningTeam = winningTeam;
+            }
+        }
+
+        // Set attributes
+        private int setNumber;
+        private int winningTeam;
+        private Player homeTeamPlayer;
+        private Player awayTeamPlayer;
+        private ArrayList<Game> games;
+
+        public Set() {
+            this.games = new ArrayList<>();
+        }
+
+        public Set(int setNumber) {
+
+            this.setNumber = setNumber;
+            this.games = new ArrayList<>();
+        }
+    }
+
+    private class Double extends Set {
+
+        int setNumber = 5;
+        Player homeTeamPlayer2;
+        Player awayTeamPlayer2;
+    }
+
+    private Team homeTeam;
+    private Team awayTeam;
+    private Team winningTeam;
+
+    private Player homeTeamPlayer1;
+    private Player homeTeamPlayer2;
+    private Player awayTeamPlayer1;
+    private Player getAwayTeamPlayer2;
+
     private ArrayList<Set> sets;
-    private boolean complete;
-    private int homeTeamSetsWon;
-    private int awayTeamSetsWon;
 
-    public Match(String homeTeamName, String awayTeamName) {
-        this.homeTeamName = homeTeamName;
-        this.awayTeamName = awayTeamName;
-        this.complete = false;
+    public Match(Team homeTeam, Team awayTeam) {
+
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.sets = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            this.sets.add(new Set(i + 1));
+        }
+        this.sets.add(new Double());
     }
 
-    public Match(String homeTeamName, String awayTeamName, String homePlayer1Name, String homePlayer2Name, String awayPlayer1Name, String awayPlayer2Name, String winningTeamName, int homeTeamSetsWon, int awayTeamSetsWon) {
-        this.homeTeamName = homeTeamName;
-        this.awayTeamName = awayTeamName;
-        this.homePlayer1Name = homePlayer1Name;
-        this.homePlayer2Name = homePlayer2Name;
-        this.awayPlayer1Name = awayPlayer1Name;
-        this.awayPlayer2Name = awayPlayer2Name;
-        this.winningTeamName = winningTeamName;
-        this.homeTeamSetsWon = homeTeamSetsWon;
-        this.awayTeamSetsWon = awayTeamSetsWon;
-        this.complete = true;
-        // TODO: load in sets here
+    public Team getHomeTeam() {
+        return homeTeam;
     }
 
-    public String getHomeTeamName() {
-        return homeTeamName;
+    public void setHomeTeam(Team homeTeam) {
+        this.homeTeam = homeTeam;
     }
 
-    public void setHomeTeamName(String homeTeamName) { this.homeTeamName = homeTeamName; }
-
-    public String getAwayTeamName() {
-        return awayTeamName;
+    public Team getAwayTeam() {
+        return awayTeam;
     }
 
-    public void setAwayTeamName(String awayTeamName) {
-        this.awayTeamName = awayTeamName;
+    public void setAwayTeam(Team awayTeam) {
+        this.awayTeam = awayTeam;
     }
 
-    public String getWinningTeamName() {
-        return winningTeamName;
+    public Team getWinningTeam() {
+        return winningTeam;
     }
 
-    public void setWinningTeamName(String winningTeamName) {
-        this.winningTeamName = winningTeamName;
+    public void setWinningTeam(Team winningTeam) {
+        this.winningTeam = winningTeam;
     }
 
-    public String getHomePlayer1Name() {
-        return homePlayer1Name;
+    public Player getHomeTeamPlayer1() {
+        return homeTeamPlayer1;
     }
 
-    public void setHomePlayer1Name(String homePlayer1Name) {
-        this.homePlayer1Name = homePlayer1Name;
+    public void setHomeTeamPlayer1(Player homeTeamPlayer1) {
+        this.homeTeamPlayer1 = homeTeamPlayer1;
     }
 
-    public String getHomePlayer2Name() {
-        return homePlayer2Name;
+    public Player getHomeTeamPlayer2() {
+        return homeTeamPlayer2;
     }
 
-    public void setHomePlayer2Name(String homePlayer2Name) {
-        this.homePlayer2Name = homePlayer2Name;
+    public void setHomeTeamPlayer2(Player homeTeamPlayer2) {
+        this.homeTeamPlayer2 = homeTeamPlayer2;
     }
 
-    public String getAwayPlayer1Name() {
-        return awayPlayer1Name;
+    public Player getAwayTeamPlayer1() {
+        return awayTeamPlayer1;
     }
 
-    public void setAwayPlayer1Name(String awayPlayer1Name) {
-        this.awayPlayer1Name = awayPlayer1Name;
+    public void setAwayTeamPlayer1(Player awayTeamPlayer1) {
+        this.awayTeamPlayer1 = awayTeamPlayer1;
     }
 
-    public String getAwayPlayer2Name() {
-        return awayPlayer2Name;
+    public Player getGetAwayTeamPlayer2() {
+        return getAwayTeamPlayer2;
     }
 
-    public void setAwayPlayer2Name(String awayPlayer2Name) {
-        this.awayPlayer2Name = awayPlayer2Name;
+    public void setGetAwayTeamPlayer2(Player getAwayTeamPlayer2) {
+        this.getAwayTeamPlayer2 = getAwayTeamPlayer2;
     }
 
     public ArrayList<Set> getSets() {
@@ -99,112 +193,4 @@ public class Match {
     public void setSets(ArrayList<Set> sets) {
         this.sets = sets;
     }
-
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public void setComplete(boolean complete) { this.complete = complete; }
-
-    public int getHomeTeamSetsWon() {
-        return homeTeamSetsWon;
-    }
-
-    public void setHomeTeamSetsWon(int homeTeamSetsWon) { this.homeTeamSetsWon = homeTeamSetsWon; }
-
-    public int getAwayTeamSetsWon() { return awayTeamSetsWon; }
-
-    public void setAwayTeamSetsWon(int awayTeamSetsWon) { this.awayTeamSetsWon = awayTeamSetsWon; }
 }
-
-    /*private void retrieveMatchPlayers() {
-
-        ArrayList<String[]> data = new ArrayList<>();
-
-        String getHID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + ")";
-        String getAID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + ")";
-        String getMatchID = "SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHID +") AND AwayTeamID = ("+ getAID + "));";
-
-        String select = "SELECT \n" +
-                "HP1.ID AS HP1N, \n" +
-                "HP2.ID AS HP2N, \n" +
-                "AP1.ID AS AP1N, \n" +
-                "AP2.ID AS AP2N \n" +
-                "FROM `Match` AS m \n" +
-                "LEFT JOIN Player AS HP1 ON m.HomePlayer1ID = HP1.ID \n" +
-                "LEFT JOIN Player AS HP2 ON m.HomePlayer2ID = HP2.ID \n" +
-                "LEFT JOIN Player AS AP1 ON m.AwayPlayer1ID = AP1.ID \n" +
-                "LEFT JOIN Player AS AP2 ON m.AwayPlayer2ID = AP2.ID " +
-                "WHERE (m.ID = "+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +");";
-
-        data = DatabaseManager.executeQuery(select);
-
-        // TODO: make these turn into names :)
-        this.homePlayer1 = data.get(0)[0];
-        this.homePlayer2 = data.get(0)[1];
-        this.awayPlayer1 = data.get(0)[2];
-        this.awayPlayer2 = data.get(0)[3];
-    }
-
-    private String generateSendPlayerQuery(String playerName) {
-
-        String getHTID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.homeTeamName) + "))";
-        String getATID = "(SELECT ID FROM Team WHERE (Name = " + DatabaseManager.surroundWithQuotes(this.awayTeamName) + "))";
-        String getPID = "(SELECT ID FROM Player WHERE (Name = ("+ DatabaseManager.surroundWithQuotes(playerName) +")))";
-        String getMatchID = "(SELECT ID FROM `Match` WHERE (HomeTeamID = ("+ getHTID +") AND AwayTeamID = ("+ getATID +")))";
-
-        return "UPDATE `Match` SET HomePlayer1ID = ("+ getPID +") WHERE (ID = ("+ DatabaseManager.executeQuery(getMatchID).get(0)[0] +") );";
-    }
-
-    void sendHomePlayer1ToDatabase(String playerName) {
-
-        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
-    }
-
-    void sendHomePlayer2ToDatabase(String playerName) {
-
-        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
-    }
-
-    void sendAwayPlayer1ToDatabase(String playerName) {
-
-        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
-    }
-
-    void sendAwayPlayer2ToDatabase(String playerName) {
-
-        DatabaseManager.insertData(generateSendPlayerQuery(playerName));
-    }*/
-
-    /**********************************************STATIC METHODS******************************************************/
-
-    /*static void generateMatches() {
-
-        for (Team team_outer : Team.getTeamList()) {
-
-            // iterate over every team, once per team - ignore when passing over self
-            for (Team team_inner : Team.getTeamList()) {
-
-                // create a match every time
-                if (team_inner.getTeamID() != team_outer.getTeamID()) {
-
-                    Match.createMatch(team_inner.getTeamName(), team_outer.getTeamName());
-                }
-            }
-        }
-    }*/
-
-    /*private static void createMatch(String HomeTeamName, String AwayTeamName) {
-
-        // send to database: HomeTeamID & AwayTeamID (using their names i suppose)
-        // Players select after game is played? I dont actually know
-        // Winner is added after game is played (naturally)
-        String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (";
-
-        String getHTID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(HomeTeamName) + ")";
-        String getATID = "(SELECT ID FROM Team WHERE Name = " + DatabaseManager.surroundWithQuotes(AwayTeamName) + ")";
-
-        insert += getHTID + "," + getATID + ");";
-
-        DatabaseManager.insertData(insert);
-    }*/

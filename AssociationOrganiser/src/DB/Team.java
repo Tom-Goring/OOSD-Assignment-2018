@@ -7,10 +7,10 @@ public class Team {
     private String teamName;
     private ArrayList<Player> playerList;
 
-    // TODO: add second constructor + playerlist?
     public Team(String teamName) {
 
         this.teamName = teamName;
+        this.playerList = new ArrayList<>();
     }
 
     public String getTeamName() {
@@ -21,11 +21,15 @@ public class Team {
         this.teamName = teamName;
     }
 
-    public ArrayList<Player> getPlayerList() {
-        return playerList;
+    public ArrayList<Player> getPlayerList() { return playerList; }
+
+    public void addPlayer(Player player) { this.playerList.add(player); }
+
+    public void removePlayer(Player playerToRemove) {
+
+        this.playerList.remove(playerToRemove);
+        playerToRemove.setTeam(null);
     }
 
-    public void setPlayerList(ArrayList<Player> playerList) {
-        this.playerList = playerList;
-    }
+    public String toString() { return this.teamName; }
 }

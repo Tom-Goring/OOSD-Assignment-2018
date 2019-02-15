@@ -5,27 +5,30 @@ package DB;// kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEE
 public class Player {
 
     private String playerName;
-    private String teamName;
+    private Team team;
 
-    public Player(String name, String teamName) {
+    public Player(String name, Team team) {
 
         this.playerName = name;
-        this.teamName = teamName;
+        this.team = team;
+        team.addPlayer(this);
     }
 
     public String getPlayerName() {
         return playerName;
     }
 
+    public void setTeam(Team team) { this.team = team; }
+
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
     public String getTeamName() {
-        return teamName;
+        if (this.team != null)
+        return team.getTeamName();
+        return "None";
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
+    public String toString() { return "Player Name: " + this.playerName + " Team: " + team.getTeamName(); }
 }

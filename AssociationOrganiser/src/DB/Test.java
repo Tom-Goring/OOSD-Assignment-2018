@@ -5,7 +5,7 @@ public class Test {
     // Just a class to allow for some basic testing of functionality before main GUI is implemented
     public static void main(String[] args) {
 
-        DatabaseManager.createTables();
+        //DatabaseManager.createTables();
 
         Team UWE = new Team("UWE");
         Team Page = new Team("Page");
@@ -35,10 +35,12 @@ public class Test {
 
         System.out.println(match.getMatchPlayers());
 
-        match.getSet(0).setHomeTeamPlayer(Tom);
-        match.getSet(0).setAwayTeamPlayer(Dave);
+        match.getSet(1).setHomeTeamPlayer(Tom);
+        match.getSet(1).setAwayTeamPlayer(Dave);
 
         match.getSet(1).getGame(1).setHomeTeamScore(2);
         match.getSet(1).getGame(1).setAwayTeamScore(1);
+
+        System.out.println(match.getGameScore(1, 1));
     }
 }

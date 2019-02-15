@@ -39,10 +39,15 @@ public class Match {
         }
 
         public Game getGame(int gameNumber) {
-            return games.get(gameNumber - 1);
+            return this.games.get(gameNumber - 1);
         }
 
         protected class Game {
+
+            public Game(int gameNumber) {
+
+                this.gameNumber = gameNumber + 1;
+            }
 
             // Game attributes
             private int gameNumber;
@@ -96,8 +101,12 @@ public class Match {
 
         public Set(int setNumber) {
 
-            this.setNumber = setNumber;
+            this.setNumber = setNumber + 1;
             this.games = new ArrayList<>();
+
+            for (int i = 0; i < 3; i++) {
+                this.games.add(new Game(i));
+            }
         }
     }
 
@@ -131,7 +140,7 @@ public class Match {
     }
 
     public Team getHomeTeam() {
-        return homeTeam;
+        return this.homeTeam;
     }
 
     public void setHomeTeam(Team homeTeam) {
@@ -139,7 +148,7 @@ public class Match {
     }
 
     public Team getAwayTeam() {
-        return awayTeam;
+        return this.awayTeam;
     }
 
     public void setAwayTeam(Team awayTeam) {
@@ -177,15 +186,22 @@ public class Match {
     public void setAwayTeamPlayer1(Player awayTeamPlayer1) { this.awayTeamPlayer1 = awayTeamPlayer1; }
 
     public Player getAwayTeamPlayer2() {
-        return awayTeamPlayer2;
+        return this.awayTeamPlayer2;
     }
 
     public void setAwayTeamPlayer2(Player getAwayTeamPlayer2) {
         this.awayTeamPlayer2 = getAwayTeamPlayer2;
     }
 
-    public Set getSet(int setNumber) {
-        return sets.get(setNumber - 1);
+    public Set getSet(int setNumber) { return this.sets.get(setNumber - 1); }
+
+    public String getGameScore(int setNumber, int gameNumber) {
+
+        int homeTeamScore = this.sets.get(setNumber - 1).games.get(gameNumber - 1).homeTeamScore;
+        int awayTeamScore = this.sets.get(setNumber - 1).games.get(gameNumber - 1).awayTeamScore;
+
+        return this.homeTeam.getTeamName() + ":  " + homeTeamScore + "\n"
+                + this.awayTeam.getTeamName() + ": " + awayTeamScore;
     }
 
     public ArrayList<Player> getMatchPlayers() {

@@ -1,7 +1,5 @@
 package DB;
 
-import com.mysql.cj.protocol.Resultset;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -195,7 +193,7 @@ public class DatabaseManager {
 
         public void sendNewUserToDB(DB.User user) {
 
-            String query = "INSERT INTO User VALUES (?, ?, ?);";
+            String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
             try {
 

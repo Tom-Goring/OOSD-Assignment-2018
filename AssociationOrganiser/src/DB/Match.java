@@ -38,8 +38,8 @@ public class Match {
             this.awayTeamPlayer = awayTeamPlayer;
         }
 
-        public ArrayList<Game> getGames() {
-            return games;
+        public Game getGame(int gameNumber) {
+            return games.get(gameNumber - 1);
         }
 
         protected class Game {
@@ -115,7 +115,7 @@ public class Match {
     private Player homeTeamPlayer1;
     private Player homeTeamPlayer2;
     private Player awayTeamPlayer1;
-    private Player getAwayTeamPlayer2;
+    private Player awayTeamPlayer2;
 
     private ArrayList<Set> sets;
 
@@ -174,23 +174,28 @@ public class Match {
         return awayTeamPlayer1;
     }
 
-    public void setAwayTeamPlayer1(Player awayTeamPlayer1) {
-        this.awayTeamPlayer1 = awayTeamPlayer1;
+    public void setAwayTeamPlayer1(Player awayTeamPlayer1) { this.awayTeamPlayer1 = awayTeamPlayer1; }
+
+    public Player getAwayTeamPlayer2() {
+        return awayTeamPlayer2;
     }
 
-    public Player getGetAwayTeamPlayer2() {
-        return getAwayTeamPlayer2;
+    public void setAwayTeamPlayer2(Player getAwayTeamPlayer2) {
+        this.awayTeamPlayer2 = getAwayTeamPlayer2;
     }
 
-    public void setGetAwayTeamPlayer2(Player getAwayTeamPlayer2) {
-        this.getAwayTeamPlayer2 = getAwayTeamPlayer2;
+    public Set getSet(int setNumber) {
+        return sets.get(setNumber - 1);
     }
 
-    public ArrayList<Set> getSets() {
-        return sets;
-    }
+    public ArrayList<Player> getMatchPlayers() {
 
-    public void setSets(ArrayList<Set> sets) {
-        this.sets = sets;
+        ArrayList<Player> playerList = new ArrayList<>();
+        playerList.add(this.homeTeamPlayer1);
+        playerList.add(this.homeTeamPlayer2);
+        playerList.add(this.awayTeamPlayer1);
+        playerList.add(this.awayTeamPlayer2);
+
+        return playerList;
     }
 }

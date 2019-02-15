@@ -1,19 +1,23 @@
 package DB;
 
+import java.util.ArrayList;
+
 public class Fixtures {
-//Woah //you made me merge u bastard
 
-    /**********************************************STATIC METHODS******************************************************/
-
-    // TODO: finish generateFixtures
     static void generateFixtures() {
 
-        /*Match.generateMatches();
-        Set.generateSets();
-        Game.generateGames();*/
+        ArrayList<Team> teamList = DatabaseManager.Team.getTeamList();
+        ArrayList<Match> matchList;
 
-        //TEST
+        for (Team homeTeam: teamList) {
+
+            for (Team awayTeam: teamList) {
+
+                if (homeTeam != awayTeam) {
 
 
+                }
+            }
+        }
     }
 }

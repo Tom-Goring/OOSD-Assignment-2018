@@ -9,13 +9,6 @@ public class DatabaseManager {
     static String user = "root";
     static String password = "password";
 
-    static Connection openConnection() throws SQLException{
-
-        Connection conn;
-        conn = DriverManager.getConnection(url, user, password);
-        return conn;
-    }
-
     // TODO: consider moving each table query into the relevant class?
     // TODO: test to make sure that database structure satisfies requirements
     public static void createTables() {

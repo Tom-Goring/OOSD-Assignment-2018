@@ -15,7 +15,7 @@ public class Fixtures {
 
                 if (homeTeam != awayTeam) {
 
-
+                    DatabaseManager.Match.sendNewMatchToDB(new Match(homeTeam, awayTeam));
                 }
             }
         }

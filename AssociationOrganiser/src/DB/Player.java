@@ -1,7 +1,5 @@
-package DB;// kill me what am i doing with my life REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+package DB;
 
-// TODO: finish Player class
-// TODO: make better formatting for toString()
 public class Player {
 
     private String playerName;

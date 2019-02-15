@@ -11,6 +11,7 @@ public class Connect_DB {
     public static Connection getConnection() {
 
         if (con != null) return con;
+        System.out.println("New connection obtained.");
         return getConnection(DatabaseManager.url, DatabaseManager.user, DatabaseManager.password);
     }
 

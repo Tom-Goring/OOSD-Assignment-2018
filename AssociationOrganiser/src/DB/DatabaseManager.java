@@ -1,5 +1,7 @@
 package DB;
 
+import com.mysql.cj.protocol.Resultset;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -207,7 +209,7 @@ public class DatabaseManager {
 
     static class Team {
 
-        static public void sendTeamToDatabase(DB.Team team) {
+        static public void insertTeam(DB.Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -247,6 +249,30 @@ public class DatabaseManager {
             catch (SQLException e) {e.printStackTrace();}
             return null;
         }
+
+        static ArrayList<DB.Team> getTeamList() {
+
+            ArrayList<DB.Team> teamList = new ArrayList<>();
+            String query = "SELECT * FROM team";
+
+            try {
+
+                PreparedStatement getTeamList = Connect_DB.getConnection().prepareStatement(query);
+                System.out.println(getTeamList);
+                ResultSet rset = getTeamList.executeQuery();
+
+                while (rset.next()) {
+
+                    teamList.add(new DB.Team(rset.getString("Name")));
+                }
+
+                return teamList;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     static class Player {
@@ -279,7 +305,7 @@ public class DatabaseManager {
 
                 rset.next();
 
-                return new DB.Player(playerName, rset.getString("Team.Name"));
+                return new DB.Player(playerName, new DB.Team(rset.getString("Name")));
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -299,8 +325,10 @@ public class DatabaseManager {
             try {
 
                 PreparedStatement insertMatch = Connect_DB.getConnection().prepareStatement(insert);
-                insertMatch.setString(1, match.getHomeTeamName());
-                insertMatch.setString(2, match.getAwayTeamName());
+                insertMatch.setString(1, match.getHomeTeam().getTeamName());
+                insertMatch.setString(2, match.getAwayTeam().getTeamName());
+
+                // TODO: insert sets and games too
 
                 System.out.println(insertMatch);
                 insertMatch.executeUpdate();
@@ -325,11 +353,11 @@ public class DatabaseManager {
             try {
 
                 PreparedStatement updateMatch = Connect_DB.getConnection().prepareStatement(update);
-                updateMatch.setString(1, match.getHomePlayer1Name());
-                updateMatch.setString(2 , match.getHomePlayer2Name());
-                updateMatch.setString(3 , match.getAwayPlayer1Name());
-                updateMatch.setString(4 , match.getAwayPlayer2Name());
-                updateMatch.setString(5, match.getWinningTeamName());
+                updateMatch.setString(1, match.getHomeTeamPlayer1().getPlayerName());
+                updateMatch.setString(2 , match.getHomeTeamPlayer2().getPlayerName());
+                updateMatch.setString(3 , match.getAwayTeamPlayer1().getPlayerName());
+                updateMatch.setString(4 , match.getAwayTeamPlayer1().getPlayerName());
+                updateMatch.setString(5, match.getWinningTeam().getTeamName());
 
                 System.out.println(updateMatch);
                 updateMatch.executeUpdate();

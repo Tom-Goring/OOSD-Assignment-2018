@@ -5,10 +5,11 @@ public class Test {
     // Just a class to allow for some basic testing of functionality before main GUI is implemented
     public static void main(String[] args) {
 
-        //DatabaseManager.createTables();
+        DatabaseManager.createTables();
 
         Team UWE = new Team("UWE");
         Team Page = new Team("Page");
+        Team Filton = new Team("Filton");
 
         Player Tom = new Player("Tom", UWE);
         Player Louis = new Player("Louis", UWE);
@@ -17,30 +18,13 @@ public class Test {
 
         DatabaseManager.Team.insertTeam(UWE);
         DatabaseManager.Team.insertTeam(Page);
+        DatabaseManager.Team.insertTeam(Filton);
 
         DatabaseManager.Player.sendNewPlayerToDB(Tom);
         DatabaseManager.Player.sendNewPlayerToDB(Louis);
-        DatabaseManager.Player.sendNewPlayerToDB(Tom);
+        DatabaseManager.Player.sendNewPlayerToDB(Dave);
         DatabaseManager.Player.sendNewPlayerToDB(Bob);
 
-        Match match = new Match(UWE, Page);
-
-        System.out.println(match.getHomeTeam().getPlayerList());
-        System.out.println(match.getAwayTeam().getPlayerList());
-
-        match.setHomeTeamPlayer1(Tom);
-        match.setHomeTeamPlayer2(Louis);
-        match.setAwayTeamPlayer1(Dave);
-        match.setAwayTeamPlayer2(Bob);
-
-        System.out.println(match.getMatchPlayers());
-
-        match.getSet(1).setHomeTeamPlayer(Tom);
-        match.getSet(1).setAwayTeamPlayer(Dave);
-
-        match.getSet(1).getGame(1).setHomeTeamScore(2);
-        match.getSet(1).getGame(1).setAwayTeamScore(1);
-
-        System.out.println(match.getGameScore(1, 1));
+        Fixtures.generateFixtures();
     }
 }

@@ -28,5 +28,5 @@ public class Player {
         return "None";
     }
 
-    public String toString() { return "Player Name: " + this.playerName + " Team: " + team.getTeamName(); }
+    public String toString() { return this.playerName; }
 }

@@ -44,7 +44,7 @@ public class DatabaseManager {
         // create player table
         queryList.add("CREATE TABLE Player (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "Name varchar(20),\n" +
+                "Name varchar(20) UNIQUE ,\n" +
                 "TeamID int NOT NULL,\n" +
                 "CONSTRAINT Player_pk PRIMARY KEY (ID)\n" +
                 ");");
@@ -153,6 +153,7 @@ public class DatabaseManager {
 
             for (String query : queryList) {
 
+                System.out.println(query);
                 Statement.addBatch(query);
             }
 
@@ -318,20 +319,68 @@ public class DatabaseManager {
 
         static void sendNewMatchToDB(DB.Match match) {
 
-            String insert = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
+            String insertMatch = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
                     "(SELECT ID FROM team WHERE Name = ?), " +
                     "(SELECT ID FROM team WHERE Name = ?));";
 
+            String insertSet = "INSERT INTO `Set` (SetNumber, MatchID) VALUES (?, " +
+                    "(SELECT ID FROM `match` " +
+                    "WHERE " +
+                    "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?)))";
+
+            // Gets SetID by finding all sets from the match, then picks the ID from those using setNumber
+            String insertGame = "INSERT INTO `game` (GameNumber, SetID) VALUES " +
+                    "(?, " +
+                    "(SELECT ID FROM `set` " +
+                    "WHERE MatchID = " +
+                    "(SELECT ID FROM `match` " +
+                    "WHERE HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?)) " +
+                    "AND " +
+                    "SetNumber = ?))";
+
             try {
 
-                PreparedStatement insertMatch = Connect_DB.getConnection().prepareStatement(insert);
-                insertMatch.setString(1, match.getHomeTeam().getTeamName());
-                insertMatch.setString(2, match.getAwayTeam().getTeamName());
+                PreparedStatement insert = Connect_DB.getConnection().prepareStatement(insertMatch);
+                insert.setString(1, match.getHomeTeam().getTeamName());
+                insert.setString(2, match.getAwayTeam().getTeamName());
 
-                // TODO: insert sets and games too
+                System.out.println(insert);
+                insert.executeUpdate();
 
-                System.out.println(insertMatch);
-                insertMatch.executeUpdate();
+                // add set details to set table
+
+                insert = Connect_DB.getConnection().prepareStatement(insertSet);
+
+                for (int i = 0; i < 5; i++) {
+
+                    insert.setInt(1, i + 1);
+                    insert.setString(2, match.getHomeTeam().getTeamName());
+                    insert.setString(3, match.getAwayTeam().getTeamName());
+                    insert.addBatch();
+                }
+
+                insert.executeBatch();
+
+                // add game details to game table
+                insert = Connect_DB.getConnection().prepareStatement(insertGame);
+
+                for (int setNumber = 1; setNumber < 6; setNumber++) {
+
+                    for (int gameNumber = 1; gameNumber < 4; gameNumber++) {
+
+                        insert.setInt(1, gameNumber);
+                        insert.setString(2, match.getHomeTeam().getTeamName());
+                        insert.setString(3, match.getAwayTeam().getTeamName());
+                        insert.setInt(4, setNumber);
+                        insert.addBatch();
+                    }
+                }
+
+                insert.executeBatch();
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -340,6 +389,15 @@ public class DatabaseManager {
 
         // Function assumes the match has been played and all data is available
         static void updateMatchInformation(DB.Match match) {
+
+            // List of information to send:
+                // HP1
+                // HP2
+                // AP1
+                // AP2
+                // Winner
+                // Sets
+                    // Games
 
             String update = "UPDATE `Match` " +
                     "SET " +

@@ -1,4 +1,4 @@
-package GUI;
+package misc;
 
 import DB.*;
 import javafx.application.Application;

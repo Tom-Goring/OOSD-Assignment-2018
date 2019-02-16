@@ -1,5 +1,9 @@
 package DB;
 
+import model.Fixtures;
+import model.Player;
+import model.Team;
+
 public class Test {
 
     // Just a class to allow for some basic testing of functionality before main GUI is implemented

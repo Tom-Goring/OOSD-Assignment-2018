@@ -1,4 +1,4 @@
-package GUI;
+package misc;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;

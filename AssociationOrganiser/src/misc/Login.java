@@ -1,18 +1,14 @@
-package GUI;
+package misc;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,18 +26,18 @@ public class Login extends Application {
     public void start(Stage primaryStage) {
 
         BorderPane bp = new BorderPane();
-        bp.setPadding(new Insets(10,50,50,50));
-
-        GridPane gp = new GridPane();
-        gp.setPadding(new Insets(20,20,20,30));
-        gp.setHgap(10);
-        gp.setVgap(10);
+        bp.setPadding(new Insets(10,50,10,50));
 
         HBox hb = new HBox();
         hb.setPadding(new Insets(20,20,20,30));
         Text title = new Text("Login");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         hb.getChildren().add(title);
+
+        GridPane gp = new GridPane();
+        gp.setPadding(new Insets(20,20,20,30));
+        gp.setHgap(10);
+        gp.setVgap(10);
 
         Label l_userName = new Label("Username");
         final TextField txt_userName = new TextField();
@@ -80,6 +76,15 @@ public class Login extends Application {
             }
         });
 
+        Hyperlink createAccount = new Hyperlink();
+        createAccount.setText("Create Account");
+        createAccount.setOnAction(event -> primaryStage.setScene(null));
+
+        HBox hb2 = new HBox();
+        hb2.setPadding(new Insets(20));
+        hb.getChildren().add(createAccount);
+
+        bp.setBottom(createAccount);
         bp.setCenter(gp);
         bp.setTop(hb);
 
@@ -87,8 +92,10 @@ public class Login extends Application {
         scene.setFill(Color.OLDLACE);
 
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Table Tennis Association Manager");
         primaryStage.getIcons().add(new Image("/images/tennis.png"));
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

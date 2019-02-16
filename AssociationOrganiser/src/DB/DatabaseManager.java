@@ -159,7 +159,7 @@ public class DatabaseManager {
 
     static class User {
 
-        public static DB.User loadUserUsingUsername(String username) {
+        public static model.User loadUserUsingUsername(String username) {
 
             String query = "SELECT * FROM User WHERE (Username = ?)";
 
@@ -171,7 +171,7 @@ public class DatabaseManager {
 
                 rset.next();
 
-                DB.User user = new DB.User();
+                model.User user = new model.User();
 
                 user.setUsername(rset.getString("Username"));
                 user.setSalt(rset.getString("PasswordSalt"));;
@@ -184,7 +184,7 @@ public class DatabaseManager {
             }
         }
 
-        public void sendNewUserToDB(DB.User user) {
+        public void sendNewUserToDB(model.User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -199,9 +199,9 @@ public class DatabaseManager {
         }
     }
 
-    static class Team {
+    public static class Team {
 
-        static public void insertTeam(DB.Team team) {
+        static public void insertTeam(model.Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -223,7 +223,7 @@ public class DatabaseManager {
         }
 
         // TODO: load players too
-        static DB.Team loadTeamInformation(String teamName) {
+        static model.Team loadTeamInformation(String teamName) {
 
             String query = "SELECT * FROM Team WHERE (Name = ?);";
 
@@ -236,15 +236,15 @@ public class DatabaseManager {
 
                 rset.next();
 
-                return new DB.Team(rset.getString("Name"));
+                return new model.Team(rset.getString("Name"));
             }
             catch (SQLException e) {e.printStackTrace();}
             return null;
         }
 
-        static ArrayList<DB.Team> getTeamList() {
+        public static ArrayList<model.Team> getTeamList() {
 
-            ArrayList<DB.Team> teamList = new ArrayList<>();
+            ArrayList<model.Team> teamList = new ArrayList<>();
             String query = "SELECT * FROM team";
 
             try {
@@ -255,7 +255,7 @@ public class DatabaseManager {
 
                 while (rset.next()) {
 
-                    teamList.add(new DB.Team(rset.getString("Name")));
+                    teamList.add(new model.Team(rset.getString("Name")));
                 }
 
                 return teamList;
@@ -269,7 +269,7 @@ public class DatabaseManager {
 
     static class Player {
 
-        static void sendNewPlayerToDB(DB.Player player) {
+        static void sendNewPlayerToDB(model.Player player) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -284,7 +284,7 @@ public class DatabaseManager {
             catch (SQLException e) {e.printStackTrace();}
         }
 
-        static DB.Player loadPlayerInformation(String playerName) {
+        static model.Player loadPlayerInformation(String playerName) {
 
             String query = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = ?";
 
@@ -297,7 +297,7 @@ public class DatabaseManager {
 
                 rset.next();
 
-                return new DB.Player(playerName, new DB.Team(rset.getString("Name")));
+                return new model.Player(playerName, new model.Team(rset.getString("Name")));
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -306,9 +306,9 @@ public class DatabaseManager {
         }
     }
 
-    static class Match {
+    public static class Match {
 
-        static void sendNewMatchToDB(DB.Match match) {
+        public static void sendNewMatchToDB(model.Match match) {
 
             String insertMatch = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
                     "(SELECT ID FROM team WHERE Name = ?), " +
@@ -379,7 +379,7 @@ public class DatabaseManager {
         }
 
         // Function assumes the match has been played and all data is available
-        static void updateMatchInformation(DB.Match match) {
+        static void updateMatchInformation(model.Match match) {
 
             // List of information to send:
                 // HP1

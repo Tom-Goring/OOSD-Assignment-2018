@@ -1,4 +1,6 @@
-package DB;
+package model;
+
+import DB.DatabaseManager;
 
 import java.util.ArrayList;
 

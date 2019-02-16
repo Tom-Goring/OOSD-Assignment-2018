@@ -16,11 +16,15 @@
       <PasswordField layoutX="149.0" layoutY="245.0" />
       <PasswordField layoutX="149.0" layoutY="305.0" />
       <Label layoutX="150.0" layoutY="278.0" stylesheets="@../application/theme.css" text="Confirm Password" />
-      <Button layoutX="149.0" layoutY="354.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../application/theme.css" text="Create">
+      <Button layoutX="149.0" layoutY="393.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../application/theme.css" text="Create">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button layoutX="231.0" layoutY="354.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" text="Cancel" />
+      <Button layoutX="231.0" layoutY="393.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" stylesheets="@../application/theme.css" text="Cancel" textAlignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

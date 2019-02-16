@@ -1,3 +1,13 @@
 .button {
     -fx-padding: 5;
 }
+
+.label {
+
+    -fx-font-size: 18px;
+}
+
+.title {
+
+    -fx-font-size: 24px;
+}

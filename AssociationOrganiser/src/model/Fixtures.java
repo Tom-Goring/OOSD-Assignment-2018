@@ -6,18 +6,21 @@ import java.util.ArrayList;
 
 public class Fixtures {
 
-    static void generateFixtures() {
+    public static void generateFixtures() {
 
         ArrayList<Team> teamList = DatabaseManager.Team.getTeamList();
         ArrayList<Match> matchList;
 
-        for (Team homeTeam: teamList) {
+        if (teamList != null) {
 
-            for (Team awayTeam: teamList) {
+            for (Team homeTeam: teamList) {
 
-                if (homeTeam != awayTeam) {
+                for (Team awayTeam: teamList) {
 
-                    DatabaseManager.Match.sendNewMatchToDB(new Match(homeTeam, awayTeam));
+                    if (homeTeam != awayTeam) {
+
+                        DatabaseManager.Match.sendNewMatchToDB(new Match(homeTeam, awayTeam));
+                    }
                 }
             }
         }

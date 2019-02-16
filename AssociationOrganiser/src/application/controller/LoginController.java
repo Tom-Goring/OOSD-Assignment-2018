@@ -13,7 +13,7 @@ public class LoginController {
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
-        Parent createAccountParent = FXMLLoader.load(getClass().getResource("../view/CreateAccount.fxml"));
+        Parent createAccountParent = FXMLLoader.load(getClass().getResource("../../view/CreateAccount.fxml"));
         Scene createAccountScene = new Scene(createAccountParent);
 
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();

@@ -1,5 +1,6 @@
 .button {
     -fx-padding: 5;
+    -fx-background-radius: 0;
 }
 
 .label {
@@ -10,4 +11,22 @@
 .title {
 
     -fx-font-size: 24px;
+}
+
+.accept_button {
+
+    -fx-background-color: #1486CFFF;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 0.8;
+    -fx-background-radius: 0;
+}
+
+.accept_button:hover {
+
+    -fx-background-color: #1486CFFF;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 1.0;
+    -fx-background-radius: 0;
 }

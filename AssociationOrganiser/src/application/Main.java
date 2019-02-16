@@ -16,6 +16,7 @@ public class Main extends Application {
         stage.setTitle("Touis Table Tennis Association Manager");
         stage.getIcons().add(new Image("/images/tennis.png"));
         stage.centerOnScreen();
+        stage.setResizable(false);
         stage.setScene(new Scene(root));
 
         stage.show();

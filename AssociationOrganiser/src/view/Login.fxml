@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginController">
+<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginController">
    <children>
       <Label layoutX="88.0" layoutY="78.0" styleClass="title" stylesheets="@../application/theme.css" text="Touis Table Tennis System">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="126.0" layoutY="157.0" stylesheets="@../application/theme.css" text="Username">
+      <Label layoutX="127.0" layoutY="157.0" prefHeight="27.0" prefWidth="200.0" stylesheets="@../application/theme.css" text="Username">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <TextField layoutX="127.0" layoutY="184.0" prefHeight="25.0" prefWidth="200.0" />
       <TextField layoutX="127.0" layoutY="261.0" prefHeight="25.0" prefWidth="200.0" />
-      <Label layoutX="129.0" layoutY="234.0" stylesheets="@../application/theme.css" text="Password">
+      <Label layoutX="127.0" layoutY="234.0" prefHeight="27.0" prefWidth="199.0" stylesheets="@../application/theme.css" text="Password">
          <font>
             <Font size="18.0" />
          </font>

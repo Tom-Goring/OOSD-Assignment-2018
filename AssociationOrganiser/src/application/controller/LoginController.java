@@ -20,4 +20,8 @@ public class LoginController {
 
         window.setScene(createAccountScene);
     }
+
+    public void attemptLogIn(ActionEvent actionEvent) {
+        // TODO: add this
+    }
 }

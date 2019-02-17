@@ -1,4 +1,4 @@
-package misc;
+package deprecated;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;

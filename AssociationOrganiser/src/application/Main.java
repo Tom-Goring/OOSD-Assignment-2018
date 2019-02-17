@@ -1,5 +1,6 @@
 package application;
 
+import DB.DatabaseManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +15,7 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("../view/Login.fxml"));
         stage.setTitle("Touis Table Tennis Association Manager");
-        stage.getIcons().add(new Image("/images/tennis.png"));
+        stage.getIcons().add(new Image("/resources/tennis.png"));
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setScene(new Scene(root));

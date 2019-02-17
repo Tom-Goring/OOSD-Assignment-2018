@@ -1,15 +1,19 @@
 package application.controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class LoginController {
+
+    @FXML
+    private TextField usernameField;
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
@@ -21,7 +25,10 @@ public class LoginController {
         window.setScene(createAccountScene);
     }
 
+
+
     public void attemptLogIn(ActionEvent actionEvent) {
-        // TODO: add this
+
+        System.out.println(usernameField.getText());
     }
 }

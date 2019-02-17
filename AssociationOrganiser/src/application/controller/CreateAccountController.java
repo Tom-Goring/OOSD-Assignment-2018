@@ -16,14 +16,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.User;
 
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.Security;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
 public class CreateAccountController {
@@ -88,32 +84,15 @@ public class CreateAccountController {
         user.setUsername(usernameField.getText());
         user.setPassword(passwordField.getText());
 
-        // generate salt
-        SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[32];
-        random.nextBytes(bytes); // fills bytes array with random bytes
-        user.setSalt(bytes);
+        user.setSalt(DatabaseManager.generateSalt());
+        user.setHashedPassword(DatabaseManager.hashPassword(user));
 
-        KeySpec spec = new PBEKeySpec(user.getPassword().toCharArray(), user.getSalt(), 25000, 256);
-        try {
+        if (user.getHashedPassword() != null) {
 
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            if (!DatabaseManager.User.sendNewUserToDB(user)) {
 
-            try {
-
-                byte[] hash = skf.generateSecret(spec).getEncoded();
-                user.setHashedPassword(hash);
-
-                DatabaseManager.User.sendNewUserToDB(user);
-            }
-            catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                System.out.println("duplicate placeholder");
             }
         }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println();
     }
 }

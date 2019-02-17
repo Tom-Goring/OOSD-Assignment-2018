@@ -180,7 +180,7 @@ public class DatabaseManager {
         admin.setUsername("admin");
         admin.setPassword("default");
         admin.setSalt(Security.generateSalt());
-        admin.setHashedPassword(Security.hashPassword(admin));
+        admin.setHashedPassword(Security.hashPassword(admin.getPassword(), admin.getSalt()));
         return admin;
     }
 
@@ -194,10 +194,10 @@ public class DatabaseManager {
             return bytes;
         }
 
-        public static byte[] hashPassword(model.User user) {
+        public static byte[] hashPassword(String password, byte[] salt) {
             try {
 
-                KeySpec spec = new PBEKeySpec(user.getPassword().toCharArray(), user.getSalt(), 25000, 256);
+                KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 25000, 256);
                 SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
                 try {

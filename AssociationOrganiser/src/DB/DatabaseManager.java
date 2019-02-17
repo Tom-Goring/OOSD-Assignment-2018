@@ -1,5 +1,11 @@
 package DB;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -8,6 +14,8 @@ public class DatabaseManager {
     static String url = "jdbc:mysql://localhost:3306/tournament?allowPublicKeyRetrieval=true&&useSSL=false";
     static String user = "root";
     static String password = "password";
+
+    private static model.User admin = createAdminDefault(); // for a main user admin to log into
 
     // TODO: consider moving each table query into the relevant class?
     // TODO: test to make sure that database structure satisfies requirements
@@ -138,11 +146,11 @@ public class DatabaseManager {
 
         queryList.add("ALTER TABLE `Set` ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES `Match` (ID);");
 
-
         try {
 
             Statement Statement = Connect_DB.getConnection().createStatement();
 
+            // create tables
             for (String query : queryList) {
 
                 System.out.println(query);
@@ -151,10 +159,57 @@ public class DatabaseManager {
 
             Statement.executeBatch();
 
+            // insert default admin account
+            String insertAdmin = "INSERT INTO user (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
+            PreparedStatement insert = Connect_DB.getConnection().prepareStatement(insertAdmin);
+            insert.setString(1, admin.getUsername());
+            insert.setBytes(2, admin.getSalt());
+            insert.setBytes(3, admin.getHashedPassword());
+
+            insert.executeUpdate();
 
         } catch (SQLException e) {
 
             e.printStackTrace();
+        }
+    }
+
+     private static model.User createAdminDefault() {
+
+        model.User admin = new model.User();
+        admin.setUsername("admin");
+        admin.setPassword("default");
+        admin.setSalt(generateSalt());
+        admin.setHashedPassword(hashPassword(admin));
+        return admin;
+    }
+
+    public static byte[] generateSalt() {
+
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[32];
+        random.nextBytes(bytes); // fills bytes array with random bytes
+        return bytes;
+    }
+
+    public static byte[] hashPassword(model.User user) {
+        try {
+
+            KeySpec spec = new PBEKeySpec(user.getPassword().toCharArray(), user.getSalt(), 25000, 256);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            try {
+
+                return skf.generateSecret(spec).getEncoded();
+            }
+            catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -185,7 +240,7 @@ public class DatabaseManager {
             }
         }
 
-        public static void sendNewUserToDB(model.User user) {
+        public static boolean sendNewUserToDB(model.User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -199,7 +254,17 @@ public class DatabaseManager {
                 System.out.println(addNewUser);
                 addNewUser.executeUpdate();
             }
-            catch (SQLException e) { e.printStackTrace(); }
+            catch (SQLException e) {
+                if (e.getErrorCode() == 1062) {
+                   return false;
+                }
+                else {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 

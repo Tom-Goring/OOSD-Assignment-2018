@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -94,7 +93,7 @@ public class Login extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Table Tennis Association Manager");
-        primaryStage.getIcons().add(new Image("/images/tennis.png"));
+        primaryStage.getIcons().add(new Image("/resources/tennis.png"));
         primaryStage.centerOnScreen();
         primaryStage.show();
     }

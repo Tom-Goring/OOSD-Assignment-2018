@@ -19,14 +19,14 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField layoutX="127.0" layoutY="184.0" prefHeight="25.0" prefWidth="200.0" />
-      <TextField layoutX="127.0" layoutY="261.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="usernameField" layoutX="127.0" layoutY="184.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="passwordField" layoutX="127.0" layoutY="261.0" prefHeight="25.0" prefWidth="200.0" />
       <Label layoutX="127.0" layoutY="234.0" prefHeight="27.0" prefWidth="199.0" stylesheets="@../application/theme.css" text="Password">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button alignment="CENTER" layoutX="249.0" layoutY="309.0" mnemonicParsing="false" onAction="#attemptLogIn" prefHeight="23.0" prefWidth="80.0" style="-fx-padding: 0;" stylesheets="@../application/theme.css" text="Button">
+      <Button alignment="CENTER" layoutX="249.0" layoutY="309.0" mnemonicParsing="false" onAction="#attemptLogIn" prefHeight="23.0" prefWidth="80.0" style="-fx-padding: 0;" styleClass="accept_button" stylesheets="@../application/theme.css" text="Login">
          <font>
             <Font size="18.0" />
          </font>

@@ -6,6 +6,7 @@ public class User {
     private String password;
     private byte[] salt;
     private byte[] hashedPassword;
+    private int privilegeLevel = 1;
 
     public String getUsername() {
         return username;
@@ -36,4 +37,7 @@ public class User {
     public void setHashedPassword(byte[] hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
+
+
 }
+

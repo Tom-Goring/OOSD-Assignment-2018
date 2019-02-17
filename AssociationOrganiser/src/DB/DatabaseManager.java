@@ -160,11 +160,12 @@ public class DatabaseManager {
             Statement.executeBatch();
 
             // insert default admin account
-            String insertAdmin = "INSERT INTO user (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
+            String insertAdmin = "INSERT INTO user (Username, PasswordSalt, HashedPassword, PrivilegeLevel) VALUES (?, ?, ?, ?);";
             PreparedStatement insert = Connect_DB.getConnection().prepareStatement(insertAdmin);
             insert.setString(1, admin.getUsername());
             insert.setBytes(2, admin.getSalt());
             insert.setBytes(3, admin.getHashedPassword());
+            insert.setInt(4, 2); // in prep for admins having more power than users
 
             insert.executeUpdate();
 
@@ -176,7 +177,7 @@ public class DatabaseManager {
 
      private static model.User createAdminDefault() {
 
-        model.User admin = new model.User();
+        model.User admin = new model.Admin();
         admin.setUsername("admin");
         admin.setPassword("default");
         admin.setSalt(Security.generateSalt());

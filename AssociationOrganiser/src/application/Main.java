@@ -13,6 +13,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        DatabaseManager.createTables();
+
         Parent root = FXMLLoader.load(getClass().getResource("../view/Login.fxml"));
         stage.setTitle("Touis Table Tennis Association Manager");
         stage.getIcons().add(new Image("/resources/tennis.png"));

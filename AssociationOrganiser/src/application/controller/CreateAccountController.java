@@ -84,8 +84,8 @@ public class CreateAccountController {
         user.setUsername(usernameField.getText());
         user.setPassword(passwordField.getText());
 
-        user.setSalt(DatabaseManager.generateSalt());
-        user.setHashedPassword(DatabaseManager.hashPassword(user));
+        user.setSalt(DatabaseManager.Security.generateSalt());
+        user.setHashedPassword(DatabaseManager.Security.hashPassword(user));
 
         if (user.getHashedPassword() != null) {
 

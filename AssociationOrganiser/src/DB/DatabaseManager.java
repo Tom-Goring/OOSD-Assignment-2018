@@ -179,37 +179,40 @@ public class DatabaseManager {
         model.User admin = new model.User();
         admin.setUsername("admin");
         admin.setPassword("default");
-        admin.setSalt(generateSalt());
-        admin.setHashedPassword(hashPassword(admin));
+        admin.setSalt(Security.generateSalt());
+        admin.setHashedPassword(Security.hashPassword(admin));
         return admin;
     }
 
-    public static byte[] generateSalt() {
+    public static class Security {
 
-        SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[32];
-        random.nextBytes(bytes); // fills bytes array with random bytes
-        return bytes;
-    }
+        public static byte[] generateSalt() {
 
-    public static byte[] hashPassword(model.User user) {
-        try {
+            SecureRandom random = new SecureRandom();
+            byte bytes[] = new byte[32];
+            random.nextBytes(bytes); // fills bytes array with random bytes
+            return bytes;
+        }
 
-            KeySpec spec = new PBEKeySpec(user.getPassword().toCharArray(), user.getSalt(), 25000, 256);
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
+        public static byte[] hashPassword(model.User user) {
             try {
 
-                return skf.generateSecret(spec).getEncoded();
+                KeySpec spec = new PBEKeySpec(user.getPassword().toCharArray(), user.getSalt(), 25000, 256);
+                SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+                try {
+
+                    return skf.generateSecret(spec).getEncoded();
+                }
+                catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
-            catch (InvalidKeySpecException e) {
+            catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

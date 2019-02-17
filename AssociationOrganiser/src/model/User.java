@@ -4,8 +4,8 @@ public class User {
 
     private String username;
     private String password;
-    private String salt;
-    private String hashedPassword;
+    private byte[] salt;
+    private byte[] hashedPassword;
 
     public String getUsername() {
         return username;
@@ -23,19 +23,17 @@ public class User {
         this.password = password;
     }
 
-    public String getSalt() {
-        return salt;
-    }
+    public byte[] getSalt() { return salt; }
 
-    public void setSalt(String salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 
-    public String getHashedPassword() {
+    public byte[] getHashedPassword() {
         return hashedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
+    public void setHashedPassword(byte[] hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
 }

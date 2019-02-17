@@ -26,9 +26,10 @@ public class DatabaseManager {
 
         queryList.add("CREATE TABLE User (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
-                "Username varchar(20),\n" +
-                "PasswordSalt varchar(128),\n" +
-                "HashedPassword varchar(128)," +
+                "Username varchar(20) UNIQUE,\n" +
+                "PasswordSalt varbinary(128),\n" +
+                "HashedPassword varbinary(128)," +
+                "PrivilegeLevel int DEFAULT 1," +
                 "CONSTRAINT User_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -157,7 +158,7 @@ public class DatabaseManager {
         }
     }
 
-    static class User {
+    public static class User {
 
         public static model.User loadUserUsingUsername(String username) {
 
@@ -174,8 +175,8 @@ public class DatabaseManager {
                 model.User user = new model.User();
 
                 user.setUsername(rset.getString("Username"));
-                user.setSalt(rset.getString("PasswordSalt"));;
-                user.setHashedPassword(rset.getString("HashedPassword"));
+                user.setSalt(rset.getBytes("PasswordSalt"));;
+                user.setHashedPassword(rset.getBytes("HashedPassword"));
                 return user;
             }
             catch (SQLException e) {
@@ -184,7 +185,7 @@ public class DatabaseManager {
             }
         }
 
-        public void sendNewUserToDB(model.User user) {
+        public static void sendNewUserToDB(model.User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -192,8 +193,11 @@ public class DatabaseManager {
 
                 PreparedStatement addNewUser = Connect_DB.getConnection().prepareStatement(query);
                 addNewUser.setString(1, user.getUsername());
-                addNewUser.setString(2, user.getSalt());
-                addNewUser.setString(3, user.getHashedPassword());
+                addNewUser.setBytes(2, user.getSalt());
+                addNewUser.setBytes(3, user.getHashedPassword());
+
+                System.out.println(addNewUser);
+                addNewUser.executeUpdate();
             }
             catch (SQLException e) { e.printStackTrace(); }
         }

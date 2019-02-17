@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -11,20 +12,26 @@
    <children>
       <Label layoutX="113.0" layoutY="78.0" styleClass="title" stylesheets="@../application/theme.css" text="Create a new account" AnchorPane.topAnchor="78.0" />
       <Label layoutX="151.0" layoutY="155.0" stylesheets="@../application/theme.css" text="Username" />
-      <TextField layoutX="150.0" layoutY="182.0" />
+      <TextField fx:id="usernameField" layoutX="150.0" layoutY="182.0" />
       <Label layoutX="151.0" layoutY="218.0" stylesheets="@../application/theme.css" text="Password" />
-      <PasswordField layoutX="149.0" layoutY="245.0" />
-      <PasswordField layoutX="149.0" layoutY="305.0" />
+      <PasswordField fx:id="passwordField" layoutX="149.0" layoutY="245.0" onKeyReleased="#comparePasswordFields" />
+      <PasswordField fx:id="confirmPasswordField" layoutX="149.0" layoutY="305.0" onKeyReleased="#comparePasswordFields" />
       <Label layoutX="150.0" layoutY="278.0" stylesheets="@../application/theme.css" text="Confirm Password" />
-      <Button layoutX="149.0" layoutY="393.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../application/theme.css" text="Create">
+      <Button layoutX="149.0" layoutY="393.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../application/theme.css" text="Create">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button layoutX="231.0" layoutY="393.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="68.0" stylesheets="@../application/theme.css" text="Cancel" textAlignment="CENTER">
+      <Button layoutX="231.0" layoutY="393.0" mnemonicParsing="false" onAction="#returnToLogin" prefHeight="30.0" prefWidth="68.0" stylesheets="@../application/theme.css" text="Cancel" textAlignment="CENTER">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
+      <ImageView fx:id="passwordCheck" fitHeight="24.0" fitWidth="21.0" layoutX="313.0" layoutY="306.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="passwordMatchText" layoutX="149.0" layoutY="327.0" text="Passwords do not match" textFill="#00000081" visible="false">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

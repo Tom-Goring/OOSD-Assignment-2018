@@ -175,7 +175,7 @@ public class DatabaseManager {
         }
     }
 
-     private static model.User createAdminDefault() {
+    private static model.User createAdminDefault() {
 
         model.User admin = new model.Admin();
         admin.setUsername("admin");
@@ -219,7 +219,7 @@ public class DatabaseManager {
 
     public static class User {
 
-        public static model.User loadUserUsingUsername(String username) {
+        public static model.User getUserFromDatabase(String username) {
 
             String query = "SELECT * FROM User WHERE (Username = ?)";
 
@@ -244,7 +244,7 @@ public class DatabaseManager {
             }
         }
 
-        public static boolean sendNewUserToDB(model.User user) {
+        public static boolean addPlayerToDatabase(model.User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -274,7 +274,7 @@ public class DatabaseManager {
 
     public static class Team {
 
-        static public void insertTeam(model.Team team) {
+        static public void addNewTeamToDatabase(model.Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -296,39 +296,45 @@ public class DatabaseManager {
         }
 
         // TODO: load players too
-        static model.Team loadTeamInformation(String teamName) {
+        static model.Team getTeamFromDatabase(String teamName) {
 
-            String query = "SELECT * FROM Team WHERE (Name = ?);";
+            String query = "SELECT Player.Name FROM Player WHERE (TeamID = (SELECT ID FROM team WHERE team.Name = ?));";
 
             try {
 
                 PreparedStatement selectTeam = Connect_DB.getConnection().prepareStatement(query);
                 selectTeam.setString(1, teamName);
+
                 System.out.println(selectTeam);
                 ResultSet rset = selectTeam.executeQuery();
 
-                rset.next();
+                model.Team team = new model.Team(teamName);
 
-                return new model.Team(rset.getString("Name"));
+                while (rset.next()) {
+
+                    team.getPlayerList().add(new model.Player(rset.getString("Name")));
+                }
+
+                return team;
             }
             catch (SQLException e) {e.printStackTrace();}
             return null;
         }
 
-        public static ArrayList<model.Team> getTeamList() {
+        public static ArrayList<model.Team> getAllTeamsFromDatabase() {
 
             ArrayList<model.Team> teamList = new ArrayList<>();
-            String query = "SELECT * FROM team";
+            String query = "SELECT Name FROM team";
 
             try {
 
-                PreparedStatement getTeamList = Connect_DB.getConnection().prepareStatement(query);
-                System.out.println(getTeamList);
-                ResultSet rset = getTeamList.executeQuery();
+                PreparedStatement getTeamNames = Connect_DB.getConnection().prepareStatement(query);
+                System.out.println(getTeamNames);
+                ResultSet rset = getTeamNames.executeQuery();
 
                 while (rset.next()) {
 
-                    teamList.add(new model.Team(rset.getString("Name")));
+                    teamList.add(getTeamFromDatabase(rset.getString("Name")));
                 }
 
                 return teamList;
@@ -342,7 +348,7 @@ public class DatabaseManager {
 
     static class Player {
 
-        static void sendNewPlayerToDB(model.Player player) {
+        static void addNewPlayerToDatabase(model.Player player, model.Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -350,27 +356,31 @@ public class DatabaseManager {
 
                 PreparedStatement insertPlayer = Connect_DB.getConnection().prepareStatement(insert);
                 insertPlayer.setString(1, player.getPlayerName());
-                insertPlayer.setString(2, player.getTeamName());
+                insertPlayer.setString(2, team.getTeamName());
                 System.out.println(insertPlayer);
                 insertPlayer.executeUpdate();
             }
             catch (SQLException e) {e.printStackTrace();}
         }
 
-        static model.Player loadPlayerInformation(String playerName) {
+        static ArrayList<model.Player> getPlayerList() {
 
-            String query = "SELECT Player.ID, Player.Name, Team.Name FROM Player INNER JOIN Team ON Player.TeamID = Team.ID WHERE Player.Name = ?";
+            ArrayList<model.Player> players = new ArrayList<>();
+
+            String query = "SELECT Name FROM player;";
 
             try {
 
-                PreparedStatement findPlayer = Connect_DB.getConnection().prepareStatement(query);
-                findPlayer.setString(1, playerName);
-                System.out.println(findPlayer);
-                ResultSet rset = findPlayer.executeQuery();
+                PreparedStatement getPlayers = Connect_DB.getConnection().prepareStatement(query);
+                ResultSet rset = getPlayers.executeQuery();
 
-                rset.next();
+                while(rset.next()) {
 
-                return new model.Player(playerName, new model.Team(rset.getString("Name")));
+                    players.add(new model.Player(rset.getString("Player.Name")));
+                }
+
+                return players;
+
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -454,15 +464,7 @@ public class DatabaseManager {
         // Function assumes the match has been played and all data is available
         static void updateMatchInformation(model.Match match) {
 
-            // List of information to send:
-                // HP1
-                // HP2
-                // AP1
-                // AP2
-                // Winner
-                // Sets
-                    // Games
-
+            // TODO: look at pushing match updates
             String update = "UPDATE `Match` " +
                     "SET " +
                     "HomePlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +

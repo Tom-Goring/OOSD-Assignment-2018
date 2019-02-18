@@ -25,16 +25,19 @@ public class LoginController {
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
-        Parent createAccountParent = FXMLLoader.load(getClass().getResource("../../view/CreateAccount.fxml"));
-        Scene createAccountScene = new Scene(createAccountParent);
-
+        Parent Parent = FXMLLoader.load(getClass().getResource("../../view/CreateAccount.fxml"));
+        Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-
-        window.setScene(createAccountScene);
+        window.setScene(Scene);
     }
 
-    public void openMainScene() {
+    public void openMainScene(ActionEvent actionEvent, User user) throws IOException {
 
+        Parent Parent = FXMLLoader.load(getClass().getResource("../../view/HomePage.fxml"));
+        Scene Scene = new Scene(Parent);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(Scene);
+        window.setResizable(true);
     }
 
     public void attemptLogIn(ActionEvent actionEvent) {
@@ -49,8 +52,12 @@ public class LoginController {
         // compare hash of entered to pre-existing hash
         if (Arrays.equals(hashAttempt, desiredUserAccount.getHashedPassword())) {
 
-            // login
-            System.out.println("success");
+            try {
+                openMainScene(actionEvent, desiredUserAccount);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else {
 

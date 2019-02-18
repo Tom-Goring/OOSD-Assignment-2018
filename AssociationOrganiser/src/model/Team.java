@@ -25,11 +25,7 @@ public class Team {
 
     public void addPlayer(Player player) { this.playerList.add(player); }
 
-    public void removePlayer(Player playerToRemove) {
-
-        this.playerList.remove(playerToRemove);
-        playerToRemove.setTeam(null);
-    }
+    public void removePlayer(Player playerToRemove) { this.playerList.remove(playerToRemove); }
 
     public String toString() { return this.teamName; }
 }

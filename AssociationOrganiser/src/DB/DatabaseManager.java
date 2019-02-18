@@ -17,8 +17,16 @@ public class DatabaseManager {
 
     private static model.User admin = createAdminDefault(); // for a main user admin to log into
 
-    // TODO: consider moving each table query into the relevant class?
-    // TODO: test to make sure that database structure satisfies requirements
+    private static model.User createAdminDefault() {
+
+        model.User admin = new model.Admin();
+        admin.setUsername("admin");
+        admin.setPassword("default");
+        admin.setSalt(Security.generateSalt());
+        admin.setHashedPassword(Security.hashPassword(admin.getPassword(), admin.getSalt()));
+        return admin;
+    }
+
     public static void createTables() {
 
         ArrayList<String> queryList = new ArrayList<>();
@@ -173,16 +181,6 @@ public class DatabaseManager {
 
             e.printStackTrace();
         }
-    }
-
-    private static model.User createAdminDefault() {
-
-        model.User admin = new model.Admin();
-        admin.setUsername("admin");
-        admin.setPassword("default");
-        admin.setSalt(Security.generateSalt());
-        admin.setHashedPassword(Security.hashPassword(admin.getPassword(), admin.getSalt()));
-        return admin;
     }
 
     public static class Security {
@@ -346,7 +344,7 @@ public class DatabaseManager {
         }
     }
 
-    static class Player {
+    public static class Player {
 
         static void addNewPlayerToDatabase(model.Player player, model.Team team) {
 

@@ -8,6 +8,12 @@
     -fx-font-size: 18px;
 }
 
+.fieldtext {
+
+    -fx-text-fill: #00000081;
+    -fx-font-size: 10px;
+}
+
 .title {
 
     -fx-font-size: 24px;

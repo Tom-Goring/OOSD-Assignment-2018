@@ -16,11 +16,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.User;
 
-import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
-import java.security.spec.KeySpec;
 
 public class CreateAccountController {
 
@@ -77,7 +74,7 @@ public class CreateAccountController {
         }
     }
 
-    public void createAccount(ActionEvent actionEvent) {
+    public void createAccount(ActionEvent actionEvent) throws IOException {
 
         User user = new User();
 
@@ -89,10 +86,22 @@ public class CreateAccountController {
 
         if (user.getHashedPassword() != null) {
 
-            if (!DatabaseManager.User.sendNewUserToDB(user)) {
+            if (!DatabaseManager.User.addPlayerToDatabase(user)) {
 
                 System.out.println("duplicate placeholder");
             }
         }
+
+        Parent loginParent = FXMLLoader.load(getClass().getResource("../../view/Login.fxml"));
+        Scene loginScene = new Scene(loginParent);
+
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+
+        window.setScene(loginScene);
+    }
+
+    public void checkUserNameAvailability(KeyEvent keyEvent) {
+
+
     }
 }

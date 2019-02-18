@@ -40,7 +40,7 @@ public class LoginController {
     public void attemptLogIn(ActionEvent actionEvent) {
 
         // TODO: account for username non existence
-        User desiredUserAccount = DatabaseManager.User.loadUserUsingUsername(usernameField.getText());
+        User desiredUserAccount = DatabaseManager.User.getUserFromDatabase(usernameField.getText());
         String enteredPassword = passwordField.getText();
 
         // hash entered password with desired user account salt

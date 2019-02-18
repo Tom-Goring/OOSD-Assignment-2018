@@ -1,3 +1,8 @@
+.anchor {
+
+    -fx-background-color: #FFFFFF;
+}
+
 .button {
     -fx-padding: 5;
     -fx-background-radius: 0;

@@ -8,6 +8,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DatabaseManager {
 
@@ -211,6 +212,22 @@ public class DatabaseManager {
             catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
                 return null;
+            }
+        }
+
+        public static boolean checkPassword(String passwordToCheck, model.User user) {
+
+            // hash entered password with desired user account salt
+            byte[] hashAttempt = DatabaseManager.Security.hashPassword(passwordToCheck, user.getSalt());
+
+            // compare hash of entered to pre-existing hash
+            if (Arrays.equals(hashAttempt, user.getHashedPassword())) {
+
+                return true;
+            }
+            else {
+
+                return false;
             }
         }
     }

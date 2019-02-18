@@ -46,11 +46,7 @@ public class LoginController {
         User desiredUserAccount = DatabaseManager.User.getUserFromDatabase(usernameField.getText());
         String enteredPassword = passwordField.getText();
 
-        // hash entered password with desired user account salt
-        byte[] hashAttempt = DatabaseManager.Security.hashPassword(enteredPassword, desiredUserAccount.getSalt());
-
-        // compare hash of entered to pre-existing hash
-        if (Arrays.equals(hashAttempt, desiredUserAccount.getHashedPassword())) {
+        if (DatabaseManager.Security.checkPassword(enteredPassword, desiredUserAccount)) {
 
             try {
                 openMainScene(actionEvent, desiredUserAccount);

@@ -1,4 +1,4 @@
-package DB;
+package java.DB;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -16,11 +16,11 @@ public class DatabaseManager {
     static String user = "root";
     static String password = "password";
 
-    private static model.User admin = createAdminDefault(); // for a main user admin to log into
+    private static java.model.User admin = createAdminDefault(); // for a main user admin to log into
 
-    private static model.User createAdminDefault() {
+    private static java.model.User createAdminDefault() {
 
-        model.User admin = new model.Admin();
+        java.model.User admin = new java.model.Admin();
         admin.setUsername("admin");
         admin.setPassword("default");
         admin.setSalt(Security.generateSalt());
@@ -215,7 +215,7 @@ public class DatabaseManager {
             }
         }
 
-        public static boolean checkPassword(String passwordToCheck, model.User user) {
+        public static boolean checkPassword(String passwordToCheck, java.model.User user) {
 
             // hash entered password with desired user account salt
             byte[] hashAttempt = DatabaseManager.Security.hashPassword(passwordToCheck, user.getSalt());
@@ -234,7 +234,7 @@ public class DatabaseManager {
 
     public static class User {
 
-        public static model.User getUserFromDatabase(String username) {
+        public static java.model.User getUserFromDatabase(String username) {
 
             String query = "SELECT * FROM User WHERE (Username = ?)";
 
@@ -246,7 +246,7 @@ public class DatabaseManager {
 
                 rset.next();
 
-                model.User user = new model.User();
+                java.model.User user = new java.model.User();
 
                 user.setUsername(rset.getString("Username"));
                 user.setSalt(rset.getBytes("PasswordSalt"));;
@@ -259,7 +259,7 @@ public class DatabaseManager {
             }
         }
 
-        public static boolean addPlayerToDatabase(model.User user) {
+        public static boolean addPlayerToDatabase(java.model.User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -289,7 +289,7 @@ public class DatabaseManager {
 
     public static class Team {
 
-        static public void addNewTeamToDatabase(model.Team team) {
+        static public void addNewTeamToDatabase(java.model.Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -311,7 +311,7 @@ public class DatabaseManager {
         }
 
         // TODO: load players too
-        static model.Team getTeamFromDatabase(String teamName) {
+        static java.model.Team getTeamFromDatabase(String teamName) {
 
             String query = "SELECT Player.Name FROM Player WHERE (TeamID = (SELECT ID FROM team WHERE team.Name = ?));";
 
@@ -323,11 +323,11 @@ public class DatabaseManager {
                 System.out.println(selectTeam);
                 ResultSet rset = selectTeam.executeQuery();
 
-                model.Team team = new model.Team(teamName);
+                java.model.Team team = new java.model.Team(teamName);
 
                 while (rset.next()) {
 
-                    team.getPlayerList().add(new model.Player(rset.getString("Name")));
+                    team.getPlayerList().add(new java.model.Player(rset.getString("Name")));
                 }
 
                 return team;
@@ -336,9 +336,9 @@ public class DatabaseManager {
             return null;
         }
 
-        public static ArrayList<model.Team> getAllTeamsFromDatabase() {
+        public static ArrayList<java.model.Team> getAllTeamsFromDatabase() {
 
-            ArrayList<model.Team> teamList = new ArrayList<>();
+            ArrayList<java.model.Team> teamList = new ArrayList<>();
             String query = "SELECT Name FROM team";
 
             try {
@@ -363,7 +363,7 @@ public class DatabaseManager {
 
     public static class Player {
 
-        static void addNewPlayerToDatabase(model.Player player, model.Team team) {
+        static void addNewPlayerToDatabase(java.model.Player player, java.model.Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -378,9 +378,9 @@ public class DatabaseManager {
             catch (SQLException e) {e.printStackTrace();}
         }
 
-        static ArrayList<model.Player> getPlayerList() {
+        static ArrayList<java.model.Player> getPlayerList() {
 
-            ArrayList<model.Player> players = new ArrayList<>();
+            ArrayList<java.model.Player> players = new ArrayList<>();
 
             String query = "SELECT Name FROM player;";
 
@@ -391,7 +391,7 @@ public class DatabaseManager {
 
                 while(rset.next()) {
 
-                    players.add(new model.Player(rset.getString("Player.Name")));
+                    players.add(new java.model.Player(rset.getString("Player.Name")));
                 }
 
                 return players;
@@ -406,7 +406,7 @@ public class DatabaseManager {
 
     public static class Match {
 
-        public static void sendNewMatchToDB(model.Match match) {
+        public static void sendNewMatchToDB(java.model.Match match) {
 
             String insertMatch = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
                     "(SELECT ID FROM team WHERE Name = ?), " +
@@ -477,7 +477,7 @@ public class DatabaseManager {
         }
 
         // Function assumes the match has been played and all data is available
-        static void updateMatchInformation(model.Match match) {
+        static void updateMatchInformation(java.model.Match match) {
 
             // TODO: look at pushing match updates
             String update = "UPDATE `Match` " +

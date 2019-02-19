@@ -1,6 +1,6 @@
-package application.controller;
+package java.controller;
 
-import DB.DatabaseManager;
+import java.DB.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.User;
+import java.model.User;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class LoginController {
 
@@ -25,7 +24,7 @@ public class LoginController {
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
-        Parent Parent = FXMLLoader.load(getClass().getResource("../../view/CreateAccount.fxml"));
+        Parent Parent = FXMLLoader.load(getClass().getResource("../../resources/view/CreateAccount.fxml"));
         Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(Scene);
@@ -33,7 +32,7 @@ public class LoginController {
 
     public void openMainScene(ActionEvent actionEvent, User user) throws IOException {
 
-        Parent Parent = FXMLLoader.load(getClass().getResource("../../view/HomePage.fxml"));
+        Parent Parent = FXMLLoader.load(getClass().getResource("../../resources/view/HomePage.fxml"));
         Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(Scene);

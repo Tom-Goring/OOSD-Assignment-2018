@@ -1,6 +1,6 @@
-package application.controller;
+package java.controller;
 
-import DB.DatabaseManager;
+import java.DB.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import model.User;
+import java.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +38,7 @@ public class CreateAccountController {
 
     public void returnToLogin(ActionEvent actionEvent) throws IOException {
 
-        Parent loginParent = FXMLLoader.load(getClass().getResource("../../view/Login.fxml"));
+        Parent loginParent = FXMLLoader.load(getClass().getResource("../../resources/view/Login.fxml"));
         Scene loginScene = new Scene(loginParent);
 
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -60,14 +60,14 @@ public class CreateAccountController {
 
         if (!passwordField.getText().equals(confirmPasswordField.getText())) {
 
-            InputStream inputStream = getClass().getResourceAsStream("/resources/cross.png");
+            InputStream inputStream = getClass().getResourceAsStream("/resources/images/cross.png");
             Image image = new Image(inputStream);
             passwordCheck.setImage(image);
             passwordMatchText.setVisible(true);
         }
         else {
 
-            InputStream inputStream = getClass().getResourceAsStream("/resources/tick.png");
+            InputStream inputStream = getClass().getResourceAsStream("/resources/images/tick.png");
             Image image = new Image(inputStream);
             passwordCheck.setImage(image);
             passwordMatchText.setVisible(false);
@@ -92,7 +92,7 @@ public class CreateAccountController {
             }
         }
 
-        Parent loginParent = FXMLLoader.load(getClass().getResource("../../view/Login.fxml"));
+        Parent loginParent = FXMLLoader.load(getClass().getResource("../../resources/view/Login.fxml"));
         Scene loginScene = new Scene(loginParent);
 
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();

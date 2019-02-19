@@ -1,8 +1,8 @@
-package DB;
+package java.DB;
 
-import model.Fixtures;
-import model.Player;
-import model.Team;
+import java.model.Fixtures;
+import java.model.Player;
+import java.model.Team;
 
 public class Test {
 

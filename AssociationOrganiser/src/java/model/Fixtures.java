@@ -1,6 +1,6 @@
-package model;
+package java.model;
 
-import DB.DatabaseManager;
+import java.DB.DatabaseManager;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package application.controller;
+package java.controller;
 
 public class HomePageController {
 }

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="application.controller.HomePageController" >
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomePageController">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="877.0">
         <menus>
@@ -29,7 +30,19 @@
         <tabs>
           <Tab text="Admin">
             <content>
-              <AnchorPane />
+              <AnchorPane styleClass="background" stylesheets="@../application/theme.css">
+                     <children>
+                        <AnchorPane layoutX="14.0" layoutY="75.0" prefHeight="120.0" prefWidth="850.0" styleClass="pane1" stylesheets="@../application/theme.css">
+                           <children>
+                              <Pane layoutX="12.0" layoutY="11.0" prefHeight="25.0" prefWidth="830.0" styleClass="pane2" stylesheets="@../application/theme.css">
+                                 <children>
+                                    <Label layoutX="4.0" layoutY="3.0" text="Create an Administrator" />
+                                    <Separator layoutX="2.0" layoutY="26.0" prefHeight="1.0" prefWidth="830.0" />
+                                 </children>
+                              </Pane>
+                           </children>
+                        </AnchorPane>
+                     </children></AnchorPane>
             </content>
           </Tab>
           <Tab text="Viewer">

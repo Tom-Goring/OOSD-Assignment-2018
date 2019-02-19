@@ -1,6 +1,16 @@
-.anchor {
+.background {
 
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #EDEDEDFF;
+}
+
+.pane1 {
+
+    -fx-background-color:#FFFFFF;
+}
+
+.pane2 {
+
+    -fx-background-color: #F8F8F8FF;
 }
 
 .button {

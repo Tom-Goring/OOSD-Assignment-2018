@@ -1,5 +1,7 @@
 package view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -16,10 +18,10 @@ public class UserListViewCell extends ListCell<User> {
     private Label Username;
 
     @FXML
-    private Button addBtn;
+    private Button btnAdd;
 
     @FXML
-    private Button removeBtn;
+    private Button btnRemove;
 
     @FXML
     private HBox Hbox;
@@ -52,6 +54,20 @@ public class UserListViewCell extends ListCell<User> {
             }
 
             Username.setText(user.getUsername());
+
+            btnAdd.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("elevate user: " + user.getUsername());
+                }
+            });
+
+            btnRemove.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("demote user: " + user.getUsername());
+                }
+            });
 
             setText(null);
             setGraphic(Hbox);

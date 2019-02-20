@@ -34,7 +34,7 @@
                      <children>
                         <AnchorPane layoutX="20.0" layoutY="62.0" prefHeight="704.0" prefWidth="877.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TitledPane expanded="false" layoutX="28.0" layoutY="36.0" prefHeight="203.0" prefWidth="820.0" text="Create an Administrator">
+                              <TitledPane expanded="false" layoutX="28.0" layoutY="36.0" prefHeight="648.0" prefWidth="820.0" text="Create an Administrator">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>

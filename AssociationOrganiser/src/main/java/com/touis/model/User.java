@@ -1,4 +1,4 @@
-package java.model;
+package main.java.com.touis.model;
 
 public class User {
 
@@ -6,7 +6,7 @@ public class User {
     private String password;
     private byte[] salt;
     private byte[] hashedPassword;
-    private int privilegeLevel = 1;
+    final private int privilegeLevel = 1;
 
     public String getUsername() {
         return username;
@@ -38,6 +38,12 @@ public class User {
         this.hashedPassword = hashedPassword;
     }
 
-
+    @Override
+    public String toString() {
+        return "DB_User{" +
+                "username='" + username + '\'' +
+                ", privilegeLevel=" + privilegeLevel +
+                '}';
+    }
 }
 

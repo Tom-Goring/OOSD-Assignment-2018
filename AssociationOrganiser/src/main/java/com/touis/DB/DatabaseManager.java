@@ -1,4 +1,6 @@
-package java.DB;
+package main.java.com.touis.DB;
+
+import main.java.com.touis.model.*;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -16,15 +18,15 @@ public class DatabaseManager {
     static String user = "root";
     static String password = "password";
 
-    private static java.model.User admin = createAdminDefault(); // for a main user admin to log into
+    private static User admin = createAdminDefault(); // for a main user admin to log into
 
-    private static java.model.User createAdminDefault() {
+    private static User createAdminDefault() {
 
-        java.model.User admin = new java.model.Admin();
+        User admin = new Admin();
         admin.setUsername("admin");
         admin.setPassword("default");
-        admin.setSalt(Security.generateSalt());
-        admin.setHashedPassword(Security.hashPassword(admin.getPassword(), admin.getSalt()));
+        admin.setSalt(DB_Security.generateSalt());
+        admin.setHashedPassword(DB_Security.hashPassword(admin.getPassword(), admin.getSalt()));
         return admin;
     }
 
@@ -114,7 +116,7 @@ public class DatabaseManager {
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Winner_Team FOREIGN KEY Winner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");
 
-        // Match Table FKs
+        // DB_Match Table FKs
 
         queryList.add("ALTER TABLE `Match` ADD CONSTRAINT Match_HomeTeam FOREIGN KEY Match_HomeTeam (HomeTeamID) " +
                 "REFERENCES Team (ID);");
@@ -137,7 +139,7 @@ public class DatabaseManager {
         queryList.add("ALTER TABLE `Match` ADD CONSTRAINT MatchWinner_Team FOREIGN KEY MatchWinner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");
 
-        // Player Table FKs
+        // DB_Player Table FKs
 
         queryList.add("ALTER TABLE Player ADD CONSTRAINT Player_Team FOREIGN KEY Player_Team (TeamID) " +
                 "REFERENCES Team (ID);");
@@ -184,7 +186,7 @@ public class DatabaseManager {
         }
     }
 
-    public static class Security {
+    public static class DB_Security {
 
         public static byte[] generateSalt() {
 
@@ -215,10 +217,10 @@ public class DatabaseManager {
             }
         }
 
-        public static boolean checkPassword(String passwordToCheck, java.model.User user) {
+        public static boolean checkPassword(String passwordToCheck, User user) {
 
             // hash entered password with desired user account salt
-            byte[] hashAttempt = DatabaseManager.Security.hashPassword(passwordToCheck, user.getSalt());
+            byte[] hashAttempt = DB_Security.hashPassword(passwordToCheck, user.getSalt());
 
             // compare hash of entered to pre-existing hash
             if (Arrays.equals(hashAttempt, user.getHashedPassword())) {
@@ -232,21 +234,21 @@ public class DatabaseManager {
         }
     }
 
-    public static class User {
+    public static class DB_User {
 
-        public static java.model.User getUserFromDatabase(String username) {
+        public static User getUserFromDatabase(String username) {
 
             String query = "SELECT * FROM User WHERE (Username = ?)";
 
             try {
 
-                PreparedStatement selectUser = Connect_DB.getConnection().prepareStatement(query);
-                selectUser.setString(1, username);
-                ResultSet rset = selectUser.executeQuery();
+                PreparedStatement getUser = Connect_DB.getConnection().prepareStatement(query);
+                getUser.setString(1, username);
+                ResultSet rset = getUser.executeQuery();
 
                 rset.next();
 
-                java.model.User user = new java.model.User();
+                User user = new User();
 
                 user.setUsername(rset.getString("Username"));
                 user.setSalt(rset.getBytes("PasswordSalt"));;
@@ -259,7 +261,42 @@ public class DatabaseManager {
             }
         }
 
-        public static boolean addPlayerToDatabase(java.model.User user) {
+        public static ArrayList<User> getUserList() {
+
+            ArrayList<User> userList = new ArrayList<>();
+
+            String query = "SELECT Username, PrivilegeLevel FROM User;";
+
+            try {
+
+                PreparedStatement getUserList = Connect_DB.getConnection().prepareStatement(query);
+                System.out.println(getUserList);
+                ResultSet rset = getUserList.executeQuery();
+
+                while (rset.next()) {
+
+                    if (rset.getInt("PrivilegeLevel") == 1) {
+                        User user = new User();
+                        user.setUsername(rset.getString("Username"));
+                        userList.add(user);
+                    }
+                    else if (rset.getInt("PrivilegeLevel") == 2) {
+
+                        User admin = new Admin();
+                        admin.setUsername(rset.getString("Username"));
+                        userList.add(admin);
+                    }
+                }
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return userList;
+        }
+
+        public static boolean addPlayerToDatabase(User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -287,9 +324,9 @@ public class DatabaseManager {
         }
     }
 
-    public static class Team {
+    public static class DB_Team {
 
-        static public void addNewTeamToDatabase(java.model.Team team) {
+        static public void addNewTeamToDatabase(Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -302,7 +339,7 @@ public class DatabaseManager {
             }
             catch (SQLException e) {
                 if (e.getErrorCode() == 1062) {
-                    System.out.println("ERROR: Team name \""+ team.getTeamName() +"\" already present.");
+                    System.out.println("ERROR: DB_Team name \""+ team.getTeamName() +"\" already present.");
                 }
                 else {
                     e.printStackTrace();
@@ -311,7 +348,7 @@ public class DatabaseManager {
         }
 
         // TODO: load players too
-        static java.model.Team getTeamFromDatabase(String teamName) {
+        static Team getTeamFromDatabase(String teamName) {
 
             String query = "SELECT Player.Name FROM Player WHERE (TeamID = (SELECT ID FROM team WHERE team.Name = ?));";
 
@@ -323,11 +360,11 @@ public class DatabaseManager {
                 System.out.println(selectTeam);
                 ResultSet rset = selectTeam.executeQuery();
 
-                java.model.Team team = new java.model.Team(teamName);
+                Team team = new Team(teamName);
 
                 while (rset.next()) {
 
-                    team.getPlayerList().add(new java.model.Player(rset.getString("Name")));
+                    team.getPlayerList().add(new Player(rset.getString("Name")));
                 }
 
                 return team;
@@ -336,9 +373,9 @@ public class DatabaseManager {
             return null;
         }
 
-        public static ArrayList<java.model.Team> getAllTeamsFromDatabase() {
+        public static ArrayList<Team> getAllTeamsFromDatabase() {
 
-            ArrayList<java.model.Team> teamList = new ArrayList<>();
+            ArrayList<Team> teamList = new ArrayList<>();
             String query = "SELECT Name FROM team";
 
             try {
@@ -361,9 +398,9 @@ public class DatabaseManager {
         }
     }
 
-    public static class Player {
+    public static class DB_Player {
 
-        static void addNewPlayerToDatabase(java.model.Player player, java.model.Team team) {
+        static void addNewPlayerToDatabase(Player player, Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -378,9 +415,9 @@ public class DatabaseManager {
             catch (SQLException e) {e.printStackTrace();}
         }
 
-        static ArrayList<java.model.Player> getPlayerList() {
+        static ArrayList<Player> getPlayerList() {
 
-            ArrayList<java.model.Player> players = new ArrayList<>();
+            ArrayList<Player> players = new ArrayList<>();
 
             String query = "SELECT Name FROM player;";
 
@@ -391,7 +428,7 @@ public class DatabaseManager {
 
                 while(rset.next()) {
 
-                    players.add(new java.model.Player(rset.getString("Player.Name")));
+                    players.add(new Player(rset.getString("DB_Player.Name")));
                 }
 
                 return players;
@@ -404,9 +441,9 @@ public class DatabaseManager {
         }
     }
 
-    public static class Match {
+    public static class DB_Match {
 
-        public static void sendNewMatchToDB(java.model.Match match) {
+        public static void sendNewMatchToDB(Match match) {
 
             String insertMatch = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
                     "(SELECT ID FROM team WHERE Name = ?), " +
@@ -477,7 +514,7 @@ public class DatabaseManager {
         }
 
         // Function assumes the match has been played and all data is available
-        static void updateMatchInformation(java.model.Match match) {
+        static void updateMatchInformation(Match match) {
 
             // TODO: look at pushing match updates
             String update = "UPDATE `Match` " +

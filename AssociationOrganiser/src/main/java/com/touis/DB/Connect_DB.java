@@ -1,4 +1,4 @@
-package java.DB;
+package main.java.com.touis.DB;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="java.controller.LoginController">
+<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.touis.controller.LoginController">
    <children>
       <Label layoutX="88.0" layoutY="78.0" styleClass="title" stylesheets="@../css/theme.css" text="Touis Table Tennis System">
          <font>
@@ -28,7 +28,7 @@
       </Label>
       <PasswordField fx:id="passwordField" layoutX="127.0" layoutY="261.0" prefHeight="25.0" prefWidth="200.0" />
       <Hyperlink layoutX="129.0" layoutY="311.0" onAction="#openCreateAccount" text="Create Account" />
-      <Button alignment="CENTER" layoutX="249.0" layoutY="309.0" mnemonicParsing="false" onAction="#attemptLogIn" prefHeight="23.0" prefWidth="80.0" style="-fx-padding: 0;" styleClass="accept_button" stylesheets="@../application/theme.css" text="Login">
+      <Button alignment="CENTER" layoutX="249.0" layoutY="309.0" mnemonicParsing="false" onAction="#attemptLogIn" prefHeight="23.0" prefWidth="80.0" style="-fx-padding: 0;" styleClass="accept_button" stylesheets="@../css/theme.css" text="Login">
          <font>
             <Font size="18.0" />
          </font>

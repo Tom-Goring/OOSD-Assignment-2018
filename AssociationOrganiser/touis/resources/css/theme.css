@@ -51,3 +51,39 @@
     -fx-opacity: 1.0;
     -fx-background-radius: 0;
 }
+
+.positive_button {
+
+    -fx-background-color: #42B549;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 1.0;
+    -fx-background-radius: 0;
+}
+
+.positive_button:hover {
+
+    -fx-background-color: #42B549;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 0.8;
+    -fx-background-radius: 2px;
+}
+
+.negative_button {
+
+    -fx-background-color: #EA2626;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 1;
+    -fx-background-radius: 0;
+}
+
+.negative_button:hover {
+
+    -fx-background-color: #EA2626;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-opacity: 0.8;
+    -fx-background-radius: 0;
+}

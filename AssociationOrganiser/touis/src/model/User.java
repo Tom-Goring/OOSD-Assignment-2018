@@ -42,10 +42,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "DB_User{" +
-                "username='" + username + '\'' +
-                ", privilegeLevel=" + privilegeLevel +
-                '}';
+        return "User: " +
+                "Username='" + this.username + '\'' +
+                ' ';
     }
 }
 

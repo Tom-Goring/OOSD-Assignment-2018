@@ -6,9 +6,8 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin{" +
-                "username='" + super.getUsername() + '\'' +
-                ", privilegeLevel=" + privilegeLevel +
-                '}';
+        return "Admin: " +
+                "Username='" + super.getUsername() + '\'' +
+                ' ';
     }
 }

@@ -1,4 +1,4 @@
-package main.java.com.touis.DB;
+package DB;
 
 public class Test {
 

@@ -1,4 +1,4 @@
-package main.java.com.touis.model;
+package model;
 
 import java.util.ArrayList;
 

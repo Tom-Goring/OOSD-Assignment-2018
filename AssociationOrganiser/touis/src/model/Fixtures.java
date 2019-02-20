@@ -1,6 +1,6 @@
-package main.java.com.touis.model;
+package model;
 
-import main.java.com.touis.DB.DatabaseManager;
+import DB.DatabaseManager;
 
 import java.util.ArrayList;
 

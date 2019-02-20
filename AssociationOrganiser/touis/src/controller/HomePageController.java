@@ -1,10 +1,10 @@
-package main.java.com.touis.controller;
+package controller;
 
+import DB.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import main.java.com.touis.DB.DatabaseManager;
-import main.java.com.touis.model.User;
+import model.User;
 
 
 import java.net.URL;

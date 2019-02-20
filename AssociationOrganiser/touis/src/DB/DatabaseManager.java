@@ -1,7 +1,6 @@
-package main.java.com.touis.DB;
+package DB;
 
-import main.java.com.touis.model.*;
-
+import model.*;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;

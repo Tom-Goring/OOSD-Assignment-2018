@@ -1,7 +1,6 @@
-package main.java.com.touis.controller;
+package controller;
 
-import main.java.com.touis.DB.DatabaseManager;
-import main.java.com.touis.model.User;
+import DB.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.User;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ public class LoginController {
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
-        Parent Parent = FXMLLoader.load(getClass().getResource("main/resources/view/CreateAccount.fxml"));
+        Parent Parent = FXMLLoader.load(getClass().getResource("/view/CreateAccount.fxml"));
         Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(Scene);
@@ -32,7 +32,7 @@ public class LoginController {
 
     public void openMainScene(ActionEvent actionEvent, User user) throws IOException {
 
-        Parent Parent = FXMLLoader.load(getClass().getResource("main/resources/view/HomePage.fxml"));
+        Parent Parent = FXMLLoader.load(getClass().getResource("/view/HomePage.fxml"));
         Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(Scene);

@@ -12,9 +12,9 @@ public class Main extends Application {
 
        //DatabaseManager.createTables();
 
-        Parent root = FXMLLoader.load(getClass().getResource("main/resources/view/Login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("view/Login.fxml"));
         stage.setTitle("Touis Table Tennis Association Manager");
-        stage.getIcons().add(new Image("main/resources/images/tennis.png"));
+        stage.getIcons().add(new Image("images/tennis.png"));
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setScene(new Scene(root));

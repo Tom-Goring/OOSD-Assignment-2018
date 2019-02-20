@@ -30,7 +30,7 @@ public class LoginController {
         window.setScene(Scene);
     }
 
-    public void openMainScene(ActionEvent actionEvent, User user) throws IOException {
+    private void openMainScene(ActionEvent actionEvent) throws IOException {
 
         Parent Parent = FXMLLoader.load(getClass().getResource("/view/HomePage.fxml"));
         Scene Scene = new Scene(Parent);
@@ -45,10 +45,12 @@ public class LoginController {
         User desiredUserAccount = DatabaseManager.DB_User.getUserFromDatabase(usernameField.getText());
         String enteredPassword = passwordField.getText();
 
+        assert desiredUserAccount != null;
         if (DatabaseManager.DB_Security.checkPassword(enteredPassword, desiredUserAccount)) {
 
             try {
-                openMainScene(actionEvent, desiredUserAccount);
+                User.currentUser = desiredUserAccount;
+                openMainScene(actionEvent);
             }
             catch (IOException e) {
                 e.printStackTrace();

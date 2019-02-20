@@ -2,6 +2,8 @@ package model;
 
 public class User {
 
+    public static User currentUser;
+
     private String username;
     private String password;
     private byte[] salt;

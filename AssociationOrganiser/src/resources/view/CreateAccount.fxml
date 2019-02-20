@@ -10,19 +10,19 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="java.controller.CreateAccountController">
    <children>
-      <Label layoutX="113.0" layoutY="78.0" styleClass="title" stylesheets="@../application/theme.css" text="Create a new account" AnchorPane.topAnchor="78.0" />
-      <Label layoutX="151.0" layoutY="155.0" stylesheets="@../application/theme.css" text="Username" />
+      <Label layoutX="113.0" layoutY="78.0" styleClass="title" stylesheets="@../css/theme.css" text="Create a new account" AnchorPane.topAnchor="78.0" />
+      <Label layoutX="151.0" layoutY="155.0" stylesheets="@../css/theme.css" text="Username" />
       <TextField fx:id="usernameField" layoutX="150.0" layoutY="182.0" onKeyReleased="#checkUserNameAvailability" />
-      <Label layoutX="151.0" layoutY="218.0" stylesheets="@../application/theme.css" text="Password" />
+      <Label layoutX="151.0" layoutY="218.0" stylesheets="@../css/theme.css" text="Password" />
       <PasswordField fx:id="passwordField" layoutX="149.0" layoutY="245.0" onKeyReleased="#comparePasswordFields" />
       <PasswordField fx:id="confirmPasswordField" layoutX="149.0" layoutY="305.0" onKeyReleased="#comparePasswordFields" />
-      <Label layoutX="150.0" layoutY="278.0" stylesheets="@../application/theme.css" text="Confirm Password" />
-      <Button layoutX="149.0" layoutY="393.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../application/theme.css" text="Create">
+      <Label layoutX="150.0" layoutY="278.0" stylesheets="@../css/theme.css" text="Confirm Password" />
+      <Button layoutX="149.0" layoutY="393.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="30.0" prefWidth="68.0" styleClass="accept_button" stylesheets="@../css/theme.css" text="Create">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button layoutX="231.0" layoutY="393.0" mnemonicParsing="false" onAction="#returnToLogin" prefHeight="30.0" prefWidth="68.0" stylesheets="@../application/theme.css" text="Cancel" textAlignment="CENTER">
+      <Button layoutX="231.0" layoutY="393.0" mnemonicParsing="false" onAction="#returnToLogin" prefHeight="30.0" prefWidth="68.0" stylesheets="@../css/theme.css" text="Cancel" textAlignment="CENTER">
          <font>
             <Font size="14.0" />
          </font>
@@ -33,6 +33,6 @@
             <Font size="10.0" />
          </font>
       </Label>
-      <Label layoutX="150.0" layoutY="204.0" styleClass="fieldtext" stylesheets="@../application/theme.css" text="Username already exists" visible="false" />
+      <Label layoutX="150.0" layoutY="204.0" styleClass="fieldtext" stylesheets="@../css/theme.css" text="Username already exists" visible="false" />
    </children>
 </AnchorPane>

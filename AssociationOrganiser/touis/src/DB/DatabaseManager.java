@@ -36,6 +36,8 @@ public class DatabaseManager {
 
         ArrayList<String> queryList = new ArrayList<>();
 
+        queryList.add("CREATE DATABASE IF NOT EXISTS tournament");
+
         queryList.add("SET FOREIGN_KEY_CHECKS = 0");
         queryList.add("DROP TABLE if exists User;");
         queryList.add("DROP TABLE if exists Player;");
@@ -45,7 +47,7 @@ public class DatabaseManager {
         queryList.add("DROP TABLE if exists Team");
         queryList.add("SET FOREIGN_KEY_CHECKS = 1");
 
-        queryList.add("CREATE TABLE User (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS User (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "Username varchar(20) UNIQUE,\n" +
                 "PasswordSalt varbinary(128),\n" +
@@ -55,7 +57,7 @@ public class DatabaseManager {
                 ");");
 
         // create player table
-        queryList.add("CREATE TABLE Player (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS Player (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "Name varchar(20) UNIQUE ,\n" +
                 "TeamID int NOT NULL,\n" +
@@ -63,14 +65,14 @@ public class DatabaseManager {
                 ");");
 
         // create team table
-        queryList.add("CREATE TABLE Team (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS Team (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "Name varchar(20) NOT NULL UNIQUE,\n" +
                 "CONSTRAINT Team_pk PRIMARY KEY (ID)\n" +
                 ");");
 
         // create match table
-        queryList.add("CREATE TABLE `Match` (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS `Match` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "HomeTeamID int NOT NULL,\n" +
                 "AwayTeamID int NOT NULL,\n" +
@@ -79,11 +81,12 @@ public class DatabaseManager {
                 "AwayPlayer1ID int,\n" +
                 "AwayPlayer2ID int,\n" +
                 "WinnerID int,\n" +
+                "Played bool,\n" +
                 "CONSTRAINT Match_pk PRIMARY KEY (ID)\n" +
                 ");");
 
         // create set table
-        queryList.add("CREATE TABLE `Set` (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS `Set` (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "SetNumber int NOT NULL,\n" +
                 "MatchID int NOT NULL,\n" +
@@ -91,17 +94,19 @@ public class DatabaseManager {
                 "AwayPlayerID int,\n" +
                 "FinalScore int,\n" +
                 "WinnerID int,\n" +
+                "Played bool,\n" +
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
                 ");");
 
         // create game table
-        queryList.add("CREATE TABLE Game (\n" +
+        queryList.add("CREATE TABLE IF NOT EXISTS Game (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "GameNumber int NOT NULL,\n" +
                 "HomeTeamScore int,\n" +
                 "AwayTeamScore int,\n" +
                 "WinnerID int,\n" +
                 "SetID int NOT NULL,\n" +
+                "Played bool,\n" +
                 "CONSTRAINT Game_pk PRIMARY KEY (ID)\n" +
                 ");");
 
@@ -546,7 +551,7 @@ public class DatabaseManager {
         }
 
         // Function assumes the match has been played and all data is available
-        static void updateMatchInformation(Match match) {
+        public static void updateMatchInformation(Match match) {
 
             // TODO: look at pushing match updates
             String update = "UPDATE `Match` " +
@@ -575,4 +580,16 @@ public class DatabaseManager {
             }
         }
     }
+
+    public static class DB_Fixtures {
+
+        public static void addFixturesToDatabase(Fixtures fixtures) {
+
+            for (Match match : fixtures.getMatchList()) {
+
+                DatabaseManager.DB_Match.sendNewMatchToDB(match);
+            }
+        }
+    }
+
 }

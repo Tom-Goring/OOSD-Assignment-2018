@@ -1,9 +1,14 @@
 // TODO: add error display for pre-existing team and player names
+// TODO: add error for when less than 2 teams exist and fixtures are generated
+// TODO: make submit new team button clear textfield
+// TODO: generate team stats method / window
 
 package controller;
 
 import DB.DatabaseManager;
 import javafx.collections.ListChangeListener;
+import javafx.scene.layout.Pane;
+import model.Fixtures;
 import model.Player;
 import model.Team;
 import model.User;
@@ -22,26 +27,30 @@ import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
 
+    // Observable lists
+    private ObservableList<User> userObservableList;
+    private ObservableList<Team> teamObservableList;
+
+    // TabPane elements
 	@FXML private TabPane tabPane;
 	@FXML private Tab tabAdmin;
 	@FXML private Tab tabViewer;
 	@FXML private Tab tabScoreSheets;
 
-	// Observable lists
-	private ObservableList<User> userObservableList;
-	private ObservableList<Team> teamObservableList;
+	// Admin Page elements
 
-	// Create Admin Titled Pane
-	@FXML ListView userListView;
+	@FXML private ListView userListView;
+    @FXML private TextField enterTeamNameForRegistration;
+    @FXML private Button btn_RegTeam;
 
-	// Add Teams TitledPane
-    @FXML TextField teamNameField;
-    @FXML Button btnRegTeam;
+	@FXML private TextField playerNameForRegistration;
+	@FXML private ComboBox<Team> cb_SelectTeam;
 
-	// Add Players TitledPane
-	@FXML private TextField playerNameEntry;
-	@FXML private ComboBox<Team> cbSelectTeam;
-	@FXML private Button btnRegisterPlayer;
+    // Viewer Page elements
+
+    @FXML private Pane matchViewer;
+    @FXML private Pane showTeamStats;
+
 
 	// Page Scope methods
 
@@ -66,12 +75,12 @@ public class HomePageController implements Initializable {
 
 		userListView.setItems(userObservableList);
 		userListView.setCellFactory(userListView -> new UserListViewCell());
-		cbSelectTeam.setItems(teamObservableList);
+		cb_SelectTeam.setItems(teamObservableList);
 
 		teamObservableList.addListener(new ListChangeListener<Team>() {
             @Override
             public void onChanged(Change<? extends Team> c) {
-                cbSelectTeam.setItems(teamObservableList);
+                cb_SelectTeam.setItems(teamObservableList);
             }
         });
 	}
@@ -91,16 +100,50 @@ public class HomePageController implements Initializable {
 
 	public void registerNewPlayer(ActionEvent actionEvent) {
 
-		Player player = new Player(playerNameEntry.getText());
-		Team team = cbSelectTeam.getValue();
+		Player player = new Player(playerNameForRegistration.getText());
+		Team team = cb_SelectTeam.getValue();
 
 		DatabaseManager.DB_Player.addNewPlayerToDatabase(player, team);
 	}
 
     public void registerNewTeam(ActionEvent actionEvent) {
 
-	    Team team = new Team(teamNameField.getText());
+	    Team team = new Team(enterTeamNameForRegistration.getText());
 	    DatabaseManager.DB_Team.addNewTeamToDatabase(team);
 	    teamObservableList.add(team); // to update combobox without having to retrieve from SQL again
     }
+
+    public void generateFixtures(ActionEvent actionEvent) {
+
+        Fixtures fixtures = Fixtures.generateFixtures();
+
+        if (fixtures != null) {
+            DatabaseManager.DB_Fixtures.addFixturesToDatabase(fixtures);
+        }
+        else {
+
+            // output error message requiring at least 2 teams to be present
+        }
+    }
+
+    public void viewFixtures(ActionEvent actionEvent) {
+
+    }
+
+    public void showTeamStats(ActionEvent actionEvent) {
+
+	    showTeamStats.setVisible(true);
+	    matchViewer.setVisible(false);
+    }
+
+    public void openMatchViewer(ActionEvent actionEvent) {
+
+        showTeamStats.setVisible(false);
+        matchViewer.setVisible(true);
+    }
+
+    // Viewer Page Methods
+
+
+
 }

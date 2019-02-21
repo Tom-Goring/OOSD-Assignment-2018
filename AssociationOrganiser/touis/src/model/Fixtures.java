@@ -6,10 +6,17 @@ import java.util.ArrayList;
 
 public class Fixtures {
 
-    public static void generateFixtures() {
+    private ArrayList<Match> matchList;
+
+    public Fixtures() {
+
+        matchList = new ArrayList<>();
+    }
+
+    public static Fixtures generateFixtures() {
 
         ArrayList<Team> teamList = DatabaseManager.DB_Team.getTeamListFromDatabase();
-        ArrayList<Match> matchList;
+        Fixtures fixtures = new Fixtures();
 
         if (teamList != null) {
 
@@ -19,10 +26,18 @@ public class Fixtures {
 
                     if (homeTeam != awayTeam) {
 
-                        DatabaseManager.DB_Match.sendNewMatchToDB(new Match(homeTeam, awayTeam));
+                        fixtures.matchList.add(new Match(homeTeam, awayTeam));
                     }
                 }
             }
         }
+        else {
+
+            return null;
+        }
+
+        return fixtures;
     }
+
+    public ArrayList<Match> getMatchList() { return matchList; }
 }

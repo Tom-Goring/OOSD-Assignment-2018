@@ -1,3 +1,5 @@
+// TODO: error message when username/password wrong
+
 package controller;
 
 import DB.DatabaseManager;
@@ -36,7 +38,6 @@ public class LoginController {
         Scene Scene = new Scene(Parent);
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(Scene);
-        window.setResizable(true);
     }
 
     public void attemptLogIn(ActionEvent actionEvent) {

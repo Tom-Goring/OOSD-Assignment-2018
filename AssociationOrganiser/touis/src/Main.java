@@ -1,3 +1,4 @@
+import DB.DatabaseManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-       //DatabaseManager.createTables();
+        //DatabaseManager.createTables();
 
         Parent root = FXMLLoader.load(getClass().getResource("view/Login.fxml"));
         stage.setTitle("Touis Table Tennis Association Manager");

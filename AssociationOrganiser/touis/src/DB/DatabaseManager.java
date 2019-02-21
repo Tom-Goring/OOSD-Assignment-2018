@@ -432,7 +432,7 @@ public class DatabaseManager {
 
     public static class DB_Player {
 
-        static void addNewPlayerToDatabase(Player player, Team team) {
+        public static void addNewPlayerToDatabase(Player player, Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -447,7 +447,7 @@ public class DatabaseManager {
             catch (SQLException e) {e.printStackTrace();}
         }
 
-        static ArrayList<Player> getPlayerList() {
+        public static ArrayList<Player> getPlayerList() {
 
             ArrayList<Player> players = new ArrayList<>();
 

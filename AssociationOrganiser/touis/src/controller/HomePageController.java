@@ -1,4 +1,4 @@
-// TODO: add listener for changes to teamList
+// TODO: add error display for pre-existing team and player names
 
 package controller;
 
@@ -34,10 +34,16 @@ public class HomePageController implements Initializable {
 	// Create Admin Titled Pane
 	@FXML ListView userListView;
 
+	// Add Teams TitledPane
+    @FXML TextField teamNameField;
+    @FXML Button btnRegTeam;
+
 	// Add Players TitledPane
 	@FXML private TextField playerNameEntry;
 	@FXML private ComboBox<Team> cbSelectTeam;
 	@FXML private Button btnRegisterPlayer;
+
+	// Page Scope methods
 
 	public HomePageController() { // called before initialize, then FXML are initialized, then initialize is called
 
@@ -61,7 +67,25 @@ public class HomePageController implements Initializable {
 		userListView.setItems(userObservableList);
 		userListView.setCellFactory(userListView -> new UserListViewCell());
 		cbSelectTeam.setItems(teamObservableList);
+
+		teamObservableList.addListener(new ListChangeListener<Team>() {
+            @Override
+            public void onChanged(Change<? extends Team> c) {
+                cbSelectTeam.setItems(teamObservableList);
+            }
+        });
 	}
+
+    private void closeTab(Tab tab) {
+
+        EventHandler<Event> handler = tab.getOnClosed();
+        if (handler != null) {
+            handler.handle(null);
+        }
+        else {
+            tab.getTabPane().getTabs().remove(tab);
+        }
+    }
 
 	// Admin Page Methods
 
@@ -69,18 +93,14 @@ public class HomePageController implements Initializable {
 
 		Player player = new Player(playerNameEntry.getText());
 		Team team = cbSelectTeam.getValue();
+
+		DatabaseManager.DB_Player.addNewPlayerToDatabase(player, team);
 	}
 
-	// Scene methods
+    public void registerNewTeam(ActionEvent actionEvent) {
 
-	private void closeTab(Tab tab) {
-
-		EventHandler<Event> handler = tab.getOnClosed();
-		if (handler != null) {
-			handler.handle(null);
-		}
-		else {
-			tab.getTabPane().getTabs().remove(tab);
-		}
-	}
+	    Team team = new Team(teamNameField.getText());
+	    DatabaseManager.DB_Team.addNewTeamToDatabase(team);
+	    teamObservableList.add(team); // to update combobox without having to retrieve from SQL again
+    }
 }

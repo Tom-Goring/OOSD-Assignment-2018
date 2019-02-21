@@ -58,13 +58,24 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
+                              <TitledPane text="Add Teams">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="828.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="22.0" stylesheets="@../css/theme.css" text="Register New Team: " />
+                                          <TextField fx:id="teamNameField" layoutX="188.0" layoutY="23.0" />
+                                          <Button fx:id="btnRegTeam" layoutX="355.0" layoutY="22.0" mnemonicParsing="false" onAction="#registerNewTeam" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Team" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </TitledPane>
                               <TitledPane text="Add Players">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="151.0" prefWidth="828.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="136.0" prefWidth="828.0">
                                        <children>
                                           <Label layoutX="14.0" layoutY="27.0" stylesheets="@../css/theme.css" text="Enter name of new player:" />
                                           <TextField fx:id="playerNameEntry" layoutX="242.0" layoutY="28.0" prefHeight="25.0" prefWidth="190.0" />
-                                          <ComboBox fx:id="cbSelectTeam" layoutX="242.0" layoutY="77.0" onAction="#getTeams" prefHeight="25.0" prefWidth="190.0" />
+                                          <ComboBox fx:id="cbSelectTeam" layoutX="242.0" layoutY="77.0" prefHeight="25.0" prefWidth="190.0" />
                                           <Label layoutX="14.0" layoutY="76.0" stylesheets="@../css/theme.css" text="Select a Team:" />
                                           <Button fx:id="btnRegisterPlayer" layoutX="482.0" layoutY="76.0" mnemonicParsing="false" onAction="#registerNewPlayer" prefWidth="134.0" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Player" />
                                        </children>

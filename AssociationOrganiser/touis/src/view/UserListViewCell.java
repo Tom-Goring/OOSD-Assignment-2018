@@ -1,5 +1,6 @@
 package view;
 
+import DB.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -58,16 +59,39 @@ public class UserListViewCell extends ListCell<User> {
             btnAdd.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println("elevate user: " + user.getUsername());
+
+                    DatabaseManager.DB_User.changeUserPrivilegeLevel(user, 2);
+                    btnAdd.setDisable(true);
+                    btnRemove.setDisable(false);
                 }
             });
 
             btnRemove.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println("demote user: " + user.getUsername());
+
+                    DatabaseManager.DB_User.changeUserPrivilegeLevel(user, 1);
+                    btnAdd.setDisable(false);
+                    btnRemove.setDisable(true);
                 }
             });
+
+            if (user.getPrivilegeLevel() == 1) {
+
+                btnAdd.setDisable(false);
+                btnRemove.setDisable(true);
+            }
+            else if (user.getPrivilegeLevel() == 2) {
+
+                btnAdd.setDisable(true);
+                btnRemove.setDisable(false);
+            }
+
+            if (user.getUsername().equals("admin") || User.currentUser.getUsername().equals(user.getUsername())) {
+
+                btnAdd.setDisable(true);
+                btnRemove.setDisable(true);
+            }
 
             setText(null);
             setGraphic(Hbox);

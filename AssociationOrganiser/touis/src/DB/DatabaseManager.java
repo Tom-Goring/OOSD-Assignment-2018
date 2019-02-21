@@ -1,3 +1,6 @@
+// TODO: load players when loading teamList
+// TODO: Update sets and games when updating match details
+
 package DB;
 
 import model.*;
@@ -91,8 +94,6 @@ public class DatabaseManager {
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
                 ");");
 
-        // TODO: consider moving game/set/match information into a separate 1-1 table containing information.
-
         // create game table
         queryList.add("CREATE TABLE Game (\n" +
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
@@ -170,7 +171,7 @@ public class DatabaseManager {
             Statement.executeBatch();
 
             // insert default admin account
-            String insertAdmin = "INSERT INTO user (Username, PasswordSalt, HashedPassword, PrivilegeLevel) VALUES (?, ?, ?, ?);";
+            String insertAdmin = "INSERT INTO User (Username, PasswordSalt, HashedPassword, PrivilegeLevel) VALUES (?, ?, ?, ?);";
             PreparedStatement insert = Connect_DB.getConnection().prepareStatement(insertAdmin);
             insert.setString(1, admin.getUsername());
             insert.setBytes(2, admin.getSalt());
@@ -247,12 +248,25 @@ public class DatabaseManager {
 
                 rset.next();
 
-                User user = new User();
+                if (rset.getInt("PrivilegeLevel") == 1) {
 
-                user.setUsername(rset.getString("Username"));
-                user.setSalt(rset.getBytes("PasswordSalt"));;
-                user.setHashedPassword(rset.getBytes("HashedPassword"));
-                return user;
+                    User user = new User();
+                    user.setUsername(rset.getString("Username"));
+                    user.setSalt(rset.getBytes("PasswordSalt"));;
+                    user.setHashedPassword(rset.getBytes("HashedPassword"));
+                    return user;
+                }
+                else if (rset.getInt("PrivilegeLevel") == 2) {
+
+                    User user = new Admin();
+                    user.setUsername(rset.getString("Username"));
+                    user.setSalt(rset.getBytes("PasswordSalt"));;
+                    user.setHashedPassword(rset.getBytes("HashedPassword"));
+                    return user;
+                }
+                else {
+                    return null;
+                }
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -260,7 +274,7 @@ public class DatabaseManager {
             }
         }
 
-        public static ArrayList<User> getUserList() {
+        public static ArrayList<User> getUserListFromDatabase() {
 
             ArrayList<User> userList = new ArrayList<>();
 
@@ -321,6 +335,25 @@ public class DatabaseManager {
 
             return true;
         }
+
+        public static boolean changeUserPrivilegeLevel(User user, int privilegeToSet) {
+
+            String update = "UPDATE User SET PrivilegeLevel = ? WHERE Username = ?;";
+
+            try {
+
+                PreparedStatement updatePrivilegeLevel = Connect_DB.getConnection().prepareStatement(update);
+                updatePrivilegeLevel.setInt(1, privilegeToSet);
+                updatePrivilegeLevel.setString(2, user.getUsername());
+                System.out.println(updatePrivilegeLevel);
+                updatePrivilegeLevel.executeUpdate();
+                return true;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public static class DB_Team {
@@ -346,7 +379,7 @@ public class DatabaseManager {
             }
         }
 
-        // TODO: load players too
+
         static Team getTeamFromDatabase(String teamName) {
 
             String query = "SELECT Player.Name FROM Player WHERE (TeamID = (SELECT ID FROM team WHERE team.Name = ?));";
@@ -372,7 +405,7 @@ public class DatabaseManager {
             return null;
         }
 
-        public static ArrayList<Team> getAllTeamsFromDatabase() {
+        public static ArrayList<Team> getTeamListFromDatabase() {
 
             ArrayList<Team> teamList = new ArrayList<>();
             String query = "SELECT Name FROM team";
@@ -524,7 +557,6 @@ public class DatabaseManager {
                     "AwayPlayer2ID = (SELECT ID FROM player WHERE Name = ?)," +
                     "WinnerID = (SELECT ID FROM team WHERE Name = ?);";
 
-            // TODO: make this update sets and games
             try {
 
                 PreparedStatement updateMatch = Connect_DB.getConnection().prepareStatement(update);

@@ -40,6 +40,8 @@ public class User {
         this.hashedPassword = hashedPassword;
     }
 
+    public int getPrivilegeLevel() { return this.privilegeLevel; }
+
     @Override
     public String toString() {
         return "User: " +

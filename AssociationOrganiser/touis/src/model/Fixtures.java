@@ -8,7 +8,7 @@ public class Fixtures {
 
     public static void generateFixtures() {
 
-        ArrayList<Team> teamList = DatabaseManager.DB_Team.getAllTeamsFromDatabase();
+        ArrayList<Team> teamList = DatabaseManager.DB_Team.getTeamListFromDatabase();
         ArrayList<Match> matchList;
 
         if (teamList != null) {

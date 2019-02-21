@@ -87,3 +87,14 @@
     -fx-opacity: 0.8;
     -fx-background-radius: 0;
 }
+
+.list-view {
+
+    -fx-selection-bar: white;
+    -fx-selection-bar-non-focused: white;
+}
+
+.button:disabled {
+
+    -fx-background-color: #a4a4a4;
+}

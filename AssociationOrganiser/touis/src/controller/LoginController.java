@@ -41,7 +41,6 @@ public class LoginController {
 
     public void attemptLogIn(ActionEvent actionEvent) {
 
-        // TODO: account for username non existence
         User desiredUserAccount = DatabaseManager.DB_User.getUserFromDatabase(usernameField.getText());
         String enteredPassword = passwordField.getText();
 

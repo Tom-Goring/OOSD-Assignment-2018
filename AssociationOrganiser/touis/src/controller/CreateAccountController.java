@@ -38,7 +38,7 @@ public class CreateAccountController {
 
     public void returnToLogin(ActionEvent actionEvent) throws IOException {
 
-        Parent loginParent = FXMLLoader.load(getClass().getResource("view/Login.fxml"));
+        Parent loginParent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         Scene loginScene = new Scene(loginParent);
 
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();

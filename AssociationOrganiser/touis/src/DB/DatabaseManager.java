@@ -90,9 +90,6 @@ public class DatabaseManager {
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "SetNumber int NOT NULL,\n" +
                 "MatchID int NOT NULL,\n" +
-                "HomePlayerID int,\n" +
-                "AwayPlayerID int,\n" +
-                "FinalScore int,\n" +
                 "WinnerID int,\n" +
                 "Played bool,\n" +
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +
@@ -228,14 +225,7 @@ public class DatabaseManager {
             byte[] hashAttempt = DB_Security.hashPassword(passwordToCheck, user.getSalt());
 
             // compare hash of entered to pre-existing hash
-            if (Arrays.equals(hashAttempt, user.getHashedPassword())) {
-
-                return true;
-            }
-            else {
-
-                return false;
-            }
+            return Arrays.equals(hashAttempt, user.getHashedPassword());
         }
     }
 
@@ -341,7 +331,7 @@ public class DatabaseManager {
             return true;
         }
 
-        public static boolean changeUserPrivilegeLevel(User user, int privilegeToSet) {
+        public static void changeUserPrivilegeLevel(User user, int privilegeToSet) {
 
             String update = "UPDATE User SET PrivilegeLevel = ? WHERE Username = ?;";
 
@@ -352,11 +342,9 @@ public class DatabaseManager {
                 updatePrivilegeLevel.setString(2, user.getUsername());
                 System.out.println(updatePrivilegeLevel);
                 updatePrivilegeLevel.executeUpdate();
-                return true;
             }
             catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
         }
     }
@@ -384,8 +372,7 @@ public class DatabaseManager {
             }
         }
 
-
-        static Team getTeamFromDatabase(String teamName) {
+        public static Team getTeamFromDatabase(String teamName) {
 
             String query = "SELECT Player.Name FROM Player WHERE (TeamID = (SELECT ID FROM team WHERE team.Name = ?));";
 
@@ -553,27 +540,88 @@ public class DatabaseManager {
         // Function assumes the match has been played and all data is available
         public static void updateMatchInformation(Match match) {
 
+            String findMatchID = "(SELECT ID FROM `match` WHERE HomeTeamID = (SELECT ID FROM team WHERE Name = ?) AND AwayTeamID = (SELECT ID FROM team WHERE Name = ?));";
+
             // TODO: look at pushing match updates
-            String update = "UPDATE `Match` " +
+            String updateMatch = "UPDATE `Match` " +
                     "SET " +
                     "HomePlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +
                     "HomePlayer2ID = (SELECT ID FROM player WHERE Name = ?), " +
                     "AwayPlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +
                     "AwayPlayer2ID = (SELECT ID FROM player WHERE Name = ?)," +
-                    "WinnerID = (SELECT ID FROM team WHERE Name = ?);";
+                    "WinnerID = (SELECT ID FROM team WHERE Name = ?)," +
+                    "Played = TRUE " +
+                    "WHERE ID = " +
+                    "(SELECT ID FROM `match` WHERE " +
+                    "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?));";
+
+            String updateSets = "UPDATE `set` " +
+                    "SET " +
+                    "HomePlayerID = (SELECT ID FROM player WHERE Name = ?), " +
+                    "AwayPlayerID = (SELECT ID FROM player WHERE Name = ?), " +
+                    "Played = TRUE " +
+                    "WHERE MatchID = (" +
+                    "(SELECT ID FROM `match` WHERE " +
+                    "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?))) " +
+                    "AND " +
+                    "SetNumber = ?;";
+
+            String updateGames = "UPDATE game " +
+                    "SET " +
+                    "HomeTeamScore = ?, " +
+                    "AwayTeamScore = ?, " +
+                    "WinnerID = (SELECT ID FROM team WHERE Name = ?), " +
+                    "Played = TRUE " +
+                    "WHERE " +
+                    "SetID = (SELECT ID FROM `set` WHERE " +
+                    "MatchID = (SELECT ID FROM `match` WHERE HomeTeamID = (SELECT ID FROM team WHERE Name = ?) AND AwayTeamID = (SELECT ID FROM team WHERE Name = ?))" +
+                    "AND SetNumber = ?)" +
+                    " AND GameNumber = ?;";
 
             try {
 
-                PreparedStatement updateMatch = Connect_DB.getConnection().prepareStatement(update);
-                updateMatch.setString(1, match.getHomeTeamPlayer1().getPlayerName());
-                updateMatch.setString(2 , match.getHomeTeamPlayer2().getPlayerName());
-                updateMatch.setString(3 , match.getAwayTeamPlayer1().getPlayerName());
-                updateMatch.setString(4 , match.getAwayTeamPlayer1().getPlayerName());
-                updateMatch.setString(5, match.getWinningTeam().getTeamName());
-
+                PreparedStatement update = Connect_DB.getConnection().prepareStatement(updateMatch);
+                update.setString(1, match.getHomeTeamPlayer1().getPlayerName());
+                update.setString(2 , match.getHomeTeamPlayer2().getPlayerName());
+                update.setString(3 , match.getAwayTeamPlayer1().getPlayerName());
+                update.setString(4 , match.getAwayTeamPlayer1().getPlayerName());
+                update.setString(5, match.getWinningTeam().getTeamName());
+                update.setString(6, match.getHomeTeam().getTeamName());
+                update.setString(7, match.getAwayTeam().getTeamName());
                 System.out.println(updateMatch);
-                updateMatch.executeUpdate();
+                update.executeUpdate();
 
+                update = Connect_DB.getConnection().prepareStatement(updateSets);
+
+                for (int setNumber = 1; setNumber < 6; setNumber++) {
+
+                    update.setString(1, match.getSet(setNumber-1).getHomeTeamPlayer().getPlayerName());
+                    update.setString(2, match.getSet(setNumber-1).getAwayTeamPlayer().getPlayerName());
+                    update.setString(3, match.getHomeTeam().getTeamName());
+                    update.setString(4, match.getAwayTeam().getTeamName());
+                    update.setInt(5, setNumber);
+                    update.addBatch();
+
+                    PreparedStatement updateGame = Connect_DB.getConnection().prepareStatement(updateGames);
+
+                    for (int gameNumber = 1; gameNumber < 4; gameNumber++) {
+
+                        updateGame.setInt(1, match.getGameHomeScore(setNumber, gameNumber));
+                        updateGame.setInt(2, match.getGameAwayScore(setNumber, gameNumber));
+                        updateGame.setString(3, match.getSet(setNumber).getGame(gameNumber).getWinningTeam().getTeamName());
+                        updateGame.setString(4, match.getHomeTeam().getTeamName());
+                        updateGame.setString(5, match.getAwayTeam().getTeamName());
+                        updateGame.setInt(6, setNumber);
+                        updateGame.setInt(7, gameNumber);
+                        updateGame.addBatch();
+                    }
+                    updateGame.executeBatch(); // games
+                }
+                update.executeBatch(); // sets
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -589,6 +637,55 @@ public class DatabaseManager {
 
                 DatabaseManager.DB_Match.sendNewMatchToDB(match);
             }
+        }
+
+        public static Fixtures getFixturesFromDatabase() {
+
+            Fixtures fixtures = new Fixtures();
+
+            String query = "SELECT HomeTeam.Name as ?, AwayTeam.Name as ?," +
+                    "HP1.Name as ?, " +
+                    "HP2.Name as ?, " +
+                    "AP1.Name as ?, " +
+                    "AP2.Name as ? " +
+                    "FROM `match` " +
+                    "LEFT JOIN team AS HomeTeam ON HomeTeam.ID = `match`.HomeTeamID " +
+                    "LEFT JOIN team AS AwayTeam ON AwayTeam.ID = `match`.AwayTeamID " +
+                    "LEFT JOIN player as HP1 ON HP1.ID = `match`.HomePlayer1ID " +
+                    "LEFT JOIN player as HP2 ON HP2.ID = `match`.HomePlayer2ID " +
+                    "LEFT JOIN player as AP1 ON AP1.ID = `match`.AwayPlayer1ID " +
+                    "LEFT JOIN player as AP2 ON AP2.ID = `match`.AwayPlayer2ID;";
+
+            try {
+
+                PreparedStatement getFixtures = Connect_DB.getConnection().prepareStatement(query);
+                getFixtures.setString(1, "Home Team Name");
+                getFixtures.setString(2, "Away Team Name");
+                getFixtures.setString(3, "Home Player 1 Name");
+                getFixtures.setString(4, "Home Player 2 Name");
+                getFixtures.setString(5, "Away Player 1 Name");
+                getFixtures.setString(6, "Away Player 2 Name");
+                System.out.println(getFixtures);
+                ResultSet rset = getFixtures.executeQuery();
+
+                while (rset.next()) {
+
+                    Match match = new Match();
+                    match.setHomeTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("Home Team Name")));
+                    match.setAwayTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("Away Team Name")));
+                    match.setHomeTeamPlayer1(new Player(rset.getString("Home Player 1 Name")));
+                    match.setHomeTeamPlayer2(new Player(rset.getString("Home Player 2 Name")));
+                    match.setAwayTeamPlayer1(new Player(rset.getString("Away Player 1 Name")));
+                    match.setAwayTeamPlayer2(new Player(rset.getString("Away Player 2 Name")));
+                    fixtures.addMatch(match);
+                }
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return fixtures;
         }
     }
 

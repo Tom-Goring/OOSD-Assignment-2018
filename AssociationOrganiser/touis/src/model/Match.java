@@ -4,15 +4,7 @@ import java.util.ArrayList;
 
 public class Match {
 
-    protected class Set {
-
-        public int getSetNumber() {
-            return setNumber;
-        }
-
-        public void setSetNumber(int setNumber) {
-            this.setNumber = setNumber;
-        }
+    public class Set {
 
         public int getWinningTeam() {
             return winningTeam;
@@ -38,11 +30,12 @@ public class Match {
             this.awayTeamPlayer = awayTeamPlayer;
         }
 
-        public Game getGame(int gameNumber) {
-            return this.games.get(gameNumber - 1);
+        public Game getGame(int index) {
+
+            return this.games.get(index);
         }
 
-        protected class Game {
+        public class Game {
 
             public Game(int gameNumber) {
 
@@ -101,7 +94,7 @@ public class Match {
 
         public Set(int setNumber) {
 
-            this.setNumber = setNumber + 1;
+            this.setNumber = setNumber;
             this.games = new ArrayList<>();
 
             for (int i = 0; i < 3; i++) {
@@ -115,6 +108,14 @@ public class Match {
         int setNumber = 5;
         Player homeTeamPlayer2;
         Player awayTeamPlayer2;
+
+        public Double() {
+
+            super.games = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                super.games.add(new Game(i));
+            }
+        }
     }
 
     private Team homeTeam;
@@ -132,6 +133,15 @@ public class Match {
 
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
+        this.sets = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            this.sets.add(new Set(i + 1));
+        }
+        this.sets.add(new Double());
+    }
+
+    public Match() {
+
         this.sets = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             this.sets.add(new Set(i + 1));
@@ -193,15 +203,16 @@ public class Match {
         this.awayTeamPlayer2 = getAwayTeamPlayer2;
     }
 
-    public Set getSet(int setNumber) { return this.sets.get(setNumber - 1); }
+    public Set getSet(int setNumber) { return this.sets.get(setNumber); }
 
-    public String getGameScore(int setNumber, int gameNumber) {
+    public int getGameHomeScore(int setNumber, int gameNumber) {
 
-        int homeTeamScore = this.sets.get(setNumber - 1).games.get(gameNumber - 1).homeTeamScore;
-        int awayTeamScore = this.sets.get(setNumber - 1).games.get(gameNumber - 1).awayTeamScore;
+        return this.sets.get(setNumber).games.get(gameNumber).homeTeamScore;
+    }
 
-        return this.homeTeam.getTeamName() + ":  " + homeTeamScore + "\n"
-                + this.awayTeam.getTeamName() + ": " + awayTeamScore;
+    public int getGameAwayScore(int setNumber, int gameNumber) {
+
+        return this.sets.get(setNumber).games.get(gameNumber).awayTeamScore;
     }
 
     public ArrayList<Player> getMatchPlayers() {

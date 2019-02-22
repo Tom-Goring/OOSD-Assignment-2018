@@ -2,8 +2,10 @@
 
 package controller;
 
+import model.User;
 import DB.DatabaseManager;
 import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.User;
-
 import java.io.IOException;
 
 public class LoginController {

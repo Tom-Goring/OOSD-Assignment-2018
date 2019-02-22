@@ -15,12 +15,16 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePageController">
@@ -39,9 +43,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane fx:id="tabPane" layoutY="25.0" prefHeight="733.0" prefWidth="877.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tp_tabPane" layoutY="25.0" prefHeight="733.0" prefWidth="877.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab fx:id="tabAdmin" text="Admin">
+          <Tab fx:id="t_Admin" text="Admin">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -51,7 +55,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <ListView fx:id="userListView" prefHeight="0.0" prefWidth="818.0" stylesheets="@../css/theme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <ListView fx:id="lv_Users" prefHeight="0.0" prefWidth="818.0" stylesheets="@../css/theme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -61,7 +65,7 @@
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="828.0">
                                        <children>
                                           <Label layoutX="14.0" layoutY="22.0" stylesheets="@../css/theme.css" text="Register New Team: " />
-                                          <TextField fx:id="enterTeamNameForRegistration" layoutX="188.0" layoutY="23.0" />
+                                          <TextField fx:id="btn_EnterNewTeamName" layoutX="188.0" layoutY="23.0" />
                                           <Button fx:id="btn_RegTeam" layoutX="355.0" layoutY="22.0" mnemonicParsing="false" onAction="#registerNewTeam" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Team" />
                                        </children>
                                     </AnchorPane>
@@ -72,8 +76,8 @@
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="136.0" prefWidth="828.0">
                                        <children>
                                           <Label layoutX="14.0" layoutY="27.0" stylesheets="@../css/theme.css" text="Enter name of new player:" />
-                                          <TextField fx:id="playerNameForRegistration" layoutX="242.0" layoutY="28.0" prefHeight="25.0" prefWidth="190.0" />
-                                          <ComboBox fx:id="cb_SelectTeam" layoutX="242.0" layoutY="77.0" prefHeight="25.0" prefWidth="190.0" />
+                                          <TextField fx:id="btn_EnterNewPlayerName" layoutX="242.0" layoutY="28.0" prefHeight="25.0" prefWidth="190.0" />
+                                          <ComboBox fx:id="cb_SelectPlayerTeam" layoutX="242.0" layoutY="77.0" prefHeight="25.0" prefWidth="190.0" />
                                           <Label layoutX="14.0" layoutY="76.0" stylesheets="@../css/theme.css" text="Select a Team:" />
                                           <Button fx:id="btn_RegisterPlayer" layoutX="482.0" layoutY="76.0" mnemonicParsing="false" onAction="#registerNewPlayer" prefWidth="134.0" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Player" />
                                        </children>
@@ -97,7 +101,7 @@
                   </AnchorPane>
                </content>
           </Tab>
-            <Tab fx:id="tabScoreSheets" text="Viewer">
+            <Tab fx:id="t_Viewer" text="Viewer">
               <content>
                 <AnchorPane>
                      <children>
@@ -121,7 +125,7 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <Pane fx:id="showTeamStats">
+                                    <Pane fx:id="p_ShowTeamStats">
                                        <children>
                                           <VBox>
                                              <children>
@@ -155,7 +159,7 @@
                                           </VBox>
                                        </children>
                                     </Pane>
-                                    <Pane fx:id="matchViewer" visible="false">
+                                    <Pane fx:id="p_MatchViewer" visible="false">
                                        <children>
                                           <VBox>
                                              <children>
@@ -278,10 +282,323 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab fx:id="tabViewer" text="Score Sheets">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
+          <Tab fx:id="t_ScoreSheets" text="Score Sheets">
+               <content>
+                  <Pane>
+                     <children>
+                        <VBox>
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="242.0" styleClass="title" stylesheets="@../css/theme.css" text="Score Sheet Wizard">
+                                       <padding>
+                                          <Insets bottom="5.0" top="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <Separator prefHeight="7.0" prefWidth="860.0" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="68.0" prefWidth="879.0">
+                                 <children>
+                                    <HBox alignment="CENTER" stylesheets="@../css/theme.css">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="27.0" prefWidth="220.0">
+                                             <children>
+                                                <Button fx:id="btn_NewSheet" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#createNewScoreSheet" prefHeight="34.0" prefWidth="101.0" stylesheets="@../css/theme.css" text="New Sheet">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="100.0" top="5.0" />
+                                                   </padding>
+                                                </Button>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="25.0" prefWidth="220.0">
+                                             <children>
+                                                <Button fx:id="btn_ModifySheet" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#modifyExistingSheet" prefHeight="34.0" prefWidth="101.0" text="Modify Sheet">
+                                                   <padding>
+                                                      <Insets bottom="5.0" top="5.0" />
+                                                   </padding>
+                                                </Button>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="20.0" top="20.0" />
+                                       </padding>
+                                    </HBox>
+                                    <Separator prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="90.0" prefWidth="879.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="39.0" prefWidth="879.0" stylesheets="@../css/theme.css">
+                                       <children>
+                                          <Label text="Home Team" />
+                                          <Region prefHeight="27.0" prefWidth="127.0" />
+                                          <Label text="Away Team" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                          <ComboBox fx:id="cb_SelectHomeTeam" prefWidth="150.0" />
+                                          <Region prefHeight="26.0" prefWidth="69.0" />
+                                          <ComboBox fx:id="cb_SelectAwayTeam" prefWidth="150.0" />
+                                       </children>
+                                    </HBox>
+                                    <Separator prefWidth="200.0">
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </Separator>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="410.0" prefWidth="879.0">
+                                 <children>
+                                    <GridPane fx:id="gp_MatchForm" alignment="CENTER" hgap="5.0" stylesheets="@../css/theme.css" vgap="5.0">
+                                      <columnConstraints>
+                                          <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" percentWidth="20.0" prefWidth="136.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" percentWidth="7.0" prefWidth="70.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" percentWidth="7.0" prefWidth="70.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="593.0" minWidth="10.0" percentWidth="7.0" prefWidth="522.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="593.0" minWidth="10.0" percentWidth="7.0" prefWidth="522.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="48.0" minHeight="10.0" percentHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="97.0" minHeight="10.0" percentHeight="25.0" prefHeight="97.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="87.0" minHeight="0.0" percentHeight="26.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="41.0" minHeight="0.0" percentHeight="24.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="41.0" minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <HBox fx:id="Test1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <Label stylesheets="@../css/theme.css" text="Single Sets" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                             <children>
+                                                <ComboBox fx:id="cb_SelectHomePlayer1" prefWidth="130.0" promptText="Home Player" />
+                                             </children>
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                             <children>
+                                                <ComboBox fx:id="cb_SelectHomePlayer2" prefWidth="130.0" promptText="Home Player" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+                                             <children>
+                                                <Label text="Double Set" />
+                                             </children>
+                                          </HBox>
+                                          <HBox GridPane.columnSpan="5" GridPane.rowIndex="4">
+                                             <children>
+                                                <Button fx:id="btn_CalcSubScores" mnemonicParsing="false" onAction="#calculateAndSubmitScores" prefHeight="50.0" prefWidth="432.0" stylesheets="@../css/theme.css" text="Calculate and submit scores" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="25.0" prefWidth="278.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                             <children>
+                                                <ComboBox fx:id="cb_SelectAwayPlayer1" prefHeight="25.0" prefWidth="133.0" promptText="Away Player" />
+                                             </children>
+                                          </HBox>
+                                          <VBox fx:id="HS1" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <children>
+                                                <TextField fx:id="tf_HS1G1" prefHeight="25.0" prefWidth="60.0" promptText="S1G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS1G2" promptText="S1G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS1G3" promptText="S1G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="HS3" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <children>
+                                                <TextField fx:id="tf_HS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS3G2" promptText="S3G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS3G3" promptText="S3G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="HDS" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <children>
+                                                <TextField fx:id="tf_HDSG1" prefHeight="25.0" prefWidth="115.0" promptText="DSG1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HDSG2" promptText="DSG2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HDSG3" promptText="DSG3" />
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="AS1" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                             <children>
+                                                <TextField fx:id="tf_AS1G1" promptText="S1G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS1G2" promptText="S1G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS1G3" promptText="S1G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="AS3" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                             <children>
+                                                <TextField fx:id="tf_AS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS3G2" promptText="S3G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS3G3" promptText="S3G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" stylesheets="@../css/theme.css" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                             <children>
+                                                <TextArea fx:id="ta_FinalScores" prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: Verdana;" stylesheets="@../css/theme.css" text="Final Scores:" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="25.0" prefWidth="278.0" GridPane.columnIndex="3" GridPane.columnSpan="2">
+                                             <children>
+                                                <ComboBox fx:id="cb_SelectAwayPlayer2" prefHeight="25.0" prefWidth="133.0" promptText="Away Player" />
+                                             </children>
+                                          </HBox>
+                                          <VBox fx:id="HS2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                             <children>
+                                                <TextField fx:id="tf_HS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS2G2" promptText="S2G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS2G3" promptText="S2G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="HS4" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                             <children>
+                                                <TextField fx:id="tf_HS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS4G2" promptText="S4G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_HS4G3" promptText="S4G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="AS2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                             <children>
+                                                <TextField fx:id="tf_AS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS2G2" promptText="S2G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS2G3" promptText="S2G3">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="AS4" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                             <children>
+                                                <TextField fx:id="tf_AS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS4G2" promptText="S4G2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_AS4G3" promptText="S4G3" />
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="ADS" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                             <children>
+                                                <TextField fx:id="tf_ADSG11" prefHeight="25.0" prefWidth="115.0" promptText="DSG1">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_ADSG21" promptText="DSG2">
+                                                   <VBox.margin>
+                                                      <Insets bottom="2.0" top="2.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="tf_ADSG31" promptText="DSG3" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+               </content>
           </Tab>
         </tabs>
       </TabPane>

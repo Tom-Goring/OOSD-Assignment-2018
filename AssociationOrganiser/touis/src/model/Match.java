@@ -236,25 +236,29 @@ public class Match {
             int awayTeamGamesWon = 0;
             for (int j = 0; j < 3; j++) {
 
-                if (this.getSet(i).getGame(j).getHomeTeamScore() > this.getSet(i).getGame(j).getAwayTeamScore()) {
+                if (this.getSet(i).getGame(j).getHomeTeamScore() != 0 || this.getSet(i).getGame(j).getAwayTeamScore() != 0) {
+                    if (this.getSet(i).getGame(j).getHomeTeamScore() > this.getSet(i).getGame(j).getAwayTeamScore()) {
 
-                    this.getSet(i).getGame(j).setWinningTeam(this.getHomeTeam());
-                    homeTeamGamesWon++;
+                        this.getSet(i).getGame(j).setWinningTeam(this.getHomeTeam());
+                        homeTeamGamesWon++;
+                    }
+                    else {
+
+                        this.getSet(i).getGame(j).setWinningTeam(this.getAwayTeam());
+                        awayTeamGamesWon++;
+                    }
+                }
+            }
+
+            if (homeTeamGamesWon != 0 || awayTeamGamesWon != 0) {
+                if (homeTeamGamesWon > awayTeamGamesWon) {
+                    this.getSet(i).setWinningTeam(this.getHomeTeam());
+                    homeTeamSetsWon++;
                 }
                 else {
-
-                    this.getSet(i).getGame(j).setWinningTeam(this.getAwayTeam());
-                    awayTeamGamesWon++;
+                    this.getSet(i).setWinningTeam(this.getAwayTeam());
+                    awayTeamSetsWon++;
                 }
-            }
-
-            if (homeTeamGamesWon > awayTeamGamesWon) {
-                this.getSet(i).setWinningTeam(this.getHomeTeam());
-                homeTeamSetsWon++;
-            }
-            else {
-                this.getSet(i).setWinningTeam(this.getAwayTeam());
-                awayTeamSetsWon++;
             }
         }
         if (homeTeamSetsWon > awayTeamSetsWon) {

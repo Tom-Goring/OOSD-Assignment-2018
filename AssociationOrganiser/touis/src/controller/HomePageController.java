@@ -1,11 +1,15 @@
 // TODO: add error display for pre-existing team and player names
 // TODO: add error for when less than 2 teams exist and fixtures are generated
 // TODO: generate team stats method / window
+// TODO: put fixtures grid in scroll?
+
 
 package controller;
 
 import DB.DatabaseManager;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.layout.*;
 import model.*;
 import view.AlphaNumericTextFormatter;
@@ -24,6 +28,7 @@ import javafx.fxml.Initializable;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
@@ -82,6 +87,7 @@ public class HomePageController implements Initializable {
 
 		ArrayList<User> userList = DatabaseManager.DB_User.getUserListFromDatabase();
 		ArrayList<Team> teamList = DatabaseManager.DB_Team.getTeamListFromDatabase();
+        Collections.reverse(teamList);
 
 		ol_Users.addAll(userList);
 		ol_Teams.addAll(teamList);
@@ -194,27 +200,24 @@ public class HomePageController implements Initializable {
 
 	    boolean fieldEmpty = false;
 
+        if (cb_SelectHomePlayer1.getValue() == null) {
+
+            fieldEmpty = true;
+        }
+        else if (cb_SelectHomePlayer2.getValue() == null) {
+
+            fieldEmpty = true;
+        }
+        else if (cb_SelectAwayPlayer1.getValue() == null) {
+
+            fieldEmpty = true;
+        }
+        else if (cb_SelectAwayPlayer2.getValue() == null) {
+
+            fieldEmpty = true;
+        }
+
         for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
-
-            if (cb_SelectHomePlayer1.getSelectionModel().isEmpty()) {
-
-                fieldEmpty = true;
-            }
-
-            if (cb_SelectHomePlayer2.getSelectionModel().isEmpty()) {
-
-                fieldEmpty = true;
-            }
-
-            if (cb_SelectAwayPlayer1.getSelectionModel().isEmpty()) {
-
-                fieldEmpty = true;
-            }
-
-            if (cb_SelectAwayPlayer2.getSelectionModel().isEmpty()) {
-
-                fieldEmpty = true;
-            }
 
             if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
 
@@ -375,6 +378,7 @@ public class HomePageController implements Initializable {
             gp_Fixtures.addColumn(column);
             ColumnConstraints colCon = new ColumnConstraints();
             colCon.setPrefWidth(50);
+            colCon.setHalignment(HPos.CENTER);
             gp_Fixtures.getColumnConstraints().add(colCon);
         }
     }
@@ -386,6 +390,7 @@ public class HomePageController implements Initializable {
             gp_Fixtures.addRow(row);
             RowConstraints rowCon = new RowConstraints();
             rowCon.setPrefHeight(50);
+            rowCon.setValignment(VPos.CENTER);
             gp_Fixtures.getRowConstraints().add(rowCon);
         }
     }
@@ -415,12 +420,20 @@ public class HomePageController implements Initializable {
 
                     String matchScore = "";
                     Match match = DatabaseManager.DB_Match.getMatchFromDatabase(ol_Teams.get(row).getTeamName(), ol_Teams.get(column).getTeamName());
-                    matchScore += match.getHomeTeamSetsWon() + ":" + match.getAwayTeamSetsWon();
-                    gp.add(new Label(matchScore), row+1, column+1);
+
+                    if (match.getHomeTeamSetsWon() == 0 && match.getAwayTeamSetsWon() == 0) {
+
+                        gp.add(new Label("np"), column+1, row+1);
+                    }
+                    else {
+
+                        matchScore += match.getHomeTeamSetsWon() + ":" + match.getAwayTeamSetsWon();
+                        gp.add(new Label(matchScore), column+1, row+1);
+                    }
                 }
                 else {
 
-                    gp.add(new Label("np"), row+1, column+1);
+                    gp.add(new Label("np"), column+1, row+1);
                 }
             }
         }
@@ -449,7 +462,52 @@ public class HomePageController implements Initializable {
 
     public void modifyExistingSheet(ActionEvent actionEvent) {
 
+        Match match = DatabaseManager.DB_Match.getMatchFromDatabase(cb_SelectHomeTeam.getValue().getTeamName(), cb_SelectAwayTeam.getValue().getTeamName());
 
+        cb_SelectHomePlayer1.setValue(match.getHomeTeamPlayer1());
+        cb_SelectHomePlayer2.setValue(match.getHomeTeamPlayer2());
+        cb_SelectAwayPlayer1.setValue(match.getAwayTeamPlayer1());
+        cb_SelectAwayPlayer2.setValue(match.getAwayTeamPlayer2());
+
+        for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
+
+            if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
+
+                // in order to get the children we need to cast the VBox to a new reference for some reason
+                VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
+                String ID = vb.getId();
+                int setNumber = vb.getId().charAt(2) - '0'; // converts char into int due to the way ASCII works
+
+                if (ID .equals("HDS") || ID.equals("ADS")) {
+                    setNumber = 5;
+                }
+
+                TextField[] scoreEntries = new TextField[3];
+                scoreEntries[0] = (TextField) vb.getChildren().get(0);
+                scoreEntries[1] = (TextField) vb.getChildren().get(1);
+                scoreEntries[2] = (TextField) vb.getChildren().get(2);
+
+                if (ID.charAt(0) == 'H') {
+
+                    scoreEntries[0].setText(Integer.toString(match.getSet(setNumber-1).getGame(0).getHomeTeamScore()));
+                    scoreEntries[1].setText(Integer.toString(match.getSet(setNumber-1).getGame(1).getHomeTeamScore()));
+                    scoreEntries[2].setText(Integer.toString(match.getSet(setNumber-1).getGame(2).getHomeTeamScore()));
+                }
+                else {
+
+                    scoreEntries[0].setText(Integer.toString(match.getSet(setNumber-1).getGame(0).getAwayTeamScore()));
+                    scoreEntries[1].setText(Integer.toString(match.getSet(setNumber-1).getGame(1).getAwayTeamScore()));
+                    scoreEntries[2].setText(Integer.toString(match.getSet(setNumber-1).getGame(2).getAwayTeamScore()));
+                }
+            }
+        }
+
+        disableSubmitButtonIfEmptyFields();
+
+        cb_SelectHomePlayer1.setValue(match.getHomeTeamPlayer1());
+        cb_SelectHomePlayer2.setValue(match.getHomeTeamPlayer2());
+        cb_SelectAwayPlayer1.setValue(match.getAwayTeamPlayer1());
+        cb_SelectAwayPlayer2.setValue(match.getAwayTeamPlayer2());
     }
 
     public void calculateAndSubmitScores(ActionEvent actionEvent) {

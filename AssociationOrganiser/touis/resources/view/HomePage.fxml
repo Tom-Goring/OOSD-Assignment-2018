@@ -25,6 +25,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePageController">
@@ -125,7 +126,7 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <Pane fx:id="p_ShowTeamStats">
+                                    <Pane fx:id="p_ShowTeamStats" visible="false">
                                        <children>
                                           <VBox>
                                              <children>
@@ -271,6 +272,25 @@
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy>
                                                 </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="p_Fixtures" prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <VBox prefHeight="36.0" prefWidth="727.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" prefHeight="35.0" prefWidth="173.0" styleClass="title" stylesheets="@../css/theme.css" text="Fixtures">
+                                                         <padding>
+                                                            <Insets bottom="5.0" top="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Separator prefHeight="0.0" prefWidth="727.0" />
+                                                      <TilePane fx:id="tp_Fixtures" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
                                              </children>
                                           </VBox>
                                        </children>

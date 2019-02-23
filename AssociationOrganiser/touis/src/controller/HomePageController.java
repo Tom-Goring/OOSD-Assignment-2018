@@ -8,6 +8,7 @@
 package controller;
 
 import DB.DatabaseManager;
+import javafx.scene.layout.TilePane;
 import model.*;
 import view.AlphaNumericTextFormatter;
 import view.UserListViewCell;
@@ -29,6 +30,7 @@ import javafx.fxml.Initializable;
 import javax.xml.soap.Text;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
@@ -58,6 +60,8 @@ public class HomePageController implements Initializable {
 
     @FXML private Pane p_MatchViewer;
     @FXML private Pane p_ShowTeamStats;
+    @FXML private Pane p_Fixtures;
+    @FXML private TilePane tp_Fixtures;
 
     // Score Sheet Page elements
     @FXML private Button btn_NewSheet;
@@ -200,16 +204,25 @@ public class HomePageController implements Initializable {
 
     public void viewFixtures(ActionEvent actionEvent) {
 
+	    p_Fixtures.setVisible(true);
+        p_ShowTeamStats.setVisible(false);
+        p_MatchViewer.setVisible(false);
+
+
+
+
     }
 
     public void showTeamStats(ActionEvent actionEvent) {
 
-	    p_ShowTeamStats.setVisible(true);
-	    p_MatchViewer.setVisible(false);
+        p_Fixtures.setVisible(false);
+        p_ShowTeamStats.setVisible(true);
+        p_MatchViewer.setVisible(false);
     }
 
     public void openMatchViewer(ActionEvent actionEvent) {
 
+        p_Fixtures.setVisible(false);
         p_ShowTeamStats.setVisible(false);
         p_MatchViewer.setVisible(true);
     }
@@ -413,9 +426,4 @@ public class HomePageController implements Initializable {
 
         DatabaseManager.DB_Match.updateMatchInformation(match);
     }
-
-    // Viewer Page Methods
-
-
-
 }

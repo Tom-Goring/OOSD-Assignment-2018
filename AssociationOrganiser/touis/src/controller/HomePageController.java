@@ -113,8 +113,6 @@ public class HomePageController implements Initializable {
         setScoreSheetFieldsToIntegerOnly();
         listenForScoreSheetChanges();
         disableSubmitButtonIfEmptyFields();
-
-        generateFixtureGrid();
 	}
 
 	private void hideAdminPageIfNonAdmin() {
@@ -124,13 +122,20 @@ public class HomePageController implements Initializable {
         }
     }
 
+    private void hideFixturesTableIfNoTeams() {
+
+	    if (ol_Teams.size() < 2) {
+
+	        vb_Fixtures.setVisible(false);
+        }
+    }
+
 	private void setTeamListListener() {
 
         ol_Teams.addListener(new ListChangeListener<Team>() {
             @Override
             public void onChanged(Change<? extends Team> c) {
                 cb_SelectPlayerTeam.setItems(ol_Teams);
-                generateFixtureGrid();
             }
         });
     }
@@ -319,7 +324,10 @@ public class HomePageController implements Initializable {
         Fixtures fixtures = Fixtures.generateFixtures();
 
         if (fixtures != null) {
+
+            DatabaseManager.DB_Match.truncMatch();
             DatabaseManager.DB_Fixtures.addFixturesToDatabase(fixtures);
+            generateFixtureGrid();
         }
         else {
 
@@ -353,6 +361,8 @@ public class HomePageController implements Initializable {
         populateLabels(gp_Fixtures);
 
         vb_Fixtures.getChildren().add(gp_Fixtures);
+
+        vb_Fixtures.setVisible(true);
     }
 
     private void setTeamColumns(GridPane gp_Fixtures) {
@@ -389,6 +399,17 @@ public class HomePageController implements Initializable {
 
             Label label = new Label(ol_Teams.get(row).getTeamName());
             gp.add(label, 0, row+1);
+        }
+    }
+
+    private void populateContent(GridPane gp) {
+
+	    for (int row = 1; row < ol_Teams.size(); row++) {
+
+            for (int column = 1; column < ol_Teams.size(); column++) {
+
+
+            }
         }
     }
 

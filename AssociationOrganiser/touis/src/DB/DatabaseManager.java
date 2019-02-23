@@ -115,7 +115,7 @@ public class DatabaseManager {
 
         // Game Table FKs
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Game_Match FOREIGN KEY Game_Match (SetID) " +
-                "REFERENCES `Set` (ID);");
+                "REFERENCES `Set` (ID) ON DELETE CASCADE;");
 
         queryList.add("ALTER TABLE Game ADD CONSTRAINT Winner_Team FOREIGN KEY Winner_Team (WinnerID) " +
                 "REFERENCES Team (ID);");
@@ -159,7 +159,7 @@ public class DatabaseManager {
         queryList.add("ALTER TABLE `Set` ADD CONSTRAINT WinnerID_TeamID FOREIGN KEY WinnerID_TeamID (WinnerID) " +
                 "REFERENCES Team (ID);");
 
-        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES `Match` (ID);");
+        queryList.add("ALTER TABLE `Set` ADD CONSTRAINT SetMatchID_Match FOREIGN KEY (MatchID) REFERENCES `Match` (ID) ON DELETE CASCADE;");
 
         try {
 
@@ -469,6 +469,122 @@ public class DatabaseManager {
 
     public static class DB_Match {
 
+        public static Match getMatchFromDatabase(String homeTeamName, String awayTeamName) {
+
+            String queryMatch = "SELECT HomeTeam.Name as HomeTeamName, AwayTeam.Name as AwayTeamName," +
+                    "HP1.Name as HomePlayer1, " +
+                    "HP2.Name as HomePlayer2, " +
+                    "AP1.Name as AwayPlayer1, " +
+                    "AP2.Name as AwayPlayer2, " +
+                    "team.Name as WinnerName " +
+                    "FROM `match` " +
+                    "LEFT JOIN team AS HomeTeam ON HomeTeam.ID = `match`.HomeTeamID " +
+                    "LEFT JOIN team AS AwayTeam ON AwayTeam.ID = `match`.AwayTeamID " +
+                    "LEFT JOIN player as HP1 ON HP1.ID = `match`.HomePlayer1ID " +
+                    "LEFT JOIN player as HP2 ON HP2.ID = `match`.HomePlayer2ID " +
+                    "LEFT JOIN player as AP1 ON AP1.ID = `match`.AwayPlayer1ID " +
+                    "LEFT JOIN player as AP2 ON AP2.ID = `match`.AwayPlayer2ID " +
+                    "LEFT JOIN team ON WinnerID = team.ID " +
+                    "WHERE " +
+                    "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?);";
+
+            String querySet = "SELECT " +
+                    "HP.Name as HomePlayer, " +
+                    "AP.Name as AwayPlayer, " +
+                    "team.Name as WinnerName " +
+                    "FROM `set` " +
+                    "LEFT JOIN player as HP ON HP.ID = `set`.HomePlayerID " +
+                    "LEFT JOIN player as AP ON AP.ID = `set`.AwayPlayerID " +
+                    "LEFT JOIN team ON WinnerID = team.ID " +
+                    "WHERE MatchID = (" +
+                    "(SELECT ID FROM `match` WHERE " +
+                    "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "AND " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?))) " +
+                    "AND " +
+                    "SetNumber = ?;";
+
+            String queryGame = "SELECT " +
+                    "HomeTeamScore, " +
+                    "AwayTeamScore, " +
+                    "team.Name as WinnerName " +
+                    "FROM game " +
+                    "LEFT JOIN team ON WinnerID = team.ID " +
+                    "WHERE " +
+                    "SetID = (SELECT ID FROM `set` WHERE " +
+                    "MatchID = (SELECT ID FROM `match` WHERE HomeTeamID = (SELECT ID FROM team WHERE Name = ?) AND AwayTeamID = (SELECT ID FROM team WHERE Name = ?))" +
+                    "AND SetNumber = ?)" +
+                    " AND GameNumber = ?;";
+
+
+            try {
+
+                PreparedStatement preparedStatement = Connect_DB.getConnection().prepareStatement(queryMatch);
+                preparedStatement.setString(1, homeTeamName);
+                preparedStatement.setString(2, awayTeamName);
+
+                ResultSet rset = preparedStatement.executeQuery();
+
+                Match match = new Match();
+
+                while (rset.next()) {
+
+                    match.setHomeTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("HomeTeamName")));
+                    match.setAwayTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("AwayTeamName")));
+                    match.setHomeTeamPlayer1(new Player(rset.getString("HomePlayer1")));
+                    match.setHomeTeamPlayer2(new Player(rset.getString("HomePlayer2")));
+                    match.setAwayTeamPlayer1(new Player(rset.getString("AwayPlayer1")));
+                    match.setAwayTeamPlayer2(new Player(rset.getString("AwayPlayer2")));
+                    match.setWinningTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("WinnerName")));
+                }
+
+                preparedStatement = Connect_DB.getConnection().prepareStatement(querySet);
+
+                for (int setNumber = 0; setNumber < 5; setNumber++) {
+
+                    preparedStatement.setString(1, homeTeamName);
+                    preparedStatement.setString(2, awayTeamName);
+                    preparedStatement.setInt(3, setNumber + 1);
+
+                    rset = preparedStatement.executeQuery();
+
+                    while (rset.next()) {
+
+                        match.getSet(setNumber).setHomeTeamPlayer(new Player(rset.getString("HomePlayer")));
+                        match.getSet(setNumber).setAwayTeamPlayer(new Player(rset.getString("AwayPlayer")));
+                        match.getSet(setNumber).setWinningTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("WinnerName")));
+                    }
+
+                    PreparedStatement preparedStatement1 = Connect_DB.getConnection().prepareStatement(queryGame);
+                    for (int gameNumber = 0; gameNumber < 3; gameNumber++) {
+
+                        preparedStatement1.setString(1, homeTeamName);
+                        preparedStatement1.setString(2, awayTeamName);
+                        preparedStatement1.setInt(3, setNumber + 1);
+                        preparedStatement1.setInt(4, gameNumber + 1);
+
+                        rset = preparedStatement1.executeQuery();
+
+                        while (rset.next()) {
+
+                            match.getSet(setNumber).getGame(gameNumber).setHomeTeamScore(rset.getInt("HomeTeamScore"));
+                            match.getSet(setNumber).getGame(gameNumber).setAwayTeamScore(rset.getInt("AwayTeamScore"));
+                            match.getSet(setNumber).getGame(gameNumber).setWinningTeam(DatabaseManager.DB_Team.getTeamFromDatabase(rset.getString("WinnerName")));
+                        }
+                    }
+                }
+
+                match.fillInWinnerFields();
+                return match;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
         public static void sendNewMatchToDB(Match match) {
 
             String insertMatch = "INSERT INTO `Match` (HomeTeamID, AwayTeamID) VALUES (" +
@@ -632,6 +748,37 @@ public class DatabaseManager {
                     updateGame.executeBatch(); // games
                 }
                 update.executeBatch(); // sets
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void truncMatch() {
+
+            String disableConstraints = "SET FOREIGN_KEY_CHECKS = 0;";
+            String truncGames = "TRUNCATE game;";
+            String truncSets = "TRUNCATE `set`;";
+            String truncMatches = "TRUNCATE `match`";
+            String enableConstraints = "SET FOREIGN_KEY_CHECKS = 1;";
+
+            try {
+
+                PreparedStatement trunc = Connect_DB.getConnection().prepareStatement(disableConstraints);
+                trunc.executeUpdate();
+
+                trunc = Connect_DB.getConnection().prepareStatement(truncGames);
+                trunc.executeUpdate();
+
+                trunc = Connect_DB.getConnection().prepareStatement(truncSets);
+                trunc.executeUpdate();
+
+                trunc = Connect_DB.getConnection().prepareStatement(truncMatches);
+                trunc.executeUpdate();
+
+                trunc = Connect_DB.getConnection().prepareStatement(enableConstraints);
+                trunc.executeUpdate();
+
             }
             catch (SQLException e) {
                 e.printStackTrace();

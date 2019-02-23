@@ -3,11 +3,13 @@
 // TODO: make submit new team button clear textfield
 // TODO: generate team stats method / window
 // TODO: make the textfields in the score sheet integer ones
+// TODO: disable submit button in score sheet
 
 package controller;
 
 import DB.DatabaseManager;
 import model.*;
+import view.AlphaNumericTextFormatter;
 import view.UserListViewCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +25,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
+import javax.xml.soap.Text;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -87,14 +91,17 @@ public class HomePageController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+	    // ensure users without privileges cannot use admin functions
 		if (User.currentUser.getPrivilegeLevel() != 2) { // hide admin tab from non admin accounts
 			closeTab(t_Admin);
 		}
 
+		// no listener for users as they cant be made outside of the login screen
 		lv_Users.setItems(ol_Users);
 		lv_Users.setCellFactory(userListView -> new UserListViewCell());
 		cb_SelectPlayerTeam.setItems(ol_Teams);
 
+		// listens for changes to teamlist
 		ol_Teams.addListener(new ListChangeListener<Team>() {
             @Override
             public void onChanged(Change<? extends Team> c) {
@@ -102,9 +109,11 @@ public class HomePageController implements Initializable {
             }
         });
 
+		// initialize observerlists with arrays
         cb_SelectHomeTeam.setItems(ol_Teams);
         cb_SelectAwayTeam.setItems(ol_Teams);
 
+        // listener for changes to TeamList to update combo boxes if new teams are added
         cb_SelectHomeTeam.valueProperty().addListener(new ChangeListener<Team>() {
             @Override
             public void changed(ObservableValue<? extends Team> observable, Team oldValue, Team newValue) {
@@ -116,6 +125,7 @@ public class HomePageController implements Initializable {
             }
         });
 
+        // listener for changes to TeamList to update combo boxes if new teams are added
         cb_SelectAwayTeam.valueProperty().addListener(new ChangeListener<Team>() {
             @Override
             public void changed(ObservableValue<? extends Team> observable, Team oldValue, Team newValue) {
@@ -126,8 +136,25 @@ public class HomePageController implements Initializable {
                 cb_SelectAwayPlayer2.setItems(ol_AwayPlayers);
             }
         });
+
+        // loop to set all textfields to be single integer only
+        for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
+
+            if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
+
+                // have to get children in order to see their children (not sure why)
+                VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
+
+                for (int j = 0; j < vb.getChildren().size(); j++) {
+
+                    TextField textField = (TextField) vb.getChildren().get(j);
+                    textField.setTextFormatter(new AlphaNumericTextFormatter(2));
+                }
+            }
+        }
 	}
 
+	// used to close admin tab if needed
     private void closeTab(Tab tab) {
 
         EventHandler<Event> handler = tab.getOnClosed();

@@ -1,5 +1,7 @@
 package model;
 
+import DB.DatabaseManager;
+
 import java.util.ArrayList;
 
 public class Match {
@@ -224,5 +226,47 @@ public class Match {
         playerList.add(this.awayTeamPlayer2);
 
         return playerList;
+    }
+
+    public void fillInWinnerFields() {
+
+        int homeTeamSetsWon = 0;
+        int awayTeamSetsWon = 0;
+
+        for (int i = 0; i < 5; i++) {
+
+            int homeTeamGamesWon = 0;
+            int awayTeamGamesWon = 0;
+            for (int j = 0; j < 3; j++) {
+
+                if (this.getSet(i).getGame(j).getHomeTeamScore() > this.getSet(i).getGame(j).getAwayTeamScore()) {
+
+                    this.getSet(i).getGame(j).setWinningTeam(this.getHomeTeam());
+                    homeTeamGamesWon++;
+                }
+                else {
+
+                    this.getSet(i).getGame(j).setWinningTeam(this.getAwayTeam());
+                    awayTeamGamesWon++;
+                }
+            }
+
+            if (homeTeamGamesWon > awayTeamGamesWon) {
+                this.getSet(i).setWinningTeam(this.getHomeTeam());
+                homeTeamSetsWon++;
+            }
+            else {
+                this.getSet(i).setWinningTeam(this.getAwayTeam());
+                awayTeamSetsWon++;
+            }
+        }
+        if (homeTeamSetsWon > awayTeamSetsWon) {
+
+            this.setWinningTeam(this.getHomeTeam());
+        }
+        else {
+
+            this.setWinningTeam(this.getAwayTeam());
+        }
     }
 }

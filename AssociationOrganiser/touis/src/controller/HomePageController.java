@@ -1,23 +1,19 @@
 // TODO: add error display for pre-existing team and player names
 // TODO: add error for when less than 2 teams exist and fixtures are generated
-// TODO: make submit new team button clear textfield
 // TODO: generate team stats method / window
 // TODO: make the textfields in the score sheet integer ones
-// TODO: disable submit button in score sheet
 
 package controller;
 
 import DB.DatabaseManager;
-import javafx.scene.layout.TilePane;
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
 import model.*;
 import view.AlphaNumericTextFormatter;
 import view.UserListViewCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -27,10 +23,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
-import javax.xml.soap.Text;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
@@ -50,10 +44,10 @@ public class HomePageController implements Initializable {
 	// Admin Page elements
 
 	@FXML private ListView lv_Users;
-    @FXML private TextField btn_EnterNewTeamName;
+    @FXML private TextField tf_EnterNewTeamName;
     @FXML private Button btn_RegTeam;
 
-	@FXML private TextField btn_EnterNewPlayerName;
+	@FXML private TextField tf_EnterNewPlayerName;
 	@FXML private ComboBox<Team> cb_SelectPlayerTeam;
 
     // Viewer Page elements
@@ -72,7 +66,9 @@ public class HomePageController implements Initializable {
     @FXML private ComboBox<Player> cb_SelectHomePlayer2;
     @FXML private ComboBox<Player> cb_SelectAwayPlayer1;
     @FXML private ComboBox<Player> cb_SelectAwayPlayer2;
+    @FXML private Button btn_CalcSubScores;
 
+    @FXML private VBox vb_Fixtures;
     @FXML private GridPane gp_MatchForm;
 
 
@@ -96,9 +92,7 @@ public class HomePageController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 	    // ensure users without privileges cannot use admin functions
-		if (User.currentUser.getPrivilegeLevel() != 2) { // hide admin tab from non admin accounts
-			closeTab(t_Admin);
-		}
+		hideAdminPageIfNonAdmin();
 
 		// no listener for users as they cant be made outside of the login screen
 		lv_Users.setItems(ol_Users);
@@ -106,18 +100,43 @@ public class HomePageController implements Initializable {
 		cb_SelectPlayerTeam.setItems(ol_Teams);
 
 		// listens for changes to teamlist
-		ol_Teams.addListener(new ListChangeListener<Team>() {
-            @Override
-            public void onChanged(Change<? extends Team> c) {
-                cb_SelectPlayerTeam.setItems(ol_Teams);
-            }
-        });
+		setTeamListListener();
 
 		// initialize observerlists with arrays
         cb_SelectHomeTeam.setItems(ol_Teams);
         cb_SelectAwayTeam.setItems(ol_Teams);
 
-        // listener for changes to TeamList to update combo boxes if new teams are added
+        // listeners for changes to TeamList to update combo boxes if new teams are added
+        setHomeTeamListListener();
+        setAwayTeamListListener();
+
+        setScoreSheetFieldsToIntegerOnly();
+        listenForScoreSheetChanges();
+        disableSubmitButtonIfEmptyFields();
+
+        generateFixtureGrid();
+	}
+
+	private void hideAdminPageIfNonAdmin() {
+
+        if (User.currentUser.getPrivilegeLevel() != 2) { // hide admin tab from non admin accounts
+            closeTab(t_Admin);
+        }
+    }
+
+	private void setTeamListListener() {
+
+        ol_Teams.addListener(new ListChangeListener<Team>() {
+            @Override
+            public void onChanged(Change<? extends Team> c) {
+                cb_SelectPlayerTeam.setItems(ol_Teams);
+                generateFixtureGrid();
+            }
+        });
+    }
+
+    private void setHomeTeamListListener() {
+
         cb_SelectHomeTeam.valueProperty().addListener(new ChangeListener<Team>() {
             @Override
             public void changed(ObservableValue<? extends Team> observable, Team oldValue, Team newValue) {
@@ -128,6 +147,9 @@ public class HomePageController implements Initializable {
                 cb_SelectHomePlayer2.setItems(ol_HomePlayers);
             }
         });
+    }
+
+    private void setAwayTeamListListener() {
 
         // listener for changes to TeamList to update combo boxes if new teams are added
         cb_SelectAwayTeam.valueProperty().addListener(new ChangeListener<Team>() {
@@ -140,6 +162,9 @@ public class HomePageController implements Initializable {
                 cb_SelectAwayPlayer2.setItems(ol_AwayPlayers);
             }
         });
+    }
+
+	private void setScoreSheetFieldsToIntegerOnly() {
 
         // loop to set all textfields to be single integer only
         for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
@@ -156,7 +181,104 @@ public class HomePageController implements Initializable {
                 }
             }
         }
-	}
+    }
+
+    private void disableSubmitButtonIfEmptyFields() {
+
+	    boolean fieldEmpty = false;
+
+        for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
+
+            if (cb_SelectHomePlayer1.getSelectionModel().isEmpty()) {
+
+                fieldEmpty = true;
+            }
+
+            if (cb_SelectHomePlayer2.getSelectionModel().isEmpty()) {
+
+                fieldEmpty = true;
+            }
+
+            if (cb_SelectAwayPlayer1.getSelectionModel().isEmpty()) {
+
+                fieldEmpty = true;
+            }
+
+            if (cb_SelectAwayPlayer2.getSelectionModel().isEmpty()) {
+
+                fieldEmpty = true;
+            }
+
+            if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
+
+                // have to get children in order to see their children (not sure why)
+                VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
+
+                for (int j = 0; j < vb.getChildren().size(); j++) {
+
+                    TextField textField = (TextField) vb.getChildren().get(j);
+                    if (textField.getText().isEmpty()) {
+
+                        fieldEmpty = true;
+                    }
+                }
+
+                btn_CalcSubScores.setDisable(fieldEmpty);
+            }
+        }
+    }
+
+    private void listenForScoreSheetChanges() {
+
+	    cb_SelectHomePlayer1.valueProperty().addListener(new ChangeListener<Player>() {
+            @Override
+            public void changed(ObservableValue<? extends Player> observable, Player oldValue, Player newValue) {
+                disableSubmitButtonIfEmptyFields();
+            }
+        });
+
+        cb_SelectHomePlayer2.valueProperty().addListener(new ChangeListener<Player>() {
+            @Override
+            public void changed(ObservableValue<? extends Player> observable, Player oldValue, Player newValue) {
+                disableSubmitButtonIfEmptyFields();
+            }
+        });
+
+        cb_SelectAwayPlayer1.valueProperty().addListener(new ChangeListener<Player>() {
+            @Override
+            public void changed(ObservableValue<? extends Player> observable, Player oldValue, Player newValue) {
+                disableSubmitButtonIfEmptyFields();
+            }
+        });
+
+        cb_SelectAwayPlayer2.valueProperty().addListener(new ChangeListener<Player>() {
+            @Override
+            public void changed(ObservableValue<? extends Player> observable, Player oldValue, Player newValue) {
+                disableSubmitButtonIfEmptyFields();
+            }
+        });
+
+        for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
+
+            if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
+
+                // have to get children in order to see their children (not sure why)
+                VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
+
+                for (int j = 0; j < vb.getChildren().size(); j++) {
+
+                    TextField textField = (TextField) vb.getChildren().get(j);
+                    textField.textProperty().addListener(new ChangeListener<String>() {
+
+                        @Override
+                        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                            disableSubmitButtonIfEmptyFields();
+                        }
+                    });
+                }
+            }
+        }
+    }
 
 	// used to close admin tab if needed
     private void closeTab(Tab tab) {
@@ -174,17 +296,22 @@ public class HomePageController implements Initializable {
 
 	public void registerNewPlayer(ActionEvent actionEvent) {
 
-		Player player = new Player(btn_EnterNewPlayerName.getText());
+		Player player = new Player(tf_EnterNewPlayerName.getText());
 		Team team = cb_SelectPlayerTeam.getValue();
+		team.addPlayer(player);
+
+		tf_EnterNewTeamName.clear();
+		tf_EnterNewPlayerName.clear();
 
 		DatabaseManager.DB_Player.addNewPlayerToDatabase(player, team);
 	}
 
     public void registerNewTeam(ActionEvent actionEvent) {
 
-	    Team team = new Team(btn_EnterNewTeamName.getText());
+	    Team team = new Team(tf_EnterNewTeamName.getText());
 	    DatabaseManager.DB_Team.addNewTeamToDatabase(team);
 	    ol_Teams.add(team); // to update combobox without having to retrieve from SQL again
+        tf_EnterNewTeamName.clear();
     }
 
     public void generateFixtures(ActionEvent actionEvent) {
@@ -207,10 +334,62 @@ public class HomePageController implements Initializable {
 	    p_Fixtures.setVisible(true);
         p_ShowTeamStats.setVisible(false);
         p_MatchViewer.setVisible(false);
+    }
 
+    public void generateFixtureGrid() {
 
+        vb_Fixtures.getChildren().clear();
+        GridPane gp_Fixtures = new GridPane();
 
+        VBox.setVgrow(gp_Fixtures, Priority.NEVER);
+        gp_Fixtures.setAlignment(Pos.CENTER);
 
+        setTeamColumns(gp_Fixtures);
+        setTeamRows(gp_Fixtures);
+
+        gp_Fixtures.setVisible(true);
+        gp_Fixtures.setGridLinesVisible(true);
+
+        populateLabels(gp_Fixtures);
+
+        vb_Fixtures.getChildren().add(gp_Fixtures);
+    }
+
+    private void setTeamColumns(GridPane gp_Fixtures) {
+
+        for (int column = 0; column < ol_Teams.size()+1; column++) {
+
+            gp_Fixtures.addColumn(column);
+            ColumnConstraints colCon = new ColumnConstraints();
+            colCon.setPrefWidth(50);
+            gp_Fixtures.getColumnConstraints().add(colCon);
+        }
+    }
+
+    private void setTeamRows(GridPane gp_Fixtures) {
+
+        for (int row = 0; row < ol_Teams.size()+1; row++) {
+
+            gp_Fixtures.addRow(row);
+            RowConstraints rowCon = new RowConstraints();
+            rowCon.setPrefHeight(50);
+            gp_Fixtures.getRowConstraints().add(rowCon);
+        }
+    }
+
+    private void populateLabels(GridPane gp) {
+
+        for (int column = 0; column < ol_Teams.size(); column++) { // start at 1 to miss the first column, which should be empty
+
+            Label label = new Label(ol_Teams.get(column).getTeamName());
+            gp.add(label, column+1, 0);
+        }
+
+        for (int row = 0; row < ol_Teams.size(); row++) { // start at 1 to miss the first column, which should be empty
+
+            Label label = new Label(ol_Teams.get(row).getTeamName());
+            gp.add(label, 0, row+1);
+        }
     }
 
     public void showTeamStats(ActionEvent actionEvent) {
@@ -256,6 +435,7 @@ public class HomePageController implements Initializable {
         match.setAwayTeamPlayer1(AP1);
         match.setAwayTeamPlayer2(AP2);
 
+        // may as well fill in double set players, even if unnecessary
         match.getSet(4).setHomeTeamPlayer(HP1);
         match.getSet(4).setHomeTeamPlayer(HP2);
         match.getSet(4).setHomeTeamPlayer(AP1);
@@ -265,7 +445,7 @@ public class HomePageController implements Initializable {
 
             if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
 
-                // im sorry for this monstrosity
+                // in order to get the children we need to cast the VBox to a new reference for some reason
                 VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
                 String ID = vb.getId();
 
@@ -277,153 +457,55 @@ public class HomePageController implements Initializable {
                 // if this set is a double
                 if (vb.getId().equals("HDS") || vb.getId().equals("ADS")) {
 
-                    // set game scores
-                    int gameIndex = 0;
-                    for (TextField gameScore : scoreEntries) {
-
-                        // check if this is for home or away
-                        if (vb.getId().charAt(0) == 'H') {
-
-                            match.getSet(4).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
-                            gameIndex++;
-                        }
-                        else if (vb.getId().charAt(0) == 'A') {
-
-                            match.getSet(4).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
-                            gameIndex++;
-                        }
-                    }
+                    setScoresWithTextFields(match, HP1, AP1, 4, scoreEntries, vb.getId());
                 }
-                else {
+                else { // if its a single
 
                     int setNumber = vb.getId().charAt(2) - '0'; // converts char into int due to the way ASCII works
                     int gameIndex = 0;
+
                     // handle the information of whatever set we're currently looking at
                     switch (setNumber) {
 
                         case 1:
-                            match.getSet(setNumber-1).setHomeTeamPlayer(HP1);
-                            match.getSet(setNumber-1).setAwayTeamPlayer(AP1);
-                            gameIndex = 0;
-                            for (TextField gameScore : scoreEntries) {
-
-                                // check if this is for home or away
-                                if (vb.getId().charAt(0) == 'H') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                                else if (vb.getId().charAt(0) == 'A') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                            }
+                            setScoresWithTextFields(match, HP1, AP1, setNumber, scoreEntries, vb.getId());
                             break;
                         case 2:
-                            match.getSet(setNumber-1).setHomeTeamPlayer(HP1);
-                            match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
-                            gameIndex = 0;
-                            for (TextField gameScore : scoreEntries) {
-
-                                // check if this is for home or away
-                                if (vb.getId().charAt(0) == 'H') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                                else if (vb.getId().charAt(0) == 'A') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                            }
+                            setScoresWithTextFields(match, HP1, AP2, setNumber, scoreEntries, vb.getId());
                             break;
                         case 3:
-                            match.getSet(setNumber-1).setHomeTeamPlayer(HP2);
-                            match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
-                            gameIndex = 0;
-                            for (TextField gameScore : scoreEntries) {
-
-                                // check if this is for home or away
-                                if (vb.getId().charAt(0) == 'H') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                                else if (vb.getId().charAt(0) == 'A') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                            }
+                            setScoresWithTextFields(match, HP2, AP1, setNumber, scoreEntries, vb.getId());
                             break;
                         case 4:
-                            match.getSet(setNumber-1).setHomeTeamPlayer(HP2);
-                            match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
-                            gameIndex = 0;
-                            for (TextField gameScore : scoreEntries) {
-
-                                // check if this is for home or away
-                                if (vb.getId().charAt(0) == 'H') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                                else if (vb.getId().charAt(0) == 'A') {
-
-                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
-                                    gameIndex++;
-                                }
-                            }
+                            setScoresWithTextFields(match, HP2, AP2, setNumber, scoreEntries, vb.getId());
                             break;
-
-                        default:
-                            // nothing due to double set
                     }
                 }
             }
         }
 
-        int homeTeamSetsWon = 0;
-        int awayTeamSetsWon = 0;
-
-        for (int i = 0; i < 5; i++) {
-
-            int homeTeamGamesWon = 0;
-            int awayTeamGamesWon = 0;
-            for (int j = 0; j < 3; j++) {
-
-                if (match.getSet(i).getGame(j).getHomeTeamScore() > match.getSet(i).getGame(j).getAwayTeamScore()) {
-
-                    match.getSet(i).getGame(j).setWinningTeam(match.getHomeTeam());
-                    homeTeamGamesWon++;
-                }
-                else {
-
-                    match.getSet(i).getGame(j).setWinningTeam(match.getAwayTeam());
-                    awayTeamGamesWon++;
-                }
-            }
-
-            if (homeTeamGamesWon > awayTeamGamesWon) {
-                match.getSet(i).setWinningTeam(match.getHomeTeam());
-                homeTeamSetsWon++;
-            }
-            else {
-                match.getSet(i).setWinningTeam(match.getAwayTeam());
-                awayTeamSetsWon++;
-            }
-        }
-        if (homeTeamSetsWon > awayTeamSetsWon) {
-
-            match.setWinningTeam(match.getHomeTeam());
-        }
-        else {
-
-            match.setWinningTeam(match.getAwayTeam());
-        }
-
+        match.fillInWinnerFields();
         DatabaseManager.DB_Match.updateMatchInformation(match);
     }
+
+    private void setScoresWithTextFields(Match match, Player HP, Player AP, int setNumber, TextField[] scoreEntries, String ID) {
+
+        match.getSet(setNumber - 1).setHomeTeamPlayer(HP);
+        match.getSet(setNumber - 1).setAwayTeamPlayer(AP);
+        int gameIndex = 0;
+        for (TextField gameScore : scoreEntries) {
+
+            // check if this is for home or away
+            if (ID.charAt(0) == 'H') {
+
+                match.getSet(setNumber - 1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
+                gameIndex++;
+            } else if (ID.charAt(0) == 'A') {
+
+                match.getSet(setNumber - 1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
+                gameIndex++;
+            }
+        }
+    }
+
 }

@@ -90,6 +90,8 @@ public class DatabaseManager {
                 "ID int NOT NULL AUTO_INCREMENT,\n" +
                 "SetNumber int NOT NULL,\n" +
                 "MatchID int NOT NULL,\n" +
+                "HomePlayerID int,\n" +
+                "AwayPlayerID int,\n" +
                 "WinnerID int,\n" +
                 "Played bool,\n" +
                 "CONSTRAINT Set_pk PRIMARY KEY (ID)\n" +

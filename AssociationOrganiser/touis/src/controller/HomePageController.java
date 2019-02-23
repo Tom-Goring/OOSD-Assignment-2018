@@ -2,6 +2,7 @@
 // TODO: add error for when less than 2 teams exist and fixtures are generated
 // TODO: generate team stats method / window
 // TODO: put fixtures grid in scroll?
+// TODO: add threaded refresh of stats
 
 
 package controller;
@@ -63,6 +64,8 @@ public class HomePageController implements Initializable {
     @FXML private Pane p_MatchViewer;
     @FXML private ComboBox<Team> cb_mvSelectHomeTeam;
     @FXML private ComboBox<Team> cb_mvSelectAwayTeam;
+    @FXML private Label lbl_HomeSetsWon;
+    @FXML private Label lbl_AwaySetsWon;
 
     @FXML private TableView<Match.Set> tv_MatchStats;
     @FXML private TableColumn<Match.Set, String> tvc_SetNumber;
@@ -269,10 +272,16 @@ public class HomePageController implements Initializable {
 
     private void initializeMatchViewer() {
 
+	    ol_MatchSets.clear();
+
 	    Team homeTeam = cb_mvSelectHomeTeam.getValue();
 	    Team awayTeam = cb_mvSelectAwayTeam.getValue();
 
+	    if (!homeTeam.equals(awayTeam))
 	    if (homeTeam != null && awayTeam != null) {
+
+            lbl_HomeSetsWon.setText(Integer.toString(DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName()).getHomeTeamSetsWon()));
+            lbl_AwaySetsWon.setText(Integer.toString(DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName()).getAwayTeamSetsWon()));
 
             tvc_SetNumber.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("setNumber"));
             tvc_HomePlayer.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("HomePlayerString"));
@@ -753,5 +762,4 @@ public class HomePageController implements Initializable {
             }
         }
     }
-
 }

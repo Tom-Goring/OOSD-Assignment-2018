@@ -203,8 +203,8 @@
                                                                      <children>
                                                                         <HBox alignment="CENTER">
                                                                            <children>
-                                                                              <Label fx:id="lbl_homeSetsWon" alignment="CENTER" contentDisplay="CENTER" text="Home Sets Won: " />
-                                                                              <Label fx:id="int_HomeSetsWon" text="4">
+                                                                              <Label alignment="CENTER" contentDisplay="CENTER" text="Home Sets Won: " />
+                                                                              <Label fx:id="lbl_HomeSetsWon" text="4">
                                                                                  <padding>
                                                                                     <Insets left="30.0" />
                                                                                  </padding>
@@ -217,8 +217,8 @@
                                                                      <children>
                                                                         <HBox alignment="CENTER">
                                                                            <children>
-                                                                              <Label fx:id="lbl_AwaySetsWon" alignment="CENTER" contentDisplay="CENTER" text="Away Sets Won: " />
-                                                                              <Label fx:id="int_AwaySetsWon" text="1">
+                                                                              <Label alignment="CENTER" contentDisplay="CENTER" text="Away Sets Won: " />
+                                                                              <Label fx:id="lbl_AwaySetsWon" text="1">
                                                                                  <padding>
                                                                                     <Insets left="30.0" />
                                                                                  </padding>

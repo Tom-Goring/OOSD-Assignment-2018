@@ -1,7 +1,5 @@
 package model;
 
-import DB.DatabaseManager;
-
 import java.util.ArrayList;
 
 public class Match {
@@ -49,14 +47,6 @@ public class Match {
             private int homeTeamScore;
             private int awayTeamScore;
             private Team winningTeam;
-
-            public int getGameNumber() {
-                return gameNumber;
-            }
-
-            public void setGameNumber(int gameNumber) {
-                this.gameNumber = gameNumber;
-            }
 
             public int getHomeTeamScore() {
                 return homeTeamScore;

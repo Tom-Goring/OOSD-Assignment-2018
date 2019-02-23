@@ -118,6 +118,7 @@ public class HomePageController implements Initializable {
         setScoreSheetFieldsToIntegerOnly();
         listenForScoreSheetChanges();
         disableSubmitButtonIfEmptyFields();
+        disableModifyIfBothTeamsNotSelected();
 
         generateFixtureGrid();
         hideFixturesTableIfNoTeams();
@@ -154,10 +155,14 @@ public class HomePageController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Team> observable, Team oldValue, Team newValue) {
 
-                ArrayList<Player> players = cb_SelectHomeTeam.getValue().getPlayerList();
-                ol_HomePlayers.setAll(players);
-                cb_SelectHomePlayer1.setItems(ol_HomePlayers);
-                cb_SelectHomePlayer2.setItems(ol_HomePlayers);
+                if (cb_SelectHomeTeam.getValue() != null) {
+
+                    ArrayList<Player> players = cb_SelectHomeTeam.getValue().getPlayerList();
+                    ol_HomePlayers.setAll(players);
+                    cb_SelectHomePlayer1.setItems(ol_HomePlayers);
+                    cb_SelectHomePlayer2.setItems(ol_HomePlayers);
+                    disableModifyIfBothTeamsNotSelected();
+                }
             }
         });
     }
@@ -169,10 +174,14 @@ public class HomePageController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Team> observable, Team oldValue, Team newValue) {
 
-                ArrayList<Player> players = cb_SelectAwayTeam.getValue().getPlayerList();
-                ol_AwayPlayers.setAll(players);
-                cb_SelectAwayPlayer1.setItems(ol_AwayPlayers);
-                cb_SelectAwayPlayer2.setItems(ol_AwayPlayers);
+                if (cb_SelectAwayTeam.getValue() != null) {
+
+                    ArrayList<Player> players = cb_SelectAwayTeam.getValue().getPlayerList();
+                    ol_AwayPlayers.setAll(players);
+                    cb_SelectAwayPlayer1.setItems(ol_AwayPlayers);
+                    cb_SelectAwayPlayer2.setItems(ol_AwayPlayers);
+                    disableModifyIfBothTeamsNotSelected();
+                }
             }
         });
     }
@@ -194,6 +203,17 @@ public class HomePageController implements Initializable {
                 }
             }
         }
+    }
+
+    private void disableModifyIfBothTeamsNotSelected() {
+
+	    Team homeTeam = cb_SelectHomeTeam.getValue();
+	    Team awayTeam = cb_SelectAwayTeam.getValue();
+
+	    btn_ModifySheet.setDisable((homeTeam == null || awayTeam == null));
+
+        cb_SelectHomeTeam.setValue(homeTeam);
+        cb_SelectAwayTeam.setValue(awayTeam);
     }
 
     private void disableSubmitButtonIfEmptyFields() {
@@ -457,7 +477,32 @@ public class HomePageController implements Initializable {
 
     public void createNewScoreSheet(ActionEvent actionEvent) {
 
+	    cb_SelectHomeTeam.getSelectionModel().clearSelection();
 
+        cb_SelectAwayTeam.valueProperty().set(null);
+
+        cb_SelectHomePlayer1.getSelectionModel().clearSelection();
+        cb_SelectHomePlayer2.getSelectionModel().clearSelection();
+        cb_SelectAwayPlayer1.getSelectionModel().clearSelection();
+        cb_SelectAwayPlayer2.getSelectionModel().clearSelection();
+
+        for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
+
+            if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
+
+                // in order to get the children we need to cast the VBox to a new reference for some reason
+                VBox vb = (VBox) gp_MatchForm.getChildren().get(i);
+
+                TextField[] scoreEntries = new TextField[3];
+                scoreEntries[0] = (TextField) vb.getChildren().get(0);
+                scoreEntries[1] = (TextField) vb.getChildren().get(1);
+                scoreEntries[2] = (TextField) vb.getChildren().get(2);
+
+                scoreEntries[0].clear();
+                scoreEntries[1].clear();
+                scoreEntries[2].clear();
+            }
+        }
     }
 
     public void modifyExistingSheet(ActionEvent actionEvent) {

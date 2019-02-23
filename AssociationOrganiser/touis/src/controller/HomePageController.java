@@ -1,6 +1,5 @@
 // TODO: add error display for pre-existing team and player names
 // TODO: add error for when less than 2 teams exist and fixtures are generated
-// TODO: generate team stats method / window
 // TODO: put fixtures grid in scroll?
 // TODO: add threaded refresh of stats
 

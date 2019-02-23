@@ -1,7 +1,6 @@
 // TODO: add error display for pre-existing team and player names
 // TODO: add error for when less than 2 teams exist and fixtures are generated
 // TODO: generate team stats method / window
-// TODO: make the textfields in the score sheet integer ones
 
 package controller;
 
@@ -113,6 +112,9 @@ public class HomePageController implements Initializable {
         setScoreSheetFieldsToIntegerOnly();
         listenForScoreSheetChanges();
         disableSubmitButtonIfEmptyFields();
+
+        generateFixtureGrid();
+        hideFixturesTableIfNoTeams();
 	}
 
 	private void hideAdminPageIfNonAdmin() {
@@ -359,6 +361,7 @@ public class HomePageController implements Initializable {
         gp_Fixtures.setGridLinesVisible(true);
 
         populateLabels(gp_Fixtures);
+        populateContent(gp_Fixtures);
 
         vb_Fixtures.getChildren().add(gp_Fixtures);
 
@@ -404,11 +407,21 @@ public class HomePageController implements Initializable {
 
     private void populateContent(GridPane gp) {
 
-	    for (int row = 1; row < ol_Teams.size(); row++) {
+	    for (int row = 0; row < ol_Teams.size(); row++) {
 
-            for (int column = 1; column < ol_Teams.size(); column++) {
+            for (int column = 0; column < ol_Teams.size(); column++) {
 
+                if (!ol_Teams.get(row).equals(ol_Teams.get(column))) {
 
+                    String matchScore = "";
+                    Match match = DatabaseManager.DB_Match.getMatchFromDatabase(ol_Teams.get(row).getTeamName(), ol_Teams.get(column).getTeamName());
+                    matchScore += match.getHomeTeamSetsWon() + ":" + match.getAwayTeamSetsWon();
+                    gp.add(new Label(matchScore), row+1, column+1);
+                }
+                else {
+
+                    gp.add(new Label("np"), row+1, column+1);
+                }
             }
         }
     }
@@ -478,7 +491,7 @@ public class HomePageController implements Initializable {
                 // if this set is a double
                 if (vb.getId().equals("HDS") || vb.getId().equals("ADS")) {
 
-                    setScoresWithTextFields(match, HP1, AP1, 4, scoreEntries, vb.getId());
+                    setScoresWithTextFields(match, null, null, 5, scoreEntries, vb.getId());
                 }
                 else { // if its a single
 
@@ -507,6 +520,7 @@ public class HomePageController implements Initializable {
 
         match.fillInWinnerFields();
         DatabaseManager.DB_Match.updateMatchInformation(match);
+        generateFixtureGrid();
     }
 
     private void setScoresWithTextFields(Match match, Player HP, Player AP, int setNumber, TextField[] scoreEntries, String ID) {

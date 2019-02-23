@@ -704,7 +704,7 @@ public class DatabaseManager {
                 update.setString(1, match.getHomeTeamPlayer1().getPlayerName());
                 update.setString(2 , match.getHomeTeamPlayer2().getPlayerName());
                 update.setString(3 , match.getAwayTeamPlayer1().getPlayerName());
-                update.setString(4 , match.getAwayTeamPlayer1().getPlayerName());
+                update.setString(4 , match.getAwayTeamPlayer2().getPlayerName());
                 update.setString(5, match.getWinningTeam().getTeamName());
                 update.setString(6, match.getHomeTeam().getTeamName());
                 update.setString(7, match.getAwayTeam().getTeamName());

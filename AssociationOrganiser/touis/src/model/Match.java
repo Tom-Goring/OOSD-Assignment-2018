@@ -121,6 +121,9 @@ public class Match {
 
     private ArrayList<Set> sets;
 
+    private int homeTeamSetsWon;
+    private int awayTeamSetsWon;
+
     public Match(Team homeTeam, Team awayTeam) {
 
         this.homeTeam = homeTeam;
@@ -140,6 +143,10 @@ public class Match {
         }
         this.sets.add(new Double());
     }
+
+    public int getHomeTeamSetsWon() { return homeTeamSetsWon; }
+
+    public int getAwayTeamSetsWon() { return awayTeamSetsWon; }
 
     public Team getHomeTeam() {
         return this.homeTeam;
@@ -258,5 +265,8 @@ public class Match {
 
             this.setWinningTeam(this.getAwayTeam());
         }
+
+        this.homeTeamSetsWon = homeTeamSetsWon;
+        this.awayTeamSetsWon = awayTeamSetsWon;
     }
 }

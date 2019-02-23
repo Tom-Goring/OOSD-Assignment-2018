@@ -576,6 +576,17 @@ public class DatabaseManager {
                     }
                 }
 
+                match.getSet(4).setHomeTeamPlayer(match.getHomeTeamPlayer1());
+
+                Match.Double doubleSet = (Match.Double) match.getSet(4);
+                doubleSet.setHomeTeamPlayer2(match.getHomeTeamPlayer2());
+
+                Player player1 = match.getAwayTeamPlayer1();
+                Player player2 = match.getAwayTeamPlayer2();
+
+                doubleSet.setAwayTeamPlayer(player1);
+                doubleSet.setAwayTeamPlayer2(player2);
+
                 match.fillInWinnerFields();
                 return match;
             }

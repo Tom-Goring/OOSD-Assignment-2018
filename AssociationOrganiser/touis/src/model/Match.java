@@ -6,6 +6,60 @@ public class Match {
 
     public class Set {
 
+        // String methods for tableView
+
+        public String getSetNumber() {
+
+            return Integer.toString(this.setNumber);
+        }
+
+        public String getHomePlayerString() {
+
+            return this.homeTeamPlayer.getPlayerName();
+        }
+
+        public String getAwayPlayerString() {
+
+            return this.awayTeamPlayer.getPlayerName();
+        }
+
+        public String getG1HomeScore() {
+
+            return Integer.toString(this.games.get(0).homeTeamScore);
+        }
+
+        public String getG2HomeScore() {
+
+            return Integer.toString(this.games.get(1).homeTeamScore);
+        }
+
+        public String getG3HomeScore() {
+
+            return Integer.toString(this.games.get(2).homeTeamScore);
+        }
+
+        public String getG1AwayScore() {
+
+            return Integer.toString(this.games.get(0).awayTeamScore);
+        }
+
+        public String getG2AwayScore() {
+
+            return Integer.toString(this.games.get(1).awayTeamScore);
+        }
+
+        public String getG3AwayScore() {
+
+            return Integer.toString(this.games.get(2).awayTeamScore);
+        }
+
+        public String getWinner() {
+
+            return winningTeam.getTeamName();
+        }
+
+        // End of string methods
+
         public Team getWinningTeam() {
             return winningTeam;
         }
@@ -95,7 +149,7 @@ public class Match {
         }
     }
 
-    private class Double extends Set {
+    public class Double extends Set {
 
         int setNumber = 5;
         Player homeTeamPlayer2;
@@ -103,10 +157,37 @@ public class Match {
 
         public Double() {
 
+            super.setNumber = 5;
             super.games = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
                 super.games.add(new Game(i));
             }
+        }
+
+        public void setHomeTeamPlayer2(Player homeTeamPlayer2) {
+            this.homeTeamPlayer2 = homeTeamPlayer2;
+        }
+
+        public void setAwayTeamPlayer2(Player awayTeamPlayer2) {
+            this.awayTeamPlayer2 = awayTeamPlayer2;
+        }
+
+        public Player getHomeTeamPlayer2() {
+            return homeTeamPlayer2;
+        }
+
+        public Player getAwayTeamPlayer2() {
+            return awayTeamPlayer2;
+        }
+
+        public String getHomePlayerString() {
+
+            return super.homeTeamPlayer.getPlayerName() + " & " + this.homeTeamPlayer2;
+        }
+
+        public String getAwayPlayerString() {
+
+            return  super.awayTeamPlayer.getPlayerName() + " & " + this.awayTeamPlayer2;
         }
     }
 

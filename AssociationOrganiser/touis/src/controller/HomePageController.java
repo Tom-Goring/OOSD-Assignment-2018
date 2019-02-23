@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import model.*;
 import view.AlphaNumericTextFormatter;
+import view.TeamStats;
 import view.UserListViewCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -40,6 +41,7 @@ public class HomePageController implements Initializable {
     private ObservableList<Player> ol_HomePlayers;
     private ObservableList<Player> ol_AwayPlayers;
     private ObservableList<Match.Set> ol_MatchSets;
+    private ObservableList<TeamStats> ol_TeamStats;
 
     // TabPane elements
 	@FXML private TabPane tp_tabPane;
@@ -75,6 +77,12 @@ public class HomePageController implements Initializable {
     @FXML private TableColumn<Match.Set, String> tvc_WinnerName;
 
     @FXML private Pane p_ShowTeamStats;
+    @FXML private TableView<TeamStats> tv_TeamStats;
+    @FXML private TableColumn<TeamStats, String> tvc_TeamName;
+    @FXML private TableColumn<TeamStats, String> tvc_MatchesPlayed;
+    @FXML private TableColumn<TeamStats, String> tvc_MatchesWon;
+    @FXML private TableColumn<TeamStats, String> tvc_SetsWon;
+    @FXML private TableColumn<TeamStats, String> tvc_GamesWon;
 
     @FXML private Pane p_Fixtures;
     @FXML private VBox vb_Fixtures;
@@ -101,6 +109,7 @@ public class HomePageController implements Initializable {
 		ol_HomePlayers = FXCollections.observableArrayList();
 		ol_AwayPlayers = FXCollections.observableArrayList();
 		ol_MatchSets = FXCollections.observableArrayList();
+		ol_TeamStats = FXCollections.observableArrayList();
 
 		ArrayList<User> userList = DatabaseManager.DB_User.getUserListFromDatabase();
 		ArrayList<Team> teamList = DatabaseManager.DB_Team.getTeamListFromDatabase();
@@ -108,6 +117,11 @@ public class HomePageController implements Initializable {
 
 		ol_Users.addAll(userList);
 		ol_Teams.addAll(teamList);
+
+        for (Team team : ol_Teams) {
+
+            ol_TeamStats.add(DatabaseManager.DB_Team.getTeamStats(team));
+        }
 	}
 
 	@Override
@@ -138,6 +152,8 @@ public class HomePageController implements Initializable {
         listenForScoreSheetChanges();
         disableSubmitButtonIfEmptyFields();
         disableModifyIfBothTeamsNotSelected();
+
+        initializeTeamStats();
 
         generateFixtureGrid();
         hideFixturesTableIfNoTeams();
@@ -283,6 +299,23 @@ public class HomePageController implements Initializable {
             cb_mvSelectHomeTeam.setValue(homeTeam);
             cb_mvSelectAwayTeam.setValue(awayTeam);
         }
+    }
+
+    private void initializeTeamStats() {
+
+	    ol_TeamStats.clear();
+        for (Team team : ol_Teams) {
+
+            ol_TeamStats.add(DatabaseManager.DB_Team.getTeamStats(team));
+        }
+
+	    tvc_TeamName.setCellValueFactory(new PropertyValueFactory<TeamStats, String>("TeamName"));
+        tvc_MatchesPlayed.setCellValueFactory(new PropertyValueFactory<TeamStats, String>("MatchesPlayed"));
+        tvc_MatchesWon.setCellValueFactory(new PropertyValueFactory<TeamStats, String>("MatchesWon"));
+        tvc_SetsWon.setCellValueFactory(new PropertyValueFactory<TeamStats, String>("SetsWon"));
+        tvc_GamesWon.setCellValueFactory(new PropertyValueFactory<TeamStats, String>("GamesWon"));
+
+        tv_TeamStats.getItems().setAll(ol_TeamStats);
     }
 
     private void disableSubmitButtonIfEmptyFields() {
@@ -530,6 +563,7 @@ public class HomePageController implements Initializable {
 
     public void showTeamStats(ActionEvent actionEvent) {
 
+        initializeTeamStats();
         p_Fixtures.setVisible(false);
         p_ShowTeamStats.setVisible(true);
         p_MatchViewer.setVisible(false);
@@ -697,6 +731,7 @@ public class HomePageController implements Initializable {
         match.fillInWinnerFields();
         DatabaseManager.DB_Match.updateMatchInformation(match);
         generateFixtureGrid();
+        initializeTeamStats();
     }
 
     private void setScoresWithTextFields(Match match, Player HP, Player AP, int setNumber, TextField[] scoreEntries, String ID) {

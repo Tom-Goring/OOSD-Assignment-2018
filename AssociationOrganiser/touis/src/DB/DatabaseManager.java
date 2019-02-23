@@ -4,6 +4,8 @@
 package DB;
 
 import model.*;
+import view.TeamStats;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -422,6 +424,129 @@ public class DatabaseManager {
                 return null;
             }
         }
+
+        public static int getNumberOfMatchesPlayed(Team team) {
+
+            //language=MySQL
+            String query = "SELECT ID FROM `match` WHERE " +
+                    "(HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
+                    "OR " +
+                    "AwayTeamID = (SELECT ID FROM team WHERE Name = ?)) " +
+                    "AND " +
+                    "Played = TRUE;";
+
+            try {
+
+                PreparedStatement getMatches = Connect_DB.getConnection().prepareStatement(query);
+                getMatches.setString(1, team.getTeamName());
+                getMatches.setString(2, team.getTeamName());
+                ResultSet rset = getMatches.executeQuery();
+
+                int numMatches = 0;
+
+                while(rset.next()) {
+
+                    numMatches++;
+                }
+
+                return numMatches;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        public static int getNumberOfMatchWins(Team team) {
+
+            //language=MySQL
+            String query = "SELECT ID FROM `match` WHERE WinnerID = (SELECT ID FROM team WHERE Name = ?)";
+
+            try {
+
+                PreparedStatement getMatches = Connect_DB.getConnection().prepareStatement(query);
+                getMatches.setString(1, team.getTeamName());
+                ResultSet rset = getMatches.executeQuery();
+
+                int numMatches = 0;
+
+                while(rset.next()) {
+
+                    numMatches++;
+                }
+
+                return numMatches;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        public static int getNumberOfSetWins(Team team) {
+
+            //language=MySQL
+            String query = "SELECT ID FROM `set` WHERE WinnerID = (SELECT ID FROM team WHERE Name = ?)";
+
+            try {
+
+                PreparedStatement getSets = Connect_DB.getConnection().prepareStatement(query);
+                getSets.setString(1, team.getTeamName());
+                ResultSet rset = getSets.executeQuery();
+
+                int numSets = 0;
+
+                while(rset.next()) {
+
+                    numSets++;
+                }
+
+                return numSets;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        public static int getNumberOfGameWins(Team team) {
+
+            //language=MySQL
+            String query = "SELECT ID FROM game WHERE WinnerID = (SELECT ID FROM team WHERE Name = ?)";
+
+            try {
+
+                PreparedStatement getGames = Connect_DB.getConnection().prepareStatement(query);
+                getGames.setString(1, team.getTeamName());
+                ResultSet rset = getGames.executeQuery();
+
+                int numSets = 0;
+
+                while(rset.next()) {
+
+                    numSets++;
+                }
+
+                return numSets;
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        public static TeamStats getTeamStats(Team team) {
+
+            TeamStats ts = new TeamStats();
+
+            ts.setTeamName(team.getTeamName());
+            ts.setMatchesPlayed(Integer.toString(getNumberOfMatchesPlayed(team)));
+            ts.setMatchesWon(Integer.toString(getNumberOfMatchWins(team)));
+            ts.setSetsWon(Integer.toString(getNumberOfSetWins(team)));
+            ts.setGamesWon(Integer.toString(getNumberOfGameWins(team)));
+
+            return ts;
+        }
     }
 
     public static class DB_Player {
@@ -688,7 +813,8 @@ public class DatabaseManager {
                     "SET " +
                     "HomePlayerID = (SELECT ID FROM player WHERE Name = ?), " +
                     "AwayPlayerID = (SELECT ID FROM player WHERE Name = ?), " +
-                    "Played = TRUE " +
+                    "Played = TRUE, " +
+                    "WinnerID = (SELECT ID FROM team WHERE Name = ?) " +
                     "WHERE MatchID = (" +
                     "(SELECT ID FROM `match` WHERE " +
                     "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
@@ -736,9 +862,10 @@ public class DatabaseManager {
                         update.setString(1, match.getSet(setNumber).getHomeTeamPlayer().getPlayerName());
                         update.setString(2, match.getSet(setNumber).getAwayTeamPlayer().getPlayerName());
                     }
-                    update.setString(3, match.getHomeTeam().getTeamName());
-                    update.setString(4, match.getAwayTeam().getTeamName());
-                    update.setInt(5, setNumber+1);
+                    update.setString(3, match.getSet(setNumber).getWinningTeam().getTeamName());
+                    update.setString(4, match.getHomeTeam().getTeamName());
+                    update.setString(5, match.getAwayTeam().getTeamName());
+                    update.setInt(6, setNumber+1);
                     System.out.println(updateSets+1);
                     update.addBatch();
 

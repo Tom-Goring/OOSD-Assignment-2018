@@ -7,14 +7,14 @@
 package controller;
 
 import DB.DatabaseManager;
+import model.*;
+import view.UserListViewCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import model.*;
-import view.UserListViewCell;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -216,6 +216,11 @@ public class HomePageController implements Initializable {
         match.setAwayTeamPlayer1(AP1);
         match.setAwayTeamPlayer2(AP2);
 
+        match.getSet(4).setHomeTeamPlayer(HP1);
+        match.getSet(4).setHomeTeamPlayer(HP2);
+        match.getSet(4).setHomeTeamPlayer(AP1);
+        match.getSet(4).setHomeTeamPlayer(AP2);
+
         for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
 
             if (gp_MatchForm.getChildren().get(i).getClass() == VBox.class) {
@@ -232,8 +237,6 @@ public class HomePageController implements Initializable {
                 // if this set is a double
                 if (vb.getId().equals("HDS") || vb.getId().equals("ADS")) {
 
-                    // leave players null
-
                     // set game scores
                     int gameIndex = 0;
                     for (TextField gameScore : scoreEntries) {
@@ -241,15 +244,11 @@ public class HomePageController implements Initializable {
                         // check if this is for home or away
                         if (vb.getId().charAt(0) == 'H') {
 
-                            match.getSet(4).setHomeTeamPlayer(HP1);
-                            match.getSet(4).setHomeTeamPlayer(HP2);
                             match.getSet(4).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
                             gameIndex++;
                         }
                         else if (vb.getId().charAt(0) == 'A') {
 
-                            match.getSet(4).setHomeTeamPlayer(AP1);
-                            match.getSet(4).setHomeTeamPlayer(AP2);
                             match.getSet(4).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
                             gameIndex++;
                         }
@@ -258,14 +257,14 @@ public class HomePageController implements Initializable {
                 else {
 
                     int setNumber = vb.getId().charAt(2) - '0'; // converts char into int due to the way ASCII works
-
+                    int gameIndex = 0;
                     // handle the information of whatever set we're currently looking at
                     switch (setNumber) {
 
                         case 1:
                             match.getSet(setNumber-1).setHomeTeamPlayer(HP1);
                             match.getSet(setNumber-1).setAwayTeamPlayer(AP1);
-                            int gameIndex = 0;
+                            gameIndex = 0;
                             for (TextField gameScore : scoreEntries) {
 
                                 // check if this is for home or away
@@ -284,14 +283,59 @@ public class HomePageController implements Initializable {
                         case 2:
                             match.getSet(setNumber-1).setHomeTeamPlayer(HP1);
                             match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
+                            gameIndex = 0;
+                            for (TextField gameScore : scoreEntries) {
+
+                                // check if this is for home or away
+                                if (vb.getId().charAt(0) == 'H') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                                else if (vb.getId().charAt(0) == 'A') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                            }
                             break;
                         case 3:
                             match.getSet(setNumber-1).setHomeTeamPlayer(HP2);
-                            match.getSet(setNumber-1).setAwayTeamPlayer(AP1);
+                            match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
+                            gameIndex = 0;
+                            for (TextField gameScore : scoreEntries) {
+
+                                // check if this is for home or away
+                                if (vb.getId().charAt(0) == 'H') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                                else if (vb.getId().charAt(0) == 'A') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                            }
                             break;
                         case 4:
                             match.getSet(setNumber-1).setHomeTeamPlayer(HP2);
                             match.getSet(setNumber-1).setAwayTeamPlayer(AP2);
+                            gameIndex = 0;
+                            for (TextField gameScore : scoreEntries) {
+
+                                // check if this is for home or away
+                                if (vb.getId().charAt(0) == 'H') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setHomeTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                                else if (vb.getId().charAt(0) == 'A') {
+
+                                    match.getSet(setNumber-1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
+                                    gameIndex++;
+                                }
+                            }
                             break;
 
                         default:
@@ -300,7 +344,47 @@ public class HomePageController implements Initializable {
                 }
             }
         }
-        // calculate winners of every set + whole match then send to DB
+
+        int homeTeamSetsWon = 0;
+        int awayTeamSetsWon = 0;
+
+        for (int i = 0; i < 5; i++) {
+
+            int homeTeamGamesWon = 0;
+            int awayTeamGamesWon = 0;
+            for (int j = 0; j < 3; j++) {
+
+                if (match.getSet(i).getGame(j).getHomeTeamScore() > match.getSet(i).getGame(j).getAwayTeamScore()) {
+
+                    match.getSet(i).getGame(j).setWinningTeam(match.getHomeTeam());
+                    homeTeamGamesWon++;
+                }
+                else {
+
+                    match.getSet(i).getGame(j).setWinningTeam(match.getAwayTeam());
+                    awayTeamGamesWon++;
+                }
+            }
+
+            if (homeTeamGamesWon > awayTeamGamesWon) {
+                match.getSet(i).setWinningTeam(match.getHomeTeam());
+                homeTeamSetsWon++;
+            }
+            else {
+                match.getSet(i).setWinningTeam(match.getAwayTeam());
+                awayTeamSetsWon++;
+            }
+        }
+        if (homeTeamSetsWon > awayTeamSetsWon) {
+
+            match.setWinningTeam(match.getHomeTeam());
+        }
+        else {
+
+            match.setWinningTeam(match.getAwayTeam());
+        }
+
+        DatabaseManager.DB_Match.updateMatchInformation(match);
     }
 
     // Viewer Page Methods

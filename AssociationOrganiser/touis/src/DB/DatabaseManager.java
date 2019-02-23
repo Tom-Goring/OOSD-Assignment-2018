@@ -540,8 +540,6 @@ public class DatabaseManager {
         // Function assumes the match has been played and all data is available
         public static void updateMatchInformation(Match match) {
 
-            String findMatchID = "(SELECT ID FROM `match` WHERE HomeTeamID = (SELECT ID FROM team WHERE Name = ?) AND AwayTeamID = (SELECT ID FROM team WHERE Name = ?));";
-
             // TODO: look at pushing match updates
             String updateMatch = "UPDATE `Match` " +
                     "SET " +
@@ -552,7 +550,7 @@ public class DatabaseManager {
                     "WinnerID = (SELECT ID FROM team WHERE Name = ?)," +
                     "Played = TRUE " +
                     "WHERE ID = " +
-                    "(SELECT ID FROM `match` WHERE " +
+                    "(SELECT ID FROM (SELECT * FROM `match`) as temp WHERE " +
                     "HomeTeamID = (SELECT ID FROM team WHERE Name = ?) " +
                     "AND " +
                     "AwayTeamID = (SELECT ID FROM team WHERE Name = ?));";
@@ -592,31 +590,41 @@ public class DatabaseManager {
                 update.setString(5, match.getWinningTeam().getTeamName());
                 update.setString(6, match.getHomeTeam().getTeamName());
                 update.setString(7, match.getAwayTeam().getTeamName());
-                System.out.println(updateMatch);
+                System.out.println(update);
                 update.executeUpdate();
 
                 update = Connect_DB.getConnection().prepareStatement(updateSets);
 
-                for (int setNumber = 1; setNumber < 6; setNumber++) {
+                for (int setNumber = 0; setNumber < 5; setNumber++) {
 
-                    update.setString(1, match.getSet(setNumber-1).getHomeTeamPlayer().getPlayerName());
-                    update.setString(2, match.getSet(setNumber-1).getAwayTeamPlayer().getPlayerName());
+                    if (setNumber == 4) { // if double
+
+                        update.setString(1, null);
+                        update.setString(2, null);
+                    }
+                    else {
+
+                        update.setString(1, match.getSet(setNumber).getHomeTeamPlayer().getPlayerName());
+                        update.setString(2, match.getSet(setNumber).getAwayTeamPlayer().getPlayerName());
+                    }
                     update.setString(3, match.getHomeTeam().getTeamName());
                     update.setString(4, match.getAwayTeam().getTeamName());
-                    update.setInt(5, setNumber);
+                    update.setInt(5, setNumber+1);
+                    System.out.println(updateSets+1);
                     update.addBatch();
 
                     PreparedStatement updateGame = Connect_DB.getConnection().prepareStatement(updateGames);
 
-                    for (int gameNumber = 1; gameNumber < 4; gameNumber++) {
+                    for (int gameNumber = 0; gameNumber < 3; gameNumber++) {
 
                         updateGame.setInt(1, match.getGameHomeScore(setNumber, gameNumber));
                         updateGame.setInt(2, match.getGameAwayScore(setNumber, gameNumber));
                         updateGame.setString(3, match.getSet(setNumber).getGame(gameNumber).getWinningTeam().getTeamName());
                         updateGame.setString(4, match.getHomeTeam().getTeamName());
                         updateGame.setString(5, match.getAwayTeam().getTeamName());
-                        updateGame.setInt(6, setNumber);
-                        updateGame.setInt(7, gameNumber);
+                        updateGame.setInt(6, setNumber+1);
+                        updateGame.setInt(7, gameNumber+1);
+                        System.out.println(updateGame);
                         updateGame.addBatch();
                     }
                     updateGame.executeBatch(); // games

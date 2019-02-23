@@ -404,17 +404,17 @@
                                           </HBox>
                                           <VBox fx:id="HS1" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <TextField fx:id="tf_HS1G1" prefHeight="25.0" prefWidth="60.0" promptText="S1G1">
+                                                <TextField fx:id="tf_HS1G1" prefHeight="25.0" prefWidth="60.0" promptText="S1G1" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS1G2" promptText="S1G2">
+                                                <TextField fx:id="tf_HS1G2" promptText="S1G2" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS1G3" promptText="S1G3">
+                                                <TextField fx:id="tf_HS1G3" promptText="S1G3" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -423,17 +423,17 @@
                                           </VBox>
                                           <VBox fx:id="HS3" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <children>
-                                                <TextField fx:id="tf_HS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1">
+                                                <TextField fx:id="tf_HS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS3G2" promptText="S3G2">
+                                                <TextField fx:id="tf_HS3G2" promptText="S3G2" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS3G3" promptText="S3G3">
+                                                <TextField fx:id="tf_HS3G3" promptText="S3G3" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -442,32 +442,32 @@
                                           </VBox>
                                           <VBox fx:id="HDS" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <children>
-                                                <TextField fx:id="tf_HDSG1" prefHeight="25.0" prefWidth="115.0" promptText="DSG1">
+                                                <TextField fx:id="tf_HDSG1" prefHeight="25.0" prefWidth="115.0" promptText="DSG1" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HDSG2" promptText="DSG2">
+                                                <TextField fx:id="tf_HDSG2" promptText="DSG2" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HDSG3" promptText="DSG3" />
+                                                <TextField fx:id="tf_HDSG3" promptText="DSG3" text="3" />
                                              </children>
                                           </VBox>
                                           <VBox fx:id="AS1" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                              <children>
-                                                <TextField fx:id="tf_AS1G1" promptText="S1G1">
+                                                <TextField fx:id="tf_AS1G1" promptText="S1G1" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS1G2" promptText="S1G2">
+                                                <TextField fx:id="tf_AS1G2" promptText="S1G2" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS1G3" promptText="S1G3">
+                                                <TextField fx:id="tf_AS1G3" promptText="S1G3" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -476,28 +476,23 @@
                                           </VBox>
                                           <VBox fx:id="AS3" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                              <children>
-                                                <TextField fx:id="tf_AS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1">
+                                                <TextField fx:id="tf_AS3G1" prefHeight="25.0" prefWidth="115.0" promptText="S3G1" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS3G2" promptText="S3G2">
+                                                <TextField fx:id="tf_AS3G2" promptText="S3G2" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS3G3" promptText="S3G3">
+                                                <TextField fx:id="tf_AS3G3" promptText="S3G3" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
                                              </children>
                                           </VBox>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" stylesheets="@../css/theme.css" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                             <children>
-                                                <TextArea fx:id="ta_FinalScores" prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: Verdana;" stylesheets="@../css/theme.css" text="Final Scores:" />
-                                             </children>
-                                          </HBox>
                                           <HBox alignment="CENTER" prefHeight="25.0" prefWidth="278.0" GridPane.columnIndex="3" GridPane.columnSpan="2">
                                              <children>
                                                 <ComboBox fx:id="cb_SelectAwayPlayer2" prefHeight="25.0" prefWidth="133.0" promptText="Away Player" />
@@ -505,17 +500,17 @@
                                           </HBox>
                                           <VBox fx:id="HS2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                              <children>
-                                                <TextField fx:id="tf_HS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1">
+                                                <TextField fx:id="tf_HS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS2G2" promptText="S2G2">
+                                                <TextField fx:id="tf_HS2G2" promptText="S2G2" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS2G3" promptText="S2G3">
+                                                <TextField fx:id="tf_HS2G3" promptText="S2G3" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -524,17 +519,17 @@
                                           </VBox>
                                           <VBox fx:id="HS4" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                              <children>
-                                                <TextField fx:id="tf_HS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1">
+                                                <TextField fx:id="tf_HS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS4G2" promptText="S4G2">
+                                                <TextField fx:id="tf_HS4G2" promptText="S4G2" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_HS4G3" promptText="S4G3">
+                                                <TextField fx:id="tf_HS4G3" promptText="S4G3" text="3">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -543,17 +538,17 @@
                                           </VBox>
                                           <VBox fx:id="AS2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                              <children>
-                                                <TextField fx:id="tf_AS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1">
+                                                <TextField fx:id="tf_AS2G1" prefHeight="25.0" prefWidth="115.0" promptText="S2G1" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS2G2" promptText="S2G2">
+                                                <TextField fx:id="tf_AS2G2" promptText="S2G2" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS2G3" promptText="S2G3">
+                                                <TextField fx:id="tf_AS2G3" promptText="S2G3" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
@@ -562,34 +557,39 @@
                                           </VBox>
                                           <VBox fx:id="AS4" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                              <children>
-                                                <TextField fx:id="tf_AS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1">
+                                                <TextField fx:id="tf_AS4G1" prefHeight="25.0" prefWidth="115.0" promptText="S4G1" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS4G2" promptText="S4G2">
+                                                <TextField fx:id="tf_AS4G2" promptText="S4G2" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_AS4G3" promptText="S4G3" />
+                                                <TextField fx:id="tf_AS4G3" promptText="S4G3" text="2" />
                                              </children>
                                           </VBox>
                                           <VBox fx:id="ADS" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                              <children>
-                                                <TextField fx:id="tf_ADSG11" prefHeight="25.0" prefWidth="115.0" promptText="DSG1">
+                                                <TextField fx:id="tf_ADSG11" prefHeight="25.0" prefWidth="115.0" promptText="DSG1" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_ADSG21" promptText="DSG2">
+                                                <TextField fx:id="tf_ADSG21" promptText="DSG2" text="2">
                                                    <VBox.margin>
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </VBox.margin>
                                                 </TextField>
-                                                <TextField fx:id="tf_ADSG31" promptText="DSG3" />
+                                                <TextField fx:id="tf_ADSG31" promptText="DSG3" text="2" />
                                              </children>
                                           </VBox>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" stylesheets="@../css/theme.css" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                             <children>
+                                                <TextArea fx:id="ta_FinalScores" prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: Verdana;" stylesheets="@../css/theme.css" text="Final Scores:" />
+                                             </children>
+                                          </HBox>
                                        </children>
                                     </GridPane>
                                  </children>

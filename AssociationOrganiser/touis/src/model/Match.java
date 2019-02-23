@@ -6,11 +6,11 @@ public class Match {
 
     public class Set {
 
-        public int getWinningTeam() {
+        public Team getWinningTeam() {
             return winningTeam;
         }
 
-        public void setWinningTeam(int winningTeam) {
+        public void setWinningTeam(Team winningTeam) {
             this.winningTeam = winningTeam;
         }
 
@@ -83,7 +83,7 @@ public class Match {
 
         // Set attributes
         private int setNumber;
-        private int winningTeam;
+        private Team winningTeam;
         private Player homeTeamPlayer;
         private Player awayTeamPlayer;
         private ArrayList<Game> games;

@@ -8,7 +8,7 @@ public class User {
     private String password;
     private byte[] salt;
     private byte[] hashedPassword;
-    final private int privilegeLevel = 1;
+    final static private int privilegeLevel = 1;
 
     public String getUsername() {
         return username;
@@ -40,7 +40,7 @@ public class User {
         this.hashedPassword = hashedPassword;
     }
 
-    public int getPrivilegeLevel() { return this.privilegeLevel; }
+    public int getPrivilegeLevel() { return privilegeLevel; }
 
     @Override
     public String toString() {

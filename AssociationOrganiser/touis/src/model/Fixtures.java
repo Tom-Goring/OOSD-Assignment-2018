@@ -12,18 +12,6 @@ public class Fixtures {
 
     public void addMatch(Match match) { this.matchList.add(match); }
 
-    public Match getMatch(String homeTeamName, String awayTeamName) {
-
-        for (Match match : matchList) {
-
-            if (match.getHomeTeam().getTeamName().equals(homeTeamName) && match.getAwayTeam().getTeamName().equals(awayTeamName)) {
-
-                return match;
-            }
-        }
-        return null;
-    }
-
     public static Fixtures generateFixtures() {
 
         ArrayList<Team> teamList = DatabaseManager.DB_Team.getTeamListFromDatabase();

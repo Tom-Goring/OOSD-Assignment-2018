@@ -231,7 +231,7 @@
                                                                         <HBox alignment="CENTER">
                                                                            <children>
                                                                               <Label alignment="CENTER" contentDisplay="CENTER" text="Home Sets Won: " />
-                                                                              <Label fx:id="lbl_HomeSetsWon" text="4">
+                                                                              <Label fx:id="lbl_HomeSetsWon" text="4" visible="false">
                                                                                  <padding>
                                                                                     <Insets left="30.0" />
                                                                                  </padding>
@@ -245,7 +245,7 @@
                                                                         <HBox alignment="CENTER">
                                                                            <children>
                                                                               <Label alignment="CENTER" contentDisplay="CENTER" text="Away Sets Won: " />
-                                                                              <Label fx:id="lbl_AwaySetsWon" text="1">
+                                                                              <Label fx:id="lbl_AwaySetsWon" text="1" visible="false">
                                                                                  <padding>
                                                                                     <Insets left="30.0" />
                                                                                  </padding>

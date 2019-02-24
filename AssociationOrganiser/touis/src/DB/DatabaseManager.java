@@ -4,7 +4,7 @@
 package DB;
 
 import model.*;
-import view.TeamStats;
+import model.TeamStats;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -335,7 +335,7 @@ public class DatabaseManager {
             return true;
         }
 
-        public static void changeUserPrivilegeLevel(BasicUser user, int privilegeToSet) {
+        public static void changeUserPrivilegeLevel(User user, int privilegeToSet) {
 
             String update = "UPDATE User SET PrivilegeLevel = ? WHERE Username = ?;";
 
@@ -537,15 +537,14 @@ public class DatabaseManager {
 
         public static TeamStats getTeamStats(Team team) {
 
-            TeamStats ts = new TeamStats();
+            TeamStats teamStats = new TeamStats.Builder(team)
+                    .withMatchesPlayed(Integer.toString(getNumberOfMatchesPlayed(team)))
+                    .withMatchesWon(Integer.toString(getNumberOfMatchWins(team)))
+                    .withSetsWon(Integer.toString(getNumberOfMatchWins(team)))
+                    .withGamesWon(Integer.toString(getNumberOfGameWins(team)))
+                    .build();
 
-            ts.setTeamName(team.getTeamName());
-            ts.setMatchesPlayed(Integer.toString(getNumberOfMatchesPlayed(team)));
-            ts.setMatchesWon(Integer.toString(getNumberOfMatchWins(team)));
-            ts.setSetsWon(Integer.toString(getNumberOfSetWins(team)));
-            ts.setGamesWon(Integer.toString(getNumberOfGameWins(team)));
-
-            return ts;
+            return teamStats;
         }
     }
 
@@ -873,8 +872,8 @@ public class DatabaseManager {
 
                     for (int gameNumber = 0; gameNumber < 3; gameNumber++) {
 
-                        updateGame.setInt(1, match.getGameHomeScore(setNumber, gameNumber));
-                        updateGame.setInt(2, match.getGameAwayScore(setNumber, gameNumber));
+                        updateGame.setInt(1, match.getSet(setNumber).getGame(gameNumber).getHomeTeamScore());
+                        updateGame.setInt(2, match.getSet(setNumber).getGame(gameNumber).getAwayTeamScore());
                         updateGame.setString(3, match.getSet(setNumber).getGame(gameNumber).getWinningTeam().getTeamName());
                         updateGame.setString(4, match.getHomeTeam().getTeamName());
                         updateGame.setString(5, match.getAwayTeam().getTeamName());

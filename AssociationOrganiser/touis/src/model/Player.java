@@ -2,7 +2,7 @@ package model;
 
 public class Player {
 
-    private String playerName;
+    final private String playerName;
 
     public Player(String name) {
 
@@ -11,10 +11,6 @@ public class Player {
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     public String toString() { return this.playerName; }

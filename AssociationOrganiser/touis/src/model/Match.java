@@ -6,7 +6,7 @@ public class Match {
 
     public class Set {
 
-        // String methods for tableView
+        // These are not unused - they are used by TableView to get results.
 
         public String getSetNumber() {
 
@@ -91,13 +91,11 @@ public class Match {
 
         public class Game {
 
-            public Game(int gameNumber) {
+            public Game() {
 
-                this.gameNumber = gameNumber + 1;
             }
 
             // Game attributes
-            private int gameNumber;
             private int homeTeamScore;
             private int awayTeamScore;
             private Team winningTeam;
@@ -144,7 +142,7 @@ public class Match {
             this.games = new ArrayList<>();
 
             for (int i = 0; i < 3; i++) {
-                this.games.add(new Game(i));
+                this.games.add(new Game());
             }
         }
     }
@@ -160,7 +158,7 @@ public class Match {
             super.setNumber = 5;
             super.games = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
-                super.games.add(new Game(i));
+                super.games.add(new Game());
             }
         }
 
@@ -168,17 +166,7 @@ public class Match {
             this.homeTeamPlayer2 = homeTeamPlayer2;
         }
 
-        public void setAwayTeamPlayer2(Player awayTeamPlayer2) {
-            this.awayTeamPlayer2 = awayTeamPlayer2;
-        }
-
-        public Player getHomeTeamPlayer2() {
-            return homeTeamPlayer2;
-        }
-
-        public Player getAwayTeamPlayer2() {
-            return awayTeamPlayer2;
-        }
+        public void setAwayTeamPlayer2(Player awayTeamPlayer2) { this.awayTeamPlayer2 = awayTeamPlayer2; }
 
         public String getHomePlayerString() {
 
@@ -284,27 +272,6 @@ public class Match {
     }
 
     public Set getSet(int setNumber) { return this.sets.get(setNumber); }
-
-    public int getGameHomeScore(int setNumber, int gameNumber) {
-
-        return this.sets.get(setNumber).games.get(gameNumber).homeTeamScore;
-    }
-
-    public int getGameAwayScore(int setNumber, int gameNumber) {
-
-        return this.sets.get(setNumber).games.get(gameNumber).awayTeamScore;
-    }
-
-    public ArrayList<Player> getMatchPlayers() {
-
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(this.homeTeamPlayer1);
-        playerList.add(this.homeTeamPlayer2);
-        playerList.add(this.awayTeamPlayer1);
-        playerList.add(this.awayTeamPlayer2);
-
-        return playerList;
-    }
 
     public void fillInWinnerFields() {
 

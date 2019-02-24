@@ -2,7 +2,6 @@
 
 package controller;
 
-import model.BasicUser;
 import DB.DatabaseManager;
 import javafx.event.ActionEvent;
 

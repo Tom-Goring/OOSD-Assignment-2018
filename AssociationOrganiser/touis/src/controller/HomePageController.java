@@ -8,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import model.*;
 import view.AlphaNumericTextFormatter;
-import view.TeamStats;
+import model.TeamStats;
 import view.UserListViewCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

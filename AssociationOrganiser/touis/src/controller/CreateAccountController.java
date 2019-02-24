@@ -86,7 +86,7 @@ public class CreateAccountController {
 
         if (user.getHashedPassword() != null) {
 
-            if (!DatabaseManager.DB_User.addPlayerToDatabase(user)) {
+            if (!DatabaseManager.DB_User.addUserToDatabase(user)) {
 
                 System.out.println("duplicate placeholder");
             }

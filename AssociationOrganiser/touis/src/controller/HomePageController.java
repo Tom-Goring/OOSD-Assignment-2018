@@ -446,7 +446,7 @@ public class HomePageController implements Initializable {
 		tf_EnterNewTeamName.clear();
 		tf_EnterNewPlayerName.clear();
 
-		DatabaseManager.DB_Player.addNewPlayerToDatabase(player, team);
+		DatabaseManager.DB_Player.addPlayerToDatabase(player, team);
 
         lbl_PlayerAdded.setVisible(true);
         WaitAndHideLabel hidePlayerAdded = new WaitAndHideLabel(5000, lbl_PlayerAdded);

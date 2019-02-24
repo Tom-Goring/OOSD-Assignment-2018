@@ -308,7 +308,7 @@ public class DatabaseManager {
             return userList;
         }
 
-        public static boolean addPlayerToDatabase(BasicUser user) {
+        public static boolean addUserToDatabase(User user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -537,20 +537,18 @@ public class DatabaseManager {
 
         public static TeamStats getTeamStats(Team team) {
 
-            TeamStats teamStats = new TeamStats.Builder(team)
+            return new TeamStats.Builder(team)
                     .withMatchesPlayed(Integer.toString(getNumberOfMatchesPlayed(team)))
                     .withMatchesWon(Integer.toString(getNumberOfMatchWins(team)))
                     .withSetsWon(Integer.toString(getNumberOfMatchWins(team)))
                     .withGamesWon(Integer.toString(getNumberOfGameWins(team)))
                     .build();
-
-            return teamStats;
         }
     }
 
     public static class DB_Player {
 
-        public static void addNewPlayerToDatabase(Player player, Team team) {
+        public static void addPlayerToDatabase(Player player, Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -563,31 +561,6 @@ public class DatabaseManager {
                 insertPlayer.executeUpdate();
             }
             catch (SQLException e) {e.printStackTrace();}
-        }
-
-        public static ArrayList<Player> getPlayerList() {
-
-            ArrayList<Player> players = new ArrayList<>();
-
-            String query = "SELECT Name FROM player;";
-
-            try {
-
-                PreparedStatement getPlayers = Connect_DB.getConnection().prepareStatement(query);
-                ResultSet rset = getPlayers.executeQuery();
-
-                while(rset.next()) {
-
-                    players.add(new Player(rset.getString("DB_Player.Name")));
-                }
-
-                return players;
-
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-                return null;
-            }
         }
     }
 

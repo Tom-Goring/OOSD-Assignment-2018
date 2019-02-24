@@ -166,7 +166,7 @@ public class HomePageController implements Initializable {
 
 	private void hideAdminPageIfNonAdmin() {
 
-        if (User.currentUser.getPrivilegeLevel() != 2) { // hide admin tab from non admin accounts
+        if (User.currentUser.getClass() != Admin.class) { // hide admin tab from non admin accounts
             closeTab(t_Admin);
         }
     }

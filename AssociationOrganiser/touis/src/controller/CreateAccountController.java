@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import model.User;
+import model.BasicUser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +76,7 @@ public class CreateAccountController {
 
     public void createAccount(ActionEvent actionEvent) throws IOException {
 
-        User user = new User();
+        BasicUser user = new BasicUser();
 
         user.setUsername(usernameField.getText());
         user.setPassword(passwordField.getText());

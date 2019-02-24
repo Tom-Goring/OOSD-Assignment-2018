@@ -9,11 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
-import model.User;
+import model.BasicUser;
 
 import java.io.IOException;
 
-public class UserListViewCell extends ListCell<User> {
+public class UserListViewCell extends ListCell<BasicUser> {
 
     @FXML
     private Label Username;
@@ -30,7 +30,7 @@ public class UserListViewCell extends ListCell<User> {
     private FXMLLoader fxmlLoader;
 
     @Override
-    protected void updateItem(User user, boolean empty) {
+    protected void updateItem(BasicUser user, boolean empty) {
 
         super.updateItem(user, empty);
 
@@ -87,7 +87,7 @@ public class UserListViewCell extends ListCell<User> {
                 btnRemove.setDisable(false);
             }
 
-            if (user.getUsername().equals("admin") || User.currentUser.getUsername().equals(user.getUsername())) {
+            if (user.getUsername().equals("admin") || BasicUser.currentUser.getUsername().equals(user.getUsername())) {
 
                 btnAdd.setDisable(true);
                 btnRemove.setDisable(true);

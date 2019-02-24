@@ -249,7 +249,7 @@ public class DatabaseManager {
 
                 if (rset.getInt("PrivilegeLevel") == 1) {
 
-                    User user = new User();
+                    BasicUser user = new BasicUser();
                     user.setUsername(rset.getString("Username"));
                     user.setSalt(rset.getBytes("PasswordSalt"));;
                     user.setHashedPassword(rset.getBytes("HashedPassword"));
@@ -288,7 +288,7 @@ public class DatabaseManager {
                 while (rset.next()) {
 
                     if (rset.getInt("PrivilegeLevel") == 1) {
-                        User user = new User();
+                        BasicUser user = new BasicUser();
                         user.setUsername(rset.getString("Username"));
                         userList.add(user);
                     }
@@ -308,7 +308,7 @@ public class DatabaseManager {
             return userList;
         }
 
-        public static boolean addPlayerToDatabase(User user) {
+        public static boolean addPlayerToDatabase(BasicUser user) {
 
             String query = "INSERT INTO User (Username, PasswordSalt, HashedPassword) VALUES (?, ?, ?);";
 
@@ -335,7 +335,7 @@ public class DatabaseManager {
             return true;
         }
 
-        public static void changeUserPrivilegeLevel(User user, int privilegeToSet) {
+        public static void changeUserPrivilegeLevel(BasicUser user, int privilegeToSet) {
 
             String update = "UPDATE User SET PrivilegeLevel = ? WHERE Username = ?;";
 

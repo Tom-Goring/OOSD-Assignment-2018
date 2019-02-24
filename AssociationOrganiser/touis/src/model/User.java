@@ -1,6 +1,6 @@
 package model;
 
-public class User {
+public abstract class User {
 
     public static User currentUser;
 
@@ -8,10 +8,11 @@ public class User {
     private String password;
     private byte[] salt;
     private byte[] hashedPassword;
-    final static private int privilegeLevel = 1;
+
+    User() {};
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -39,14 +40,4 @@ public class User {
     public void setHashedPassword(byte[] hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
-
-    public int getPrivilegeLevel() { return privilegeLevel; }
-
-    @Override
-    public String toString() {
-        return "User: " +
-                "Username='" + this.username + '\'' +
-                ' ';
-    }
 }
-

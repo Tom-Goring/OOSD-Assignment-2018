@@ -2,7 +2,7 @@
 
 package controller;
 
-import model.User;
+import model.BasicUser;
 import DB.DatabaseManager;
 import javafx.event.ActionEvent;
 
@@ -14,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.User;
+
 import java.io.IOException;
 
 public class LoginController {

@@ -2,9 +2,7 @@ package model;
 
 public class Admin extends User {
 
-    final static private int privilegeLevel = 1;
-
-    public int getPrivilegeLevel() { return privilegeLevel; }
+    final static private int privilegeLevel = 2;
 
     @Override
     public String toString() {

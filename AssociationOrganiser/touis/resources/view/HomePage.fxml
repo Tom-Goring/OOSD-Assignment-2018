@@ -25,6 +25,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePageController">
    <children>
@@ -59,18 +60,23 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane animated="false" text="Add Teams">
+                              <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Add Teams">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="828.0">
                                        <children>
                                           <Label layoutX="14.0" layoutY="22.0" stylesheets="@../css/theme.css" text="Register New Team: " />
                                           <TextField fx:id="tf_EnterNewTeamName" layoutX="188.0" layoutY="23.0" />
                                           <Button fx:id="btn_RegTeam" layoutX="355.0" layoutY="22.0" mnemonicParsing="false" onAction="#registerNewTeam" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Team" />
+                                          <Label fx:id="lbl_TeamCreated" layoutX="495.0" layoutY="26.0" text="Team created!" textFill="#0d8600" visible="false">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane animated="false" text="Add Players">
+                              <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Add Player">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="136.0" prefWidth="828.0">
                                        <children>
@@ -79,6 +85,11 @@
                                           <ComboBox fx:id="cb_SelectPlayerTeam" layoutX="242.0" layoutY="77.0" prefHeight="25.0" prefWidth="190.0" />
                                           <Label layoutX="14.0" layoutY="76.0" stylesheets="@../css/theme.css" text="Select a Team:" />
                                           <Button fx:id="btn_RegisterPlayer" layoutX="482.0" layoutY="76.0" mnemonicParsing="false" onAction="#registerNewPlayer" prefWidth="134.0" styleClass="positive_button" stylesheets="@../css/theme.css" text="Register Player" />
+                                          <Label fx:id="lbl_PlayerAdded" layoutX="671.0" layoutY="80.0" text="Player Added!" textFill="#0b8300" visible="false">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -89,7 +100,17 @@
                                        <children>
                                           <Label layoutX="14.0" layoutY="14.0" stylesheets="@../css/theme.css" text="Generate a match between all teams:" />
                                           <Label layoutX="14.0" layoutY="41.0" styleClass="fieldtext" stylesheets="@../css/theme.css" text="Warning: This will erase all pre-existing match information." />
-                                          <Button fx:id="btn_GenerateFixtures" layoutX="731.0" layoutY="120.0" mnemonicParsing="false" onAction="#generateFixtures" prefHeight="46.0" prefWidth="83.0" styleClass="accept_button" stylesheets="@../css/theme.css" text="Generate Fixtures" textAlignment="CENTER" wrapText="true" />
+                                          <Button fx:id="btn_GenerateFixtures" layoutX="621.0" layoutY="120.0" mnemonicParsing="false" onAction="#generateFixtures" prefHeight="46.0" prefWidth="193.0" styleClass="accept_button" stylesheets="@../css/theme.css" text="Generate Fixtures" textAlignment="CENTER" wrapText="true" />
+                                          <Label fx:id="lbl_FixturesFailure" layoutX="60.0" layoutY="134.0" text="Need more than one team in the system in order to generate fixtures!" textFill="RED" visible="false">
+                                             <font>
+                                                <Font name="Verdana" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lbl_FixturesSuccess" layoutX="159.0" layoutY="134.0" text="Fixtures successfully generated!" textFill="#008d10" visible="false">
+                                             <font>
+                                                <Font name="Verdana" size="14.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -132,11 +153,17 @@
                                                    <children>
                                                       <VBox>
                                                          <children>
-                                                            <Label alignment="CENTER" prefHeight="35.0" prefWidth="173.0" styleClass="title" stylesheets="@../css/theme.css" text="Team Stats">
-                                                               <padding>
-                                                                  <Insets bottom="5.0" top="5.0" />
-                                                               </padding>
-                                                            </Label>
+                                                            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="173.0" styleClass="title" stylesheets="@../css/theme.css" text="Team Stats">
+                                                                     <padding>
+                                                                        <Insets bottom="5.0" top="5.0" />
+                                                                     </padding>
+                                                                  </Label>
+                                                                  <Region prefHeight="100.0" prefWidth="432.0" />
+                                                                  <Button fx:id="btn_ReloadStats" mnemonicParsing="false" onAction="#callInitializeTeamStats" prefHeight="33.0" prefWidth="94.0" stylesheets="@../css/theme.css" text="Reload Stats" />
+                                                               </children>
+                                                            </HBox>
                                                             <Separator prefHeight="0.0" prefWidth="727.0" />
                                                          </children>
                                                       </VBox>

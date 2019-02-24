@@ -1,9 +1,3 @@
-// TODO: add error display for pre-existing team and player names
-// TODO: add error for when less than 2 teams exist and fixtures are generated
-// TODO: put fixtures grid in scroll?
-// TODO: add threaded refresh of stats
-
-
 package controller;
 
 import DB.DatabaseManager;
@@ -52,11 +46,17 @@ public class HomePageController implements Initializable {
 	// Admin Page elements
 
 	@FXML private ListView lv_Users;
+
     @FXML private TextField tf_EnterNewTeamName;
     @FXML private Button btn_RegTeam;
+    @FXML private Label lbl_TeamCreated;
 
 	@FXML private TextField tf_EnterNewPlayerName;
 	@FXML private ComboBox<Team> cb_SelectPlayerTeam;
+    @FXML private Label lbl_PlayerAdded;
+
+	@FXML private Label lbl_FixturesSuccess;
+    @FXML private Label lbl_FixturesFailure;
 
     // Viewer Page elements
 
@@ -128,6 +128,9 @@ public class HomePageController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+	    StatsThread statsThread = new StatsThread();
+	    statsThread.start();
 
 	    // ensure users without privileges cannot use admin functions
 		hideAdminPageIfNonAdmin();
@@ -444,6 +447,10 @@ public class HomePageController implements Initializable {
 		tf_EnterNewPlayerName.clear();
 
 		DatabaseManager.DB_Player.addNewPlayerToDatabase(player, team);
+
+        lbl_PlayerAdded.setVisible(true);
+        WaitAndHideLabel hidePlayerAdded = new WaitAndHideLabel(5000, lbl_PlayerAdded);
+        hidePlayerAdded.start();
 	}
 
     public void registerNewTeam(ActionEvent actionEvent) {
@@ -452,21 +459,29 @@ public class HomePageController implements Initializable {
 	    DatabaseManager.DB_Team.addNewTeamToDatabase(team);
 	    ol_Teams.add(team); // to update combobox without having to retrieve from SQL again
         tf_EnterNewTeamName.clear();
+
+        lbl_TeamCreated.setVisible(true);
+        WaitAndHideLabel hideTeamCreated = new WaitAndHideLabel(5000, lbl_TeamCreated);
+        hideTeamCreated.start();
     }
 
     public void generateFixtures(ActionEvent actionEvent) {
 
         Fixtures fixtures = Fixtures.generateFixtures();
 
-        if (fixtures != null) {
+        if (ol_Teams.size() > 3) {
 
             DatabaseManager.DB_Match.truncMatch();
             DatabaseManager.DB_Fixtures.addFixturesToDatabase(fixtures);
             generateFixtureGrid();
+            WaitAndHideLabel hideSuccess = new WaitAndHideLabel(5000, lbl_FixturesSuccess);
+            hideSuccess.start();
         }
         else {
 
-            // output error message requiring at least 2 teams to be present
+            lbl_FixturesFailure.setVisible(true);
+            WaitAndHideLabel hideFailure = new WaitAndHideLabel(5000, lbl_FixturesFailure);
+            hideFailure.start();
         }
     }
 
@@ -582,11 +597,6 @@ public class HomePageController implements Initializable {
         p_Fixtures.setVisible(false);
         p_ShowTeamStats.setVisible(false);
         p_MatchViewer.setVisible(true);
-    }
-
-    public void loadMatchViewer() {
-
-
     }
 
     // Score Sheet Page Methods
@@ -758,6 +768,54 @@ public class HomePageController implements Initializable {
 
                 match.getSet(setNumber - 1).getGame(gameIndex).setAwayTeamScore(Integer.parseInt(gameScore.getText()));
                 gameIndex++;
+            }
+        }
+    }
+
+    public void callInitializeTeamStats(ActionEvent actionEvent) {
+
+        initializeTeamStats();
+    }
+
+    private class StatsThread extends Thread {
+
+	    public void run(){
+
+	        while (true) {
+
+                try {
+
+                    Thread.sleep(100000);
+                }
+                catch (InterruptedException e) {e.printStackTrace(); }
+
+                initializeTeamStats();
+            }
+        }
+    }
+
+    private class WaitAndHideLabel extends Thread {
+
+	    private int duration;
+	    private Label labelToDisable;
+
+	    public WaitAndHideLabel(int duration, Label labelToDisable) {
+
+            this.duration = duration;
+            this.labelToDisable = labelToDisable;
+        }
+
+        public void run() {
+
+            while (true) {
+
+                try {
+
+                    Thread.sleep(duration);
+                }
+                catch (InterruptedException e) {e.printStackTrace(); }
+
+                labelToDisable.setVisible(false);
             }
         }
     }

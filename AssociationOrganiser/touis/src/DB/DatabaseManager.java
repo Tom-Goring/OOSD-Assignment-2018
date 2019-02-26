@@ -1,6 +1,3 @@
-// TODO: load players when loading teamList
-// TODO: Update sets and games when updating match details
-
 package DB;
 
 import model.*;
@@ -245,26 +242,31 @@ public class DatabaseManager {
                 getUser.setString(1, username);
                 ResultSet rset = getUser.executeQuery();
 
-                rset.next();
+                if (!rset.next()) {
 
-                if (rset.getInt("PrivilegeLevel") == 1) {
-
-                    BasicUser user = new BasicUser();
-                    user.setUsername(rset.getString("Username"));
-                    user.setSalt(rset.getBytes("PasswordSalt"));;
-                    user.setHashedPassword(rset.getBytes("HashedPassword"));
-                    return user;
-                }
-                else if (rset.getInt("PrivilegeLevel") == 2) {
-
-                    User user = new Admin();
-                    user.setUsername(rset.getString("Username"));
-                    user.setSalt(rset.getBytes("PasswordSalt"));;
-                    user.setHashedPassword(rset.getBytes("HashedPassword"));
-                    return user;
+                    return null;
                 }
                 else {
-                    return null;
+
+                    if (rset.getInt("PrivilegeLevel") == 1) {
+
+                        BasicUser user = new BasicUser();
+                        user.setUsername(rset.getString("Username"));
+                        user.setSalt(rset.getBytes("PasswordSalt"));;
+                        user.setHashedPassword(rset.getBytes("HashedPassword"));
+                        return user;
+                    }
+                    else if (rset.getInt("PrivilegeLevel") == 2) {
+
+                        User user = new Admin();
+                        user.setUsername(rset.getString("Username"));
+                        user.setSalt(rset.getBytes("PasswordSalt"));;
+                        user.setHashedPassword(rset.getBytes("HashedPassword"));
+                        return user;
+                    }
+                    else {
+                        return null;
+                    }
                 }
             }
             catch (SQLException e) {
@@ -355,7 +357,7 @@ public class DatabaseManager {
 
     public static class DB_Team {
 
-        static public void addNewTeamToDatabase(Team team) {
+        static public boolean addNewTeamToDatabase(Team team) {
 
             String insert = "INSERT INTO Team (Name) VALUES (?);";
 
@@ -365,13 +367,16 @@ public class DatabaseManager {
                 insertTeam.setString(1, team.getTeamName());
                 System.out.println(insertTeam);
                 insertTeam.executeUpdate();
+                return true;
             }
             catch (SQLException e) {
                 if (e.getErrorCode() == 1062) {
                     System.out.println("ERROR: DB_Team name \""+ team.getTeamName() +"\" already present.");
+                    return false;
                 }
                 else {
                     e.printStackTrace();
+                    return false;
                 }
             }
         }
@@ -540,7 +545,7 @@ public class DatabaseManager {
             return new TeamStats.Builder(team)
                     .withMatchesPlayed(Integer.toString(getNumberOfMatchesPlayed(team)))
                     .withMatchesWon(Integer.toString(getNumberOfMatchWins(team)))
-                    .withSetsWon(Integer.toString(getNumberOfMatchWins(team)))
+                    .withSetsWon(Integer.toString(getNumberOfSetWins(team)))
                     .withGamesWon(Integer.toString(getNumberOfGameWins(team)))
                     .build();
         }
@@ -548,7 +553,7 @@ public class DatabaseManager {
 
     public static class DB_Player {
 
-        public static void addPlayerToDatabase(Player player, Team team) {
+        public static boolean addPlayerToDatabase(Player player, Team team) {
 
             String insert = "INSERT INTO Player (Name, TeamID) VALUES (?, (SELECT ID FROM Team WHERE Name = ?));";
 
@@ -559,8 +564,12 @@ public class DatabaseManager {
                 insertPlayer.setString(2, team.getTeamName());
                 System.out.println(insertPlayer);
                 insertPlayer.executeUpdate();
+                return true;
             }
-            catch (SQLException e) {e.printStackTrace();}
+            catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -766,7 +775,6 @@ public class DatabaseManager {
         // Function assumes the match has been played and all data is available
         public static void updateMatchInformation(Match match) {
 
-            // TODO: look at pushing match updates
             String updateMatch = "UPDATE `Match` " +
                     "SET " +
                     "HomePlayer1ID = (SELECT ID FROM player WHERE Name = ?), " +

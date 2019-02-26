@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,6 +25,8 @@ public class LoginController {
 
     @FXML
     private PasswordField passwordField;
+
+    @FXML private Label lbl_IncorrectPassword;
 
     public void openCreateAccount(ActionEvent actionEvent) throws IOException {
 
@@ -46,21 +49,32 @@ public class LoginController {
         User desiredUserAccount = DatabaseManager.DB_User.getUserFromDatabase(usernameField.getText());
         String enteredPassword = passwordField.getText();
 
-        assert desiredUserAccount != null;
-        if (DatabaseManager.DB_Security.checkPassword(enteredPassword, desiredUserAccount)) {
+        if (desiredUserAccount != null) {
 
-            try {
-                User.currentUser = desiredUserAccount;
-                openMainScene(actionEvent);
+            if (DatabaseManager.DB_Security.checkPassword(enteredPassword, desiredUserAccount)) {
+
+                try {
+                    User.currentUser = desiredUserAccount;
+                    openMainScene(actionEvent);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            catch (IOException e) {
-                e.printStackTrace();
+            else {
+
+                displayMessage(lbl_IncorrectPassword, 5000);
             }
         }
         else {
 
-            // failure
-            System.out.println("wrong password");
+            displayMessage(lbl_IncorrectPassword, 5000);
         }
+    }
+
+    private static void displayMessage(Node message, int duration) {
+
+        message.setVisible(true);
+        new HomePageController.waitAndHideLabel(duration, message);
     }
 }

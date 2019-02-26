@@ -4,6 +4,7 @@ import DB.DatabaseManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import model.*;
@@ -58,6 +59,9 @@ public class HomePageController implements Initializable {
 	@FXML private Label lbl_FixturesSuccess;
     @FXML private Label lbl_FixturesFailure;
 
+    @FXML private Label lbl_TeamNameTaken;
+    @FXML private Label lbl_PlayerNameTaken;
+
     // Viewer Page elements
 
     @FXML private Pane p_MatchViewer;
@@ -65,6 +69,7 @@ public class HomePageController implements Initializable {
     @FXML private ComboBox<Team> cb_mvSelectAwayTeam;
     @FXML private Label lbl_HomeSetsWon;
     @FXML private Label lbl_AwaySetsWon;
+    @FXML private Label lbl_MVR_DuplicateTeams;
 
     @FXML private TableView<Match.Set> tv_MatchStats;
     @FXML private TableColumn<Match.Set, String> tvc_SetNumber;
@@ -100,6 +105,8 @@ public class HomePageController implements Initializable {
     @FXML private ComboBox<Player> cb_SelectAwayPlayer2;
     @FXML private Button btn_CalcSubScores;
     @FXML private GridPane gp_MatchForm;
+    @FXML private Label lbl_SSDuplicateTeam;
+    @FXML private TextArea ta_FinalScores;
 
 
 	// Page Scope methods
@@ -197,10 +204,11 @@ public class HomePageController implements Initializable {
 
                 if (cb_SelectHomeTeam.getValue() != null) {
 
-                    ArrayList<Player> players = cb_SelectHomeTeam.getValue().getPlayerList();
+                    ArrayList<Player> players = cb_SelectHomeTeam.getSelectionModel().getSelectedItem().getPlayerList();
                     ol_HomePlayers.setAll(players);
-                    cb_SelectHomePlayer1.setItems(ol_HomePlayers);
-                    cb_SelectHomePlayer2.setItems(ol_HomePlayers);
+                    setPlayerComboBoxList(cb_SelectHomePlayer1, cb_SelectHomePlayer2, cb_SelectHomeTeam, ol_HomePlayers);
+                    lbl_SSDuplicateTeam.setVisible(false);
+                    disableSubmitButtonIfEmptyFields();
                     disableModifyIfBothTeamsNotSelected();
                 }
             }
@@ -224,10 +232,11 @@ public class HomePageController implements Initializable {
 
                 if (cb_SelectAwayTeam.getValue() != null) {
 
-                    ArrayList<Player> players = cb_SelectAwayTeam.getValue().getPlayerList();
+                    ArrayList<Player> players = cb_SelectAwayTeam.getSelectionModel().getSelectedItem().getPlayerList();
                     ol_AwayPlayers.setAll(players);
-                    cb_SelectAwayPlayer1.setItems(ol_AwayPlayers);
-                    cb_SelectAwayPlayer2.setItems(ol_AwayPlayers);
+                    setPlayerComboBoxList(cb_SelectAwayPlayer1, cb_SelectAwayPlayer2, cb_SelectAwayTeam, ol_AwayPlayers);
+                    lbl_SSDuplicateTeam.setVisible(false);
+                    disableSubmitButtonIfEmptyFields();
                     disableModifyIfBothTeamsNotSelected();
                 }
             }
@@ -240,6 +249,14 @@ public class HomePageController implements Initializable {
                 initializeMatchViewer();
             }
         });
+    }
+
+    private void setPlayerComboBoxList(ComboBox<Player> cb_Player1, ComboBox<Player> cb_Player2, ComboBox<Team> cb_Team, ObservableList<Player> ol) {
+
+        ArrayList<Player> players = cb_Team.getValue().getPlayerList();
+        ol.setAll(players);
+        cb_Player1.setItems(ol);
+        cb_Player2.setItems(ol);
     }
 
 	private void setScoreSheetFieldsToIntegerOnly() {
@@ -267,11 +284,13 @@ public class HomePageController implements Initializable {
 	    Team awayTeam = cb_SelectAwayTeam.getValue();
 
 	    btn_ModifySheet.setDisable((homeTeam == null || awayTeam == null));
+	    btn_ModifySheet.setDisable(homeTeam == awayTeam);
 
         cb_SelectHomeTeam.setValue(homeTeam);
         cb_SelectAwayTeam.setValue(awayTeam);
     }
 
+    @FXML
     private void initializeMatchViewer() {
 
 	    ol_MatchSets.clear();
@@ -279,36 +298,44 @@ public class HomePageController implements Initializable {
 	    Team homeTeam = cb_mvSelectHomeTeam.getValue();
 	    Team awayTeam = cb_mvSelectAwayTeam.getValue();
 
-	    if (!homeTeam.equals(awayTeam))
 	    if (homeTeam != null && awayTeam != null) {
+	        if (homeTeam != awayTeam) {
 
-            lbl_HomeSetsWon.setText(Integer.toString(DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName()).getHomeTeamSetsWon()));
-            lbl_AwaySetsWon.setText(Integer.toString(DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName()).getAwayTeamSetsWon()));
+	            Match match = DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName());
 
-            tvc_SetNumber.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("setNumber"));
-            tvc_HomePlayer.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("HomePlayerString"));
-            tvc_AwayPlayer.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("AwayPlayerString"));
-            tvc_G1HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G1HomeScore"));
-            tvc_G2HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G2HomeScore"));
-            tvc_G3HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G3HomeScore"));
-            tvc_G1AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G1AwayScore"));
-            tvc_G2AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G2AwayScore"));
-            tvc_G3AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G3AwayScore"));
-            tvc_WinnerName.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("Winner"));
+                lbl_HomeSetsWon.setText(Integer.toString(match.getHomeTeamSetsWon()));
+                lbl_AwaySetsWon.setText(Integer.toString(match.getAwayTeamSetsWon()));
 
-            Match match = DatabaseManager.DB_Match.getMatchFromDatabase(homeTeam.getTeamName(), awayTeam.getTeamName());
+                lbl_HomeSetsWon.setVisible(true);
+                lbl_AwaySetsWon.setVisible(true);
 
-            for (int i = 0; i < 5; i++) {
+                tvc_SetNumber.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("setNumber"));
+                tvc_HomePlayer.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("HomePlayerString"));
+                tvc_AwayPlayer.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("AwayPlayerString"));
+                tvc_G1HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G1HomeScore"));
+                tvc_G2HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G2HomeScore"));
+                tvc_G3HomeScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G3HomeScore"));
+                tvc_G1AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G1AwayScore"));
+                tvc_G2AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G2AwayScore"));
+                tvc_G3AwayScore.setCellValueFactory(new PropertyValueFactory<Match.Set.Game, String>("G3AwayScore"));
+                tvc_WinnerName.setCellValueFactory(new PropertyValueFactory<Match.Set, String>("Winner"));
 
-                ol_MatchSets.add(match.getSet(i));
+                if (match.getHomeTeamPlayer1() != null) {
+
+                    for (int i = 0; i < 5; i++) {
+
+                        ol_MatchSets.add(match.getSet(i));
+                    }
+
+                    tv_MatchStats.getItems().setAll(ol_MatchSets);
+                }
             }
+            else {
 
-            tv_MatchStats.getItems().setAll(ol_MatchSets);
-        }
-        else {
-
-            cb_mvSelectHomeTeam.setValue(homeTeam);
-            cb_mvSelectAwayTeam.setValue(awayTeam);
+                cb_mvSelectHomeTeam.setValue(homeTeam);
+                cb_mvSelectAwayTeam.setValue(awayTeam);
+                displayMessage(lbl_MVR_DuplicateTeams, 5000);
+            }
         }
     }
 
@@ -332,6 +359,13 @@ public class HomePageController implements Initializable {
     private void disableSubmitButtonIfEmptyFields() {
 
 	    boolean fieldEmpty = false;
+
+	    if(cb_SelectHomeTeam.getSelectionModel().getSelectedItem() == cb_SelectAwayTeam.getSelectionModel().getSelectedItem()) {
+
+	        fieldEmpty = true;
+	        if (cb_SelectHomeTeam.getSelectionModel().getSelectedItem() != null && cb_SelectAwayTeam.getSelectionModel().getSelectedItem() != null)
+                displayMessage(lbl_SSDuplicateTeam, 5000);
+        }
 
         if (cb_SelectHomePlayer1.getValue() == null) {
 
@@ -423,7 +457,6 @@ public class HomePageController implements Initializable {
         }
     }
 
-	// used to close admin tab if needed
     private void closeTab(Tab tab) {
 
         EventHandler<Event> handler = tab.getOnClosed();
@@ -441,28 +474,35 @@ public class HomePageController implements Initializable {
 
 		Player player = new Player(tf_EnterNewPlayerName.getText());
 		Team team = cb_SelectPlayerTeam.getValue();
-		team.addPlayer(player);
 
 		tf_EnterNewTeamName.clear();
 		tf_EnterNewPlayerName.clear();
 
-		DatabaseManager.DB_Player.addPlayerToDatabase(player, team);
+		if (DatabaseManager.DB_Player.addPlayerToDatabase(player, team)) {
 
-        lbl_PlayerAdded.setVisible(true);
-        WaitAndHideLabel hidePlayerAdded = new WaitAndHideLabel(5000, lbl_PlayerAdded);
-        hidePlayerAdded.start();
+		    team.addPlayer(player);
+            displayMessage(lbl_PlayerAdded, 5000);
+        }
+        else {
+
+            displayMessage(lbl_PlayerNameTaken, 5000);
+        }
 	}
 
     public void registerNewTeam(ActionEvent actionEvent) {
 
 	    Team team = new Team(tf_EnterNewTeamName.getText());
-	    DatabaseManager.DB_Team.addNewTeamToDatabase(team);
-	    ol_Teams.add(team); // to update combobox without having to retrieve from SQL again
-        tf_EnterNewTeamName.clear();
+	    if (DatabaseManager.DB_Team.addNewTeamToDatabase(team)) {
 
-        lbl_TeamCreated.setVisible(true);
-        WaitAndHideLabel hideTeamCreated = new WaitAndHideLabel(5000, lbl_TeamCreated);
-        hideTeamCreated.start();
+            ol_Teams.add(team); // to update combobox without having to retrieve from SQL again
+            tf_EnterNewTeamName.clear();
+
+           displayMessage(lbl_TeamCreated, 5000);
+        }
+        else {
+
+            // TODO: display error
+        }
     }
 
     public void generateFixtures(ActionEvent actionEvent) {
@@ -474,14 +514,12 @@ public class HomePageController implements Initializable {
             DatabaseManager.DB_Match.truncMatch();
             DatabaseManager.DB_Fixtures.addFixturesToDatabase(fixtures);
             generateFixtureGrid();
-            WaitAndHideLabel hideSuccess = new WaitAndHideLabel(5000, lbl_FixturesSuccess);
+            waitAndHideLabel hideSuccess = new waitAndHideLabel(5000, lbl_FixturesSuccess);
             hideSuccess.start();
         }
         else {
 
-            lbl_FixturesFailure.setVisible(true);
-            WaitAndHideLabel hideFailure = new WaitAndHideLabel(5000, lbl_FixturesFailure);
-            hideFailure.start();
+           displayMessage(lbl_FixturesFailure, 5000);
         }
     }
 
@@ -586,7 +624,6 @@ public class HomePageController implements Initializable {
 
     public void showTeamStats(ActionEvent actionEvent) {
 
-        initializeTeamStats();
         p_Fixtures.setVisible(false);
         p_ShowTeamStats.setVisible(true);
         p_MatchViewer.setVisible(false);
@@ -603,7 +640,12 @@ public class HomePageController implements Initializable {
 
     public void createNewScoreSheet(ActionEvent actionEvent) {
 
-	    cb_SelectHomeTeam.getSelectionModel().clearSelection();
+	    resetScoreSheet();
+    }
+
+    private void resetScoreSheet() {
+
+        cb_SelectHomeTeam.getSelectionModel().clearSelection();
         cb_SelectAwayTeam.getSelectionModel().clearSelection();
 
         cb_SelectHomePlayer1.getSelectionModel().clearSelection();
@@ -633,6 +675,10 @@ public class HomePageController implements Initializable {
     public void modifyExistingSheet(ActionEvent actionEvent) {
 
         Match match = DatabaseManager.DB_Match.getMatchFromDatabase(cb_SelectHomeTeam.getValue().getTeamName(), cb_SelectAwayTeam.getValue().getTeamName());
+        populateSheet(match);
+    }
+
+    private void populateSheet(Match match) {
 
         cb_SelectHomePlayer1.setValue(match.getHomeTeamPlayer1());
         cb_SelectHomePlayer2.setValue(match.getHomeTeamPlayer2());
@@ -681,6 +727,16 @@ public class HomePageController implements Initializable {
     }
 
     public void calculateAndSubmitScores(ActionEvent actionEvent) {
+
+	    Match match = getMatchInfoFromFields();
+        match.fillInWinnerFields();
+        String scores = match.getHomeTeamSetsWon() + " : " + match.getAwayTeamSetsWon();
+        ta_FinalScores.setText(scores);
+        DatabaseManager.DB_Match.updateMatchInformation(match);
+        generateFixtureGrid();
+    }
+
+    private Match getMatchInfoFromFields() {
 
         Match match = new Match();
 
@@ -746,10 +802,8 @@ public class HomePageController implements Initializable {
             }
         }
 
-        match.fillInWinnerFields();
-        DatabaseManager.DB_Match.updateMatchInformation(match);
-        generateFixtureGrid();
-        initializeTeamStats();
+        resetScoreSheet();
+        return match;
     }
 
     private void setScoresWithTextFields(Match match, Player HP, Player AP, int setNumber, TextField[] scoreEntries, String ID) {
@@ -777,6 +831,16 @@ public class HomePageController implements Initializable {
         initializeTeamStats();
     }
 
+    public void refreshDatabase(ActionEvent actionEvent) {
+
+	    DatabaseManager.createTables();
+        ol_Users.addAll(DatabaseManager.DB_User.getUserListFromDatabase());
+        ol_Teams.addAll(DatabaseManager.DB_Team.getTeamListFromDatabase());
+        ol_HomePlayers.clear();
+        ol_AwayPlayers.clear();
+        ol_MatchSets.clear();
+    }
+
     private class StatsThread extends Thread {
 
 	    public void run(){
@@ -794,15 +858,21 @@ public class HomePageController implements Initializable {
         }
     }
 
-    private class WaitAndHideLabel extends Thread {
+    private static void displayMessage(Node message, int duration) {
+
+	    message.setVisible(true);
+	    new waitAndHideLabel(duration, message);
+    }
+
+    public static class waitAndHideLabel extends Thread {
 
 	    private int duration;
-	    private Label labelToDisable;
+	    private Node nodeToInvisible;
 
-	    public WaitAndHideLabel(int duration, Label labelToDisable) {
+	    public waitAndHideLabel(int duration, Node nodeToInvisible) {
 
             this.duration = duration;
-            this.labelToDisable = labelToDisable;
+            this.nodeToInvisible = nodeToInvisible;
         }
 
         public void run() {
@@ -815,7 +885,7 @@ public class HomePageController implements Initializable {
                 }
                 catch (InterruptedException e) {e.printStackTrace(); }
 
-                labelToDisable.setVisible(false);
+                nodeToInvisible.setVisible(false);
             }
         }
     }

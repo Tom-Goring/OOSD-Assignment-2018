@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane prefHeight="446.0" prefWidth="453.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
       <Label layoutX="88.0" layoutY="78.0" styleClass="title" stylesheets="@../css/theme.css" text="Touis Table Tennis System">
          <font>
@@ -33,5 +33,6 @@
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="lbl_IncorrectPassword" layoutX="140.0" layoutY="283.0" text="Username or password incorrect!" textFill="RED" visible="false" />
    </children>
 </AnchorPane>

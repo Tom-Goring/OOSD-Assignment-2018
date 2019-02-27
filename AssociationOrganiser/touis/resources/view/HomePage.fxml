@@ -30,16 +30,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="877.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePageController">
    <children>
-      <MenuBar prefHeight="25.0" prefWidth="877.0">
+      <MenuBar fx:id="mb_Menubar" prefHeight="25.0" prefWidth="877.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu fx:id="m_File" mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="mi_Close" mnemonicParsing="false" onAction="#exit" text="Close" />
             </items>
           </Menu>
         </menus>

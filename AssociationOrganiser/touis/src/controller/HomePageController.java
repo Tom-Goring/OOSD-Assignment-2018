@@ -1,6 +1,7 @@
 package controller;
 
 import DB.DatabaseManager;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -37,6 +38,10 @@ public class HomePageController implements Initializable {
     private ObservableList<Player> ol_AwayPlayers;
     private ObservableList<Match.Set> ol_MatchSets;
     private ObservableList<TeamStats> ol_TeamStats;
+
+    @FXML MenuBar mb_MenuBar;
+    @FXML Menu m_File;
+    @FXML MenuItem mi_Close;
 
     // TabPane elements
 	@FXML private TabPane tp_tabPane;
@@ -501,7 +506,7 @@ public class HomePageController implements Initializable {
         }
         else {
 
-            // TODO: display error
+           displayMessage(lbl_TeamNameTaken, 5000);
         }
     }
 
@@ -616,7 +621,7 @@ public class HomePageController implements Initializable {
                 }
                 else {
 
-                    gp.add(new Label("np"), column+1, row+1);
+                    gp.add(new Label("--"), column+1, row+1);
                 }
             }
         }
@@ -649,9 +654,13 @@ public class HomePageController implements Initializable {
         cb_SelectAwayTeam.getSelectionModel().clearSelection();
 
         cb_SelectHomePlayer1.getSelectionModel().clearSelection();
+        cb_SelectHomePlayer1.setValue(null);
         cb_SelectHomePlayer2.getSelectionModel().clearSelection();
+        cb_SelectHomePlayer2.setValue(null);
         cb_SelectAwayPlayer1.getSelectionModel().clearSelection();
+        cb_SelectAwayPlayer1.setValue(null);
         cb_SelectAwayPlayer2.getSelectionModel().clearSelection();
+        cb_SelectAwayPlayer2.setValue(null);
 
         for (int i = 0; i < gp_MatchForm.getChildren().size(); i++) {
 
@@ -841,6 +850,12 @@ public class HomePageController implements Initializable {
         ol_MatchSets.clear();
     }
 
+    public void exit(ActionEvent actionEvent) {
+
+        Platform.exit();
+        System.exit(0);
+    }
+
     private class StatsThread extends Thread {
 
 	    public void run(){
@@ -861,7 +876,7 @@ public class HomePageController implements Initializable {
     private static void displayMessage(Node message, int duration) {
 
 	    message.setVisible(true);
-	    new waitAndHideLabel(duration, message);
+	    new waitAndHideLabel(duration, message).start();
     }
 
     public static class waitAndHideLabel extends Thread {

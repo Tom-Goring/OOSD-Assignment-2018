@@ -567,7 +567,9 @@ public class DatabaseManager {
                 return true;
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                if (e.getErrorCode() == 1062) {
+                    System.out.println("ERROR: DB_Player name \""+ player.getPlayerName() +"\" already present.");
+                }
                 return false;
             }
         }
